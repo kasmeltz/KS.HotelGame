@@ -4,6 +4,7 @@ SceneManager = SceneManager:getInstance()
 local FontManager = require 'classes/scene/FontManager'
 FontManager = FontManager:getInstance()
 local HotelScene = require 'classes/scene/HotelScene'
+local BankScene = require 'classes/scene/BankScene'
 local DialogueScene = require 'classes/scene/DialogueScene'
 local Character = require 'classes/simulation/Character'
 	
@@ -11,16 +12,20 @@ local gameWorld
 function love.load()
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 16)
 	FontManager:addFont(font, 'Courier16')
+	font = love.graphics.newFont('data/fonts/courbd.ttf', 32)
+	FontManager:addFont(font, 'Courier32')
+
 	gameWorld = GameWorld:new()
 	
 	local hero = Character:new(gameWorld)
 	hero.name = 'Kevin'
 	gameWorld.hero = hero
 		
+	SceneManager:addScene(BankScene:new(gameWorld), 'bank')
 	SceneManager:addScene(HotelScene:new(gameWorld), 'hotel')
 	SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')
 
-	SceneManager:show('hotel')
+	SceneManager:show('bank')
 end
 
 function love.update()

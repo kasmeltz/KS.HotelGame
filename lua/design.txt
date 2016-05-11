@@ -101,4 +101,28 @@ Illegal Activities?
 	
 Story board
 
-Game starts with a conversation with the banker. How you answer questions determines how much money you get and your starting stats / skills.
+The time and date is January 2nd, current year, 7:55 A.M.(the game always starts in the current year)
+
+Game starts with the 2d version of the player outside the bank. 
+The story overlay pops up to tell them that they have always dreamed of starting a hotel, that today is an exciting day, and that they have an appointment at 8:00 A.M. with a bank to secure a loan that will allow them to start their business!
+The player can enter the bank or can start to wander around the city if they want.
+When the player enters the bank they have the option to leave the bank or talk with the secretary.
+If the player is male then the secretary is female and vice versa.
+When the player talks with the secretary if it is before 8:00 A.M. the secretary basically tells them that the banker isn't ready yet.
+The player can try and hit on the secrtary. 
+How the player talks with the secratry affects certain stats and how the conversation goes with the banker.
+After 8:00 A.M. but before 8:15 A.M. there is some random chance that the banker will be ready for the player every time they talk with the secretary.
+After 8:15 A.M. but before 8:30 A.M. the banker is always ready for the player and the player starts the conversation with the banker.
+After 8:30 A.M. the secretary notifies the player that their appointment has been cancelled because they were too late. The player can not get money from the bank and must try and start a hotel some other way.
+There is always the option to sell drugs or to play the stock market.
+Drugs and stock market are the same principal except one is legal and the other illegal.
+If the player sells drugs they can get arrested.
+
+
+
+
+
+
+
+
+a conversation with the banker. How you answer questions determines how much money you get and your starting stats / skills.
