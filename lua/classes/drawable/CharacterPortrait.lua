@@ -1,3 +1,6 @@
+local FontManager = require 'classes/scene/FontManager'
+FontManager = FontManager:getInstance()
+
 local Drawable = require 'classes/drawable/Drawable'
 local CharacterPortrait = Drawable:extend('CharacterPortrait')
 
@@ -11,6 +14,9 @@ function CharacterPortrait:draw()
 	local sh = self.screenHeight
 	
 	local left = (sw / 2) - 200
+	
+	local font = FontManager:getFont('Courier16')
+	love.graphics.setFont(font)
 	
 	love.graphics.setColor(255,255,255)
 	love.graphics.rectangle('fill', left, 75, 400, 400)	

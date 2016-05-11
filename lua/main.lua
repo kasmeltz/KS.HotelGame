@@ -24,6 +24,11 @@ SceneManager:addScene(DialogueScene:new(), 'dialogue')
 SceneManager:show('hotel')
 SceneManager:show('dialogue', dialogue)
 
+function love.load()
+	local font = love.graphics.newFont('data/fonts/courbd.ttf', 16)
+	FontManager:addFont(font, 'Courier16')
+end
+
 function love.update()
 	gw:update()
 	
