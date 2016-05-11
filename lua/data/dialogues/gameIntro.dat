@@ -4,9 +4,11 @@
 		character = 'o',
 		options = 
 		{
-			text = 
 			{
-				'Welcome to my bank now fuck off'
+				text = 
+				{
+					'Welcome to my bank now fuck off'
+				}
 			}
 		}
 	}
