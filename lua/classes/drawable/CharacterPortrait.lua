@@ -5,7 +5,7 @@ local Drawable = require 'classes/drawable/Drawable'
 local CharacterPortrait = Drawable:extend('CharacterPortrait')
 
 function CharacterPortrait:init(character) 
-	CharacterPortrait.super:init()
+	CharacterPortrait.super.init(self)
 	self.character = character
 end
 

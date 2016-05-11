@@ -21,7 +21,7 @@ end
 
 function DialogueBranchFactory:createBranches(dialogueName, gameWorld, hero, other)
 	local dialogueText, size = love.filesystem.read(rootDirectory .. dialogueName .. '.dat')
-	local context = { gameWorld = gameWorld, hero = hero, other = other }
+	local context = { gameWorld = gameWorld, hero = hero, other = other, math = math }
 	local condition = assert(loadstring('return ' .. dialogueText))
 	setfenv(condition, context)
 	return condition()

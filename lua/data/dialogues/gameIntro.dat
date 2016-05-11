@@ -6,8 +6,13 @@
 		options = 
 		{
 			{
+				trySelect = function() return math.random(1, 100) > 50 end,
 				text = 'Welcome to my bank now fuck off',
 				onSelected = function() other.emotion = 'upset' end,				
+			},
+			{
+				text = 'Hello and welcome to my bank I am so happy to see you!',
+				onSelected = function() other.emotion = 'happy' end,				
 			}
 		}
 	},
@@ -23,7 +28,7 @@
 			},
 			{
 				text = 'Why hello there!',
-				onSelected = function() other.emotion = 'happy' end,				
+				onSelected = function() other.emotion = 'elated' end,				
 				next = 'arentyounice'
 			}
 		}

@@ -1,7 +1,8 @@
 local Drawable = require 'classes/drawable/Drawable'
 local Scene = Drawable:extend('Scene')
 
-function Scene:init(gw) 
+function Scene:init(gw)
+	Scene.super.init(self, gw) 
 	self.gameWorld = gw
 end
 

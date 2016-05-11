@@ -8,6 +8,10 @@ local DialogueScene = Scene:extend('DialogueScene', {isOverlay = true, isBlockin
 function DialogueScene:show(dialogue)
 	self.characterPortrait = CharacterPortrait:new(dialogue.other)
 	self.dialogue = dialogue
+	self.branch = nil
+	self.option = nil
+	self.optionNumber = nil
+	self.isOver = nil	
 	self:getOption()
 end
 

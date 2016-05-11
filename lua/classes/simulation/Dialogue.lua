@@ -5,7 +5,7 @@ local DialogueBranchFactory = require 'classes/factories/DialogueBranchFactory'
 DialogueBranchFactory = DialogueBranchFactory:getInstance()
 
 function Dialogue:init(dialogueName, startBranch, gameWorld, hero, other)
-	Dialogue.super:init(gameWorld)
+	Dialogue.super.init(self, gameWorld)
 	
 	local startBranch = startBranch or 'start'
 	local branches = DialogueBranchFactory:createBranches(dialogueName, gameWorld, hero, other)
@@ -52,8 +52,20 @@ function Dialogue:getSelectedOption()
 	local option = branch.options[idx]
 	
 	if branch.character == 'o' then
-		idx = 1
-		option = branch.options[idx]
+		for i = 1, #branch.options do
+			local possibleOption = branch.options[i]			
+			if not possibleOption.trySelect then
+				option = possibleOption
+				idx = i
+				break
+			end			
+			if possibleOption:trySelect() then
+				option = possibleOption
+				idx = i
+				break
+			end
+		end
+			
 		if option.onSelected then
 			option:onSelected()
 		end
