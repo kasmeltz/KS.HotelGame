@@ -31,14 +31,14 @@ function Dialogue:advance(option)
 			option:onNext()
 		end
 		
-		self:setBranch(option.next)
+		self:setBranch(option.next())
 	else
 		if branch.next then
 			if branch.onNext then
 				branch:onNext()
 			end
 			
-			self:setBranch(branch.next)
+			self:setBranch(branch.next())
 		else	
 			return true
 		end

@@ -2,7 +2,7 @@
 	start = 
 	{
 		character = 'o',
-		next = 'heroHello',
+		next = function() return 'heroHello' end,
 		options = 
 		{
 			{
@@ -24,12 +24,12 @@
 			{
 				text = 'Fuck off to you too',
 				onSelected = function() other.emotion = 'angry' end,
-				next = 'damnyou'
+				next = function() return 'damnyou' end
 			},
 			{
 				text = 'Why hello there!',
 				onSelected = function() other.emotion = 'elated' end,				
-				next = 'arentyounice'
+				next = function() return 'arentyounice' end
 			}
 		}
 	},
@@ -46,7 +46,7 @@
 	arentyounice = 
 	{
 		character = 'o',
-		next = 'thanks',
+		next = function() return 'thanks' end,
 		options = 
 		{
 			{
