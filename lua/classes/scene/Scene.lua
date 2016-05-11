@@ -4,7 +4,7 @@ local Scene = class('Scene')
 function Scene:initialize() end
 function Scene:show() end
 function Scene:draw() end
-function Scene:update() end
+function Scene:update(dt) end
 function Scene:hide() end
 function Scene:destroy() end
 function Scene:keyreleased() end

@@ -2,8 +2,8 @@ local Scene = require 'classes/scene/Scene'
 local CharacterPortrait = require 'classes/drawable/CharacterPortrait'
 local DialogueScene = Scene:extend('DialogueScene', {isOverlay = true, isBlocking = true})
 
-function DialogueScene:show(params)
-	self.characterPortrait = CharacterPortrait:new(params.other)
+function DialogueScene:show(dialogue)
+	self.characterPortrait = CharacterPortrait:new(dialogue.other)
 end
 
 function DialogueScene:draw()
