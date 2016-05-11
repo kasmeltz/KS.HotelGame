@@ -1,4 +1,3 @@
-local class = require 'libs/30log/30log'
 local Scene = require 'classes/scene/Scene'
 local HotelScene = Scene:extend('HotelScene')
 

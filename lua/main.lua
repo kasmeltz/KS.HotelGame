@@ -7,11 +7,15 @@ FontManager = FontManager:getInstance()
 local HotelScene = require 'classes/scene/HotelScene'
 local DialogueScene = require 'classes/scene/DialogueScene'
 
+local Dialogue = require 'classes/simulation/Dialogue'
+local dialogue = Dialogue:new()
+dialogue.other = { name = 'Bank Guy' }
+
 SceneManager:addScene(HotelScene:new(), 'hotel')
 SceneManager:addScene(DialogueScene:new(), 'dialogue')
 
 SceneManager:show('hotel')
-SceneManager:show('dialogue')
+SceneManager:show('dialogue', dialogue)
 
 function love.draw()
 	local vs = SceneManager.visibleScenes
