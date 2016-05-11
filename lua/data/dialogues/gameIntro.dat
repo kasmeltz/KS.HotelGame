@@ -1,0 +1,13 @@
+{
+	start = 
+	{
+		character = 'o',
+		options = 
+		{
+			text = 
+			{
+				'Welcome to my bank now fuck off'
+			}
+		}
+	}
+}

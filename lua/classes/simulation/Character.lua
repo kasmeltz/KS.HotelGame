@@ -1,4 +1,4 @@
-local class = require 'libs/30log/30log'
-local Character = class('Character', {name = ''})
+local SimulationItem = require 'classes/simulation/SimulationItem'
+local Character = SimulationItem:extend('Character')
 
 return Character
