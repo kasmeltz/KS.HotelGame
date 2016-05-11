@@ -1,9 +1,8 @@
-local class = require 'libs/30log/30log'
-local Scene = class('Scene')
+local Drawable = require 'classes/drawable/Drawable'
+local Scene = Drawable:extend('Scene')
 
 function Scene:initialize() end
 function Scene:show() end
-function Scene:draw() end
 function Scene:update(dt) end
 function Scene:hide() end
 function Scene:destroy() end

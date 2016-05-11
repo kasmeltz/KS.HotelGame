@@ -7,13 +7,16 @@ function DialogueScene:show(dialogue)
 end
 
 function DialogueScene:draw()
+	local sw = self.screenWidth
+	local sh = self.screenHeight
+	
 	love.graphics.setColor(255, 255, 255, 128)
-	love.graphics.rectangle('fill', 50,50,1024-100, 768-100)
+	love.graphics.rectangle('fill', 50, 50, sw - 100, sh - 100)
 
 	self.characterPortrait:draw()
 	
 	love.graphics.setColor(128,64,64)
-	love.graphics.rectangle('fill', 75,425,875,275)
+	love.graphics.rectangle('fill', 75, 525, sw - 150, 300)
 end
 
 function DialogueScene:keyreleased(key, scancode)
