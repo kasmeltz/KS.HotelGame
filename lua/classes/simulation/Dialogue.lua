@@ -24,11 +24,21 @@ function Dialogue:setBranch(name)
 end
 
 function Dialogue:advance(option) 
+	local branch = self.currentBranch
+
 	if option.next then	
+		if option.onNext then
+			option:onNext()
+		end
+		
 		self:setBranch(option.next)
 	else
-		if (self.currentBranch.next) then
-			self:setBranch(self.currentBranch.next)
+		if branch.next then
+			if branch.onNext then
+				branch:onNext()
+			end
+			
+			self:setBranch(branch.next)
 		else	
 			return true
 		end
@@ -36,7 +46,20 @@ function Dialogue:advance(option)
 end
 
 function Dialogue:getSelectedOption()
-	return self.currentBranch.options[1], 1
+	local branch = self.currentBranch
+	
+	local idx = 1
+	local option = branch.options[idx]
+	
+	if branch.character == 'o' then
+		idx = 1
+		option = branch.options[idx]
+		if option.onSelected then
+			option:onSelected()
+		end
+	end
+		
+	return option, idx
 end
 
 return Dialogue

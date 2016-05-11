@@ -22,7 +22,12 @@ function DialogueScene:getOption()
 end
 
 function DialogueScene:advance()
-	if self.dialogue:advance(self.option) then
+	local option = self.option
+	if option.onSelected then
+		option:onSelected()
+	end
+	
+	if self.dialogue:advance(option) then
 		if self.branch.character == 'o' then
 			SceneManager:hide('dialogue')
 		else 

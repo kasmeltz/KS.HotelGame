@@ -6,7 +6,8 @@
 		options = 
 		{
 			{
-				text = 'Welcome to my bank now fuck off'
+				text = 'Welcome to my bank now fuck off',
+				onSelected = function() other.emotion = 'upset' end,				
 			}
 		}
 	},
@@ -17,10 +18,12 @@
 		{
 			{
 				text = 'Fuck off to you too',
+				onSelected = function() other.emotion = 'angry' end,
 				next = 'damnyou'
 			},
 			{
 				text = 'Why hello there!',
+				onSelected = function() other.emotion = 'happy' end,				
 				next = 'arentyounice'
 			}
 		}
@@ -31,17 +34,28 @@
 		options = 
 		{
 			{
-				text = 'That\'s it you\'re fired!',
+				text = 'That\'s it you\'re fired!'
 			}
 		}
 	},
 	arentyounice = 
 	{
 		character = 'o',
+		next = 'thanks',
 		options = 
 		{
 			{
 				text = 'Well aren\'t you nice!'
+			}
+		}
+	},
+	thanks = 
+	{
+		character = 'h',
+		options = 
+		{
+			{
+				text = 'Thanks so are you except for the bald head and bad breath and smelly feet!'
 			}
 		}
 	},
