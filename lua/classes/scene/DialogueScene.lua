@@ -54,6 +54,7 @@ function DialogueScene:draw()
 	local sw = self.screenWidth
 	local sh = self.screenHeight
 	
+	local dialogue = self.dialogue
 	local branch = self.branch
 	local option = self.option
 	
@@ -72,8 +73,8 @@ function DialogueScene:draw()
 	end
 	
 	if (branch.character == 'o') then
-		love.graphics.setColor(255,255,255)
-		love.graphics.printf(option.text, 80, 530, sw - 160)
+		love.graphics.setColor(255,255,255)		
+		love.graphics.printf(dialogue.other.name .. ': ' .. option.text, 80, 530, sw - 160)
 		love.graphics.setColor(0,255,255)
 		love.graphics.print('PRESS ENTER TO CONTINUE', sw - 320, 800)		
 	else

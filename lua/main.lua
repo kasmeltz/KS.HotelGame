@@ -16,11 +16,14 @@ function love.load()
 	
 	SceneManager:addScene(HotelScene:new(gameWorld), 'hotel')
 	SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')
-	
+
+	local hero = Character:new(gameWorld)
+	hero.name = 'Kevin'
+
 	local character = Character:new(gameWorld)
 	character.name = 'Bank Guy'
 	
-	local dialogue = Dialogue:new('gameIntro', 'start', gameWorld, gameWorld.hero, character)
+	local dialogue = Dialogue:new('gameIntro', 'start', gameWorld, hero, character)
 	
 	SceneManager:show('hotel')
 	SceneManager:show('dialogue', dialogue)

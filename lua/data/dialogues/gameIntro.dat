@@ -6,10 +6,7 @@
 		options = 
 		{
 			{
-				text = 
-				{
-					'Welcome to my bank now fuck off'
-				}
+				text = 'Welcome to my bank now fuck off'
 			}
 		}
 	},
@@ -19,10 +16,7 @@
 		options = 
 		{
 			{
-				text = 
-				{
-					'Fuck off to you too!'					
-				},
+				text = 'Fuck off to you too',
 				next = 'damnyou'
 			},
 			{
@@ -40,10 +34,7 @@
 		options = 
 		{
 			{
-				text = 
-				{
-					'That\'s it your\'re fired!'
-				}
+				text = 'That\'s it you\'re fired!',
 			}
 		}
 	},
@@ -53,10 +44,7 @@
 		options = 
 		{
 			{
-				text = 
-				{
-					'Well aren\'t you nice!'
-				}
+				text = 'Well aren\'t you nice!'
 			}
 		}
 	},
