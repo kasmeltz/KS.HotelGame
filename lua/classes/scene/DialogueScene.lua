@@ -86,7 +86,7 @@ function DialogueScene:draw()
 			end
 			
 			love.graphics.setColor(255,255,255)
-			love.graphics.printf(possibleOption.text, 80, sy, sw - 160)
+			love.graphics.printf('You: ' .. possibleOption.text, 80, sy, sw - 160)
 			sy = sy + 50
 		end
 	end
