@@ -21,6 +21,10 @@ function Dialogue:setBranch(name)
 	if self.currentBranch == null then
 		error('Dialogue can not set branch "' .. name .. '" because it doesn\'t exist')
 	end	
+	
+	if self.currentBranch.onStart then
+		self.currentBranch.onStart()
+	end
 end
 
 function Dialogue:advance(option) 

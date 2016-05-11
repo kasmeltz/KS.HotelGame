@@ -81,7 +81,7 @@ function DialogueScene:draw()
 		return
 	end
 	
-	if (branch.character == 'o') then
+	if branch.character == 'o' then
 		love.graphics.setColor(255,255,255)		
 		love.graphics.printf(dialogue.other.name .. ': ' .. option.text, 80, 530, sw - 160)
 		love.graphics.setColor(0,255,255)
@@ -110,12 +110,15 @@ function DialogueScene:keyreleased(key, scancode)
 		end
 	end	
 	
-	if key == 'down' or scancode == 'down' then
-		self:scrollOption(1)
-	end
-	
-	if key == 'up' or scancode == 'up' then
-		self:scrollOption(-1)
+	local branch = self.branch
+	if branch.character == 'h' then
+		if key == 'down' or scancode == 'down' then
+			self:scrollOption(1)
+		end
+		
+		if key == 'up' or scancode == 'up' then
+			self:scrollOption(-1)
+		end
 	end
 end
 
