@@ -21,7 +21,22 @@ function Dialogue:setBranch(name)
 	if self.currentBranch == null then
 		error('Dialogue can not set branch "' .. name .. '" because it doesn\'t exist')
 	end	
-	self.selectedOption = 1
+end
+
+function Dialogue:advance(option) 
+	if option.next then	
+		self:setBranch(option.next)
+	else
+		if (self.currentBranch.next) then
+			self:setBranch(self.currentBranch.next)
+		else	
+			return true
+		end
+	end
+end
+
+function Dialogue:getSelectedOption()
+	return self.currentBranch.options[1], 1
 end
 
 return Dialogue

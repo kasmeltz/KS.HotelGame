@@ -52,4 +52,13 @@ function SceneManager:show(name, params)
 	vs[#vs + 1] = scene
 end
 
+function SceneManager:hide()
+	local scene = self.visibleScenes[#self.visibleScenes]
+	if scene == nil then	
+		error('Attempting to hide but there is no scene!')
+	end
+	scene:hide()
+	self.visibleScenes[#self.visibleScenes] = nil
+end
+
 return SceneManager

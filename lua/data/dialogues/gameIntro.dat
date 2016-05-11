@@ -1,7 +1,8 @@
-{
+{	
 	start = 
 	{
 		character = 'o',
+		next = 'heroHello',
 		options = 
 		{
 			{
@@ -11,5 +12,52 @@
 				}
 			}
 		}
-	}
+	},
+	heroHello = 
+	{
+		character = 'h',		
+		options = 
+		{
+			{
+				text = 
+				{
+					'Fuck off to you too!'					
+				},
+				next = 'damnyou'
+			},
+			{
+				text = 
+				{
+					'Why hello there!'
+				},
+				next = 'arentyounice'
+			}
+		}
+	},
+	damnyou = 
+	{
+		character = 'o',
+		options = 
+		{
+			{
+				text = 
+				{
+					'That\'s it your\'re fired!'
+				}
+			}
+		}
+	},
+	arentyounice = 
+	{
+		character = 'o',
+		options = 
+		{
+			{
+				text = 
+				{
+					'Well aren\'t you nice!'
+				}
+			}
+		}
+	},
 }
