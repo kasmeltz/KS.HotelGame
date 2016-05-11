@@ -1,0 +1,4 @@
+{ 
+	title = function() return 'The Beginning' end,
+	text = function() return 'Finally the day you have been waiting for has arrived!\n\nToday you have a meeting with a banker at 8:00 AM in hopes of procuring a loan to start your new hotel empire. Well hopefully at least to start a small bed and breakfast, with plans of expanding and one day becoming the biggest hotel chain in the world (you greedy bastard).' end
+}	

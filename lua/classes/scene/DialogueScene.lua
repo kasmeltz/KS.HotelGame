@@ -67,7 +67,7 @@ function DialogueScene:draw()
 	local branch = self.branch
 	local option = self.option
 	
-	love.graphics.setColor(255, 255, 255, 128)
+	love.graphics.setColor(128, 128, 128)
 	love.graphics.rectangle('fill', 50, 50, sw - 100, sh - 100)
 
 	self.characterPortrait:draw()
