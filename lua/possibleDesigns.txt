@@ -1,0 +1,134 @@
+Gameplay Elements
+
+Exploration
+
+Character dialogues
+	Deep conversation trees
+	Procedurally generated
+	Choices affect gameplay
+
+Real time action
+
+Story
+	Procedurally generated?
+	
+Strategy
+	Turn based 
+		Combat like chess
+	Real time 
+		Running clock with a date and time
+		Clock can be sped up or slowed down
+		Clock can jump to events	
+
+Character building
+	Stats
+	Affect gameplay somehow
+			
+Crafting
+			
+Building 
+	Buildings
+	Vehicles
+	Military
+	
+Resources
+	
+Economy
+	Income
+	Expenses
+
+Trading
+
+Research 
+	Technology affects what?	
+	
+Upgrading
+	
+Smuggling
+
+Bartering
+
+Cheating
+
+Lying
+
+Breaking the law
+
+Different "endings"
+
+
+
+
+Possible Settings
+	
+Postapocalyptic
+
+Space
+	Interstellar
+
+Gothic
+	Diabloesque
+
+Fantasy
+	Tolkienesque
+
+Microscopic
+	Quantum
+	Life 
+	
+Earth Mythology
+	Gods
+
+Futuristic society
+
+Focused on one planet but an alien race on an alien planet
+
+
+
+Focus on one job and make different parts of it?
+
+Bodybuilding
+Gangster / Mafia
+Sports
+Adventurer
+Movie star
+Athlete
+Entertainer
+Politicican
+Police
+Fire Fighter
+Native Chief
+Stripper
+Archeologist
+Hotel owner
+Truck driver
+Real estate mogul
+Settler
+Software developer
+Heating / Air conditioning mechanic
+Car mechanic
+Taxi driver
+Vampire
+Submarine Captain
+God
+Musician
+Artist
+Circus Owner
+Bullfighter
+Monster trainer
+President of a country
+
+
+
+
+Inspirations
+
+Pirates
+Star Control II
+Civilization
+SimCity
+Diablo I, II, III
+Final Fantasy
+Secret of Monkey Island
+Chess
+Fallout

@@ -1,0 +1,104 @@
+https://github.com/kasmeltz/KS.HotelGame.git
+
+Hotel Owner	
+
+Gameplay Elements
+
+Exploration 
+	Explore cities and neighbourhoods to find a good place to put your hotel
+	Find land for sale
+	Start in a seedy part of town
+	
+Character dialogues 
+	Talk to customers and prospective and current employees	
+	Every face is different
+		Use separate parts	
+			Head 
+				Shape
+				Color
+			Hair
+				Shape
+				Color
+			Eyes
+				Shape
+				Color
+			Eyebrows
+				Shape
+				Color
+			Nose
+				Shape
+			Ears
+				Shape
+			Mouth
+				Shape
+				Color			
+	
+Real time action
+	Exploring cities and possibly other gameplay
+	
+Story
+	Over arching story is that you are creating a hotel empire but story evolves through characters	
+	Multi level marketing?
+	Other coincidental stories
+	Insider trading?
+	
+Strategy
+	Managing hotel operations 
+	Dealing with employees
+	Marketing
+		Online social media	
+		Hotel search engines
+		Online travel agencies
+	
+Character building
+	Your character has skills that develop over time based on your actions
+	
+Crafting
+	For cooking
+
+Building 
+	Add extra floors 
+	Build restaurant
+	Build new hotels
+	
+Resources 
+	Money
+		Bank loan 
+		Earn money from clients
+	Some other types of resources?
+		As you make people happy
+	
+Economy 
+	Income 
+	Expenses
+	Loan interest 
+	New hotel services
+	Restaurant income
+	
+Trading
+	Can invest in stock market - is a side / mini gameplay		
+		Company names will be randomized 
+		Each company will have a type
+			Tech
+			Industrial
+			Commercial
+			Financial			
+			
+		Each stock will have randomized propensities
+		Specific story events can affect stocks individually or globally
+	
+Research 
+	New hotel technologies? :-)
+	
+Upgrading
+	Upgrade furniture 
+	Upgrade services infrastructure
+	
+Illegal Activities?
+	Can choose to sell illegal items? Prostituion? Drugs?
+	
+
+	
+Story board
+
+Game starts with a conversation with the banker. How you answer questions determines how much money you get and your starting stats / skills.
