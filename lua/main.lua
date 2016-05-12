@@ -1,3 +1,8 @@
+print()
+print('----------------------------------------------------------------------')
+print('|                       START LUA EXECUTION                          |')
+print('----------------------------------------------------------------------')
+
 local SceneManager = require 'classes/scene/SceneManager'
 SceneManager = SceneManager:getInstance()
 local FontManager = require 'classes/scene/FontManager'
@@ -16,6 +21,9 @@ local Character = require 'classes/simulation/Character'
 	
 local gameWorld
 function love.load()
+	print('----------------------------------------------------------------------')
+	print('|                       love.load()                                  |')
+	print('----------------------------------------------------------------------')
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 12)
 	FontManager:addFont(font, 'Courier12')
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 16)
