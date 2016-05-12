@@ -1,70 +1,65 @@
 local Scene = require 'classes/scene/Scene'
 local ShearTestScene = Scene:extend('ShearTestScene')
 
+local toChannel = love.thread.getChannel('toBuildings')
+local fromChannel = love.thread.getChannel('fromBuildings')
+
 function ShearTestScene:init()
 	ShearTestScene.super.init(self)
 	self.image = love.graphics.newImage('data/images/building2.jpg')
-	
-	local imageData = self.image:getData()	
-	local id = {}
-	for x = 0, 82 do 
-		for y = 0, 149 do				
-			local r, g, b, a = imageData:getPixel(x, y)
-			id[#id + 1] = r
-			id[#id + 1] = g
-			id[#id + 1] = b
-		end
-	end
-	self.id = id	
-	self.transformedData = love.image.newImageData(83,150)	
-	
-	self.rotation = 0
 end
+
+function ShearTestScene:show()	
+	local sw = self.screenWidth
+	local sh = self.screenHeight		
+	
+	toChannel:push{sw, sh}
+	local backBufferData = love.image.newImageData(sw,sh)	
+	local backBufferImg = love.graphics.newImage(backBufferData)	
+	self.backBufferData = backBufferData
+	self.backBufferImg = backBufferImg	
+	--toChannel:supply(backBufferData)
+	
+	local ptr, size = backBufferData:getPointer(), backBufferData:getSize()	
+	print(backBufferData)
+	print(ptr, size)
+end
+
+local redPixels = {}
+local greenPixels = {}
+local bluePixels = {}
+for y = 0, 899 do
+	redPixels[y] = {}
+	greenPixels[y] = {}
+	bluePixels[y] = {}
+	for x = 0, 1199 do
+		redPixels[y][x] = 64
+		greenPixels[y][x] = 64
+		bluePixels[y][x] = 64
+	end
+end	
 
 function ShearTestScene:draw()
 	local sw = self.screenWidth
-	local sh = self.screenHeight		
+	local sh = self.screenHeight
 	local img = self.image
-	local w = img:getWidth()
-	local h = img:getHeight()
+		
+	local backBufferData = self.backBufferData
+	local backBufferImg = self.backBufferImg	
 	
-	local rotation = self.rotation
-	local transformedData = self.transformedData
-	local id = self.id	
-	
-	local cos = math.cos(rotation)
-	local sin = math.sin(rotation)
-	local cx = 0
-	local cy = 0	
-	
-	for i = 1, 10 do
-		local idx = 1
-		for x = 0, 82 do 
-			for y = 0, 149 do
-				local r, g, b, a = 0, 0, 0, 0			
-				local sx = x * cos - y * sin
-				local sy = x * sin + y * cos				
-				if sx >=0 and sx <= 82 and sy >= 0 and sy <= 149 then								
-					idx = (sy * 3 * 82) + (sx * 3) + 1					
-					idx = math.floor(idx)
-					r = id[idx]
-					g = id[idx + 1]
-					b = id[idx + 2]
-					a = 255
-				end
+--	backBufferData:clear()	
 
-				transformedData:setPixel(x, y, r, g, b, 255)				
-			end
-		end
-	end	
+	local function fn(x, y, r, g, b, a)
+		return redPixels[y][x], greenPixels[y][x], redPixels[y][x], 255
+	end
+
+	backBufferData:mapPixel(fn)		 
 	
-	local img = love.graphics.newImage(transformedData)
-	love.graphics.draw(img, 100, 100, 0, 4, 4)
-	
+	backBufferImg:refresh()	
+	love.graphics.draw(backBufferImg, 0, 0)
 end
 
 function ShearTestScene:update(dt)
-	self.rotation = self.rotation + (dt * 0.1)
 end
 
 return ShearTestScene
