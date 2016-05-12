@@ -9,6 +9,7 @@ local GameTime = require 'classes/simulation/GameTime'
 local GameWorld = require 'classes/simulation/GameWorld'
 local HotelScene = require 'classes/scene/HotelScene'
 local BankScene = require 'classes/scene/BankScene'
+local ShearTestScene = require 'classes/scene/ShearTestScene'
 local StoryScene = require 'classes/scene/StoryScene'
 local DialogueScene = require 'classes/scene/DialogueScene'
 local Character = require 'classes/simulation/Character'
@@ -36,9 +37,12 @@ function love.load()
 	SceneManager:addScene(HotelScene:new(gameWorld), 'hotel')
 	SceneManager:addScene(StoryScene:new(gameWorld), 'story')
 	SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')
-
-	SceneManager:show('bank')
-	SceneManager:show('story', StoryFactory:createStory('begin', gameWorld))
+	SceneManager:addScene(ShearTestScene:new(), 'shearTest')
+	
+	SceneManager:show('shearTest')
+	
+	--SceneManager:show('bank')
+	--SceneManager:show('story', StoryFactory:createStory('begin', gameWorld))
 end
 
 function love.update(dt)

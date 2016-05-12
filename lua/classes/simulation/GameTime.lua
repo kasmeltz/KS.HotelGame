@@ -9,13 +9,11 @@ end
 
 function GameTime:setTime(year, month, day, hour, minute, second)
 	self.timeSeconds = os.time{year = year, month = month, day = day, hour = hour, min = minute, sec = second}
-	print(self.timeSeconds)
 end
 
 function GameTime:getDateString(frmt)
 	return os.date(frmt, self.timeSeconds)
 end
-
 
 function GameTime:setSpeed(speed)
 	if speed < 1 or speed > #self.speeds then
@@ -28,6 +26,5 @@ function GameTime:update(dt)
 	local speed = self.speeds[self.currentSpeed]
 	self.timeSeconds = self.timeSeconds + (dt * speed)
 end
-
 
 return GameTime
