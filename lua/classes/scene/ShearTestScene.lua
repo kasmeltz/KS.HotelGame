@@ -1,9 +1,6 @@
 local Scene = require 'classes/scene/Scene'
 local ShearTestScene = Scene:extend('ShearTestScene')
 
-local toChannel = love.thread.getChannel('toBuildings')
-local fromChannel = love.thread.getChannel('fromBuildings')
-
 local cpml = require 'libs/cpml'
 
 local roofMesh
@@ -21,127 +18,109 @@ function ShearTestScene:findMiddle(mesh)
 	end
 end
 
+function ShearTestScene:createRoofSection(sx, ex, sy, ey)
+	local t1 = 
+	{
+		vertices = 
+		{
+			{ex, ey, -1, 0, 1},
+			{ex, sy, -1, 0, 0},
+			{sx, ey, -1, 1, 1}
+		}, 
+		normal = { 0, 0, -1 }
+	}
+	
+	local t2 = 
+	{
+		vertices = 
+		{
+			{ex, sy, -1, 0, 0},
+			{sx, sy, -1, 1, 0},
+			{sx, ey, -1, 1, 1}
+		}, 		
+		normal = { 0, 0, -1 }
+	}
+	
+	return t1, t2
+end
+
+function ShearTestScene:createWallSection(sx, ex, sy, ey, nx, ny, level)
+	local t1 = 
+	{
+		vertices = 
+		{
+			{sx, sy, level, 0, 1},
+			{sx, sy, level + 1, 0, 0},
+			{ex, ey, level, 1, 1},
+		}, 
+		normal = { nx, ny, 0 }
+	}
+	local t2 = 
+	{
+		vertices = 
+		{
+			{sx, sy, level + 1, 0, 0},
+			{ex, ey, level + 1, 1, 0},
+			{ex, ey, level, 1, 1},
+		}, 
+		normal = { nx, ny, 0 }
+	}
+	
+	return t1, t2
+end
+
 function ShearTestScene:createBuilding(pos)
 	local building = {}
 	building.position = pos
-	building[1] = roofMesh
-	building[2] = wallMesh	
+	
+	building[1] = 
+	{
+		texture = self.roofImage,		
+	}
+	
+	local roof = building[1]
+	local t1, t2 = self:createRoofSection(-0.5, 0.5, -0.5, 0.5)
+	roof[#roof + 1] = t1
+	roof[#roof + 1] = t2
+	
+	building[2] = 
+	{
+		texture = self.wallImage,		
+	}
+	
+	local walls = building[2]	
+	for i = 2, 6 do
+		local level = -i
+		local t1, t2 = self:createWallSection(0.5, 0.5, -0.5, 0.5, -1, 0, level)
+		walls[#walls + 1] = t1
+		walls[#walls + 1] = t2
+		local t1, t2 = self:createWallSection(-0.5, -0.5, -0.5, 0.5, 1, 0, level)
+		walls[#walls + 1] = t1
+		walls[#walls + 1] = t2		
+		local t1, t2 = self:createWallSection(-0.5, 0.5, -0.5, -0.5, 0, 1, level)
+		walls[#walls + 1] = t1
+		walls[#walls + 1] = t2
+		local t1, t2 = self:createWallSection(-0.5, 0.5, 0.5, 0.5, 0, -1, level)
+		walls[#walls + 1] = t1
+		walls[#walls + 1] = t2		
+	end
+
+	for _, mesh in ipairs(building) do
+		self:findMiddle(mesh)
+	end
+	
 	return building
 end
 
 function ShearTestScene:init()
 	ShearTestScene.super.init(self)
 	self.roofImage = love.graphics.newImage('data/images/roof.jpg')
-	self.wallImage = love.graphics.newImage('data/images/building2.jpg')
+	self.wallImage = love.graphics.newImage('data/images/building3.png')
 	local drawingMesh = love.graphics.newMesh(3, 'triangles', 'dynamic')
-	self.drawingMesh = drawingMesh	
-
-	roofMesh = 	
-	{
-		texture = self.roofImage,		
-		{
-			vertices = 
-			{
-				{1, 1, -1, 0, 1},
-				{1, -1, -1, 0, 0},
-				{-1, 1, -1, 1, 1}
-			}, 
-			normal = { 0, 0, -1 }
-		}, 
-		{
-			vertices = 
-			{
-				{1, -1, -1, 0, 0},
-				{-1, -1, -1, 1, 0},
-				{-1, 1, -1, 1, 1}
-			}, 		
-			normal = { 0, 0, -1 }
-		}
-	}	
-	
-	self:findMiddle(roofMesh)	
-	
-	wallMesh = 
-	{
-		texture = self.wallImage,
-		{
-			vertices = 
-			{
-				{1, -1, -5, 0, 1},
-				{1, -1, -1, 0, 0},
-				{1, 1, -5, 1, 1},
-			}, 
-			normal = { -1, 0, 0 }
-		},
-		{
-			vertices = 
-			{
-				{1, -1, -1, 0, 0},
-				{1, 1, -1, 1, 0},
-				{1, 1, -5, 1, 1},
-			}, 
-			normal = { -1, 0, 0 }
-		},
-		{
-			vertices = 
-			{
-				{-1, -1, -5, 0, 1},
-				{-1, -1, -1, 0, 0},
-				{-1, 1, -5, 1, 1},
-			}, 
-			normal = { 1, 0, 0 }
-		},
-		{
-			vertices = 
-			{
-				{-1, -1, -1, 0, 0},
-				{-1, 1, -1, 1, 0},
-				{-1, 1, -5, 1, 1},
-			}, 
-			normal = { 1, 0, 0 }
-		},
-		{
-			vertices = 
-			{
-				{-1, -1, -5, 0, 1},
-				{-1, -1, -1, 0, 0},
-				{1, -1, -5, 1, 1}
-			}, 
-			normal = { 0, 1, 0 }
-		},
-		{
-			vertices = 
-			{
-				{-1, -1, -1, 0, 0},
-				{1, -1, -1, 1, 0},
-				{1, -1, -5, 1, 1},
-			}, 
-			normal = { 0, 1, 0 }
-		},
-		{
-			vertices = 
-			{
-				{-1, 1, -5, 0, 1},
-				{-1, 1, -1, 0, 0},
-				{1, 1, -5, 1, 1},
-			}, 
-			normal = { 0, -1, 0 }
-		},
-		{
-			vertices = 
-			{
-				{-1, 1, -1, 0, 0},
-				{1, 1, -1, 1, 0},
-				{1, 1, -5, 1, 1},
-			}, 
-			normal = { 0, -1, 0 }
-		}
-	}
-	
-	self:findMiddle(wallMesh)
+	self.drawingMesh = drawingMesh		
 end
 
-local cam = {0, 0, -10}
+local cam = {0, 0, -5}
 
 local building1Pos = {0, 0, 0}
 local building2Pos = {6, 0, 0}
