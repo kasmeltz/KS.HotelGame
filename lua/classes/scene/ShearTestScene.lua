@@ -49,28 +49,12 @@ function ShearTestScene:init()
 	
 	local buildingObjects = {}	
 
-	local bo = 	self:createBuildingFromType(self.buildingTypes[1])
-	bo.position = { 0, -6, 0 }		
-	buildingObjects[#buildingObjects + 1] = bo
-	
-	--[[
-	buildingObjects[#buildingObjects + 1] = 
-		self:createBuilding(-2, 2, -1, 1, 1, groundFloor, 1,
-		building1Pos, self.roofImages[1], self.buildingImages[1])		
-	
-	buildingObjects[#buildingObjects + 1] = 
-		self:createBuilding(-2, 2, -1, 1, 4, groundFloor, 1,
-		building2Pos, self.roofImages[2], self.buildingImages[2])
-		
-	buildingObjects[#buildingObjects + 1] = 
-		self:createBuilding(-3, 3, -0.5, 0.5, -4, groundFloor, 1,
-		building3Pos, self.roofImages[3], self.buildingImages[3])
-		
-	buildingObjects[#buildingObjects + 1] = 
-		self:createBuilding(-0.25, 0.25, -1, 1, 2, groundFloor, 0.5,
-		building4Pos, self.roofImages[4], self.buildingImages[4])
-		
-		]]
+	for i = 1, 50 do
+		local t = math.random(1,4)
+		local bo = 	self:createBuildingFromType(self.buildingTypes[t])
+		bo.position = { math.random(0,100) - 50, math.random(0,100) - 50, 0 }		
+		buildingObjects[#buildingObjects + 1] = bo
+	end
 		
 	self.buildingObjects = buildingObjects
 		
@@ -243,14 +227,14 @@ function ShearTestScene:createBuildingFromType(buildingType)
 				self:addWallSections(walls, cx, cx, cy, cy + ss, roofHeight, groundFloor, 1, -1, 0)
 				self:addWallSections(walls, cx, cx - ss, cy, cy, roofHeight, groundFloor, 1, 0, 1)
 			elseif c == 'C' then
-				self:addWallSections(walls, cx, cx - ss, cy + ss, cy + ss, roofHeight, groundFloor, 1, 0, -1)
 				self:addWallSections(walls, cx, cx, cy, cy + ss, roofHeight, groundFloor, 1, -1, 0)
+				self:addWallSections(walls, cx, cx - ss, cy + ss, cy + ss, roofHeight, groundFloor, 1, 0, -1)			
 			elseif c == 'W' then	
 				self:addWallSections(walls, cx - ss, cx - ss, cy, cy + ss, roofHeight, groundFloor, 1, 1, 0)
 				self:addWallSections(walls, cx, cx - ss, cy, cy, roofHeight, groundFloor, 1, 0, 1)
 			elseif c == 'D' then	
-				self:addWallSections(walls, cx, cx - ss, cy + ss, cy + ss, roofHeight, groundFloor, 1, 0, -1)
 				self:addWallSections(walls, cx - ss, cx - ss, cy, cy + ss, roofHeight, groundFloor, 1, 1, 0)
+				self:addWallSections(walls, cx, cx - ss, cy + ss, cy + ss, roofHeight, groundFloor, 1, 0, -1)				
 			end
 			
 			if c ~= 'Z'then
@@ -326,6 +310,8 @@ function ShearTestScene:translate3Dto2D()
 	
 	local scene = self.scene
 	
+	Profiler:start('Update Objects To Camera')	
+	
 	-- update objects according to camera
 	for _, object in ipairs(scene.objects) do
 		for _, mesh in ipairs(object.meshes) do		
@@ -348,6 +334,10 @@ function ShearTestScene:translate3Dto2D()
 			movedBox[5] = movedBox[5] - camera[3]
 		end	
 	end
+	
+	Profiler:stop('Update Objects To Camera')
+	
+	Profiler:start('Calculate Triangle Distance')		
 		
 	-- sort triangles	
 	for _, mesh in ipairs(meshesToRender) do
@@ -373,11 +363,19 @@ function ShearTestScene:translate3Dto2D()
 		end
 	end
 	
+	Profiler:stop('Calculate Triangle Distance')		
+	
+	Profiler:start('Sort Triangles')		
+	
 	table.sort(orderedTriangles, 
 		function(a,b) 
 			return a.distanceToCamera < b.distanceToCamera 
 		end)
 		
+	Profiler:stop('Sort Triangles')		
+		
+	Profiler:start('Calculate 2D Points for Triangles')
+	
 	local sw = self.screenWidth
 	local sh = self.screenHeight
 	local hsw = sw / 2
@@ -401,12 +399,20 @@ function ShearTestScene:translate3Dto2D()
 		end		
 	end
 	
+	Profiler:stop('Calculate 2D Points for Triangles')
+	
+	Profiler:start('Update Actors To Camera')
+	
 	-- update actors according to camera
 	for _, actor in ipairs(scene.actors) do
 		actor.movedPosition[1] = actor.position[1] - camera[1]
 		actor.movedPosition[2] = actor.position[2] - camera[2]
 		actor.movedPosition[3] = actor.position[3] - camera[3]
 	end
+	
+	Profiler:stop('Update Actors To Camera')
+	
+	Profiler:start('Calculate 2D Points for Actors')
 	
 	-- create 2D points for actors
 	for _, actor in ipairs(scene.actors) do
@@ -416,6 +422,8 @@ function ShearTestScene:translate3Dto2D()
 		actor.position2D[1] = (x / z * sw) + hsw
 		actor.position2D[2] = (-y / z * sh) + hsh
 	end
+	
+	Profiler:stop('Calculate 2D Points for Actors')
 end
 
 function ShearTestScene:createBoundingBoxes2D()
@@ -661,32 +669,24 @@ function ShearTestScene:draw()
 		
 	Profiler:start('renderBoundingBoxes')	
 	
-	--self:createBoundingBoxes2D()	
-	--self:drawBoundingBoxes()
+	self:createBoundingBoxes2D()	
+	self:drawBoundingBoxes()
 	
-	Profiler:stop('renderBoundingBoxes')
-	
-	love.graphics.print('Time to add objects to secene: ' .. 
-		Profiler:getAverage('addObjectsToScene'), 0, 15)
-		
-	love.graphics.print('Time to render meshes: ' .. 
-		Profiler:getAverage('renderTriangles'), 0, 30)		
-		
-	love.graphics.print('Time to translate 3d to 2d: ' .. 
-		Profiler:getAverage('translate3Dto2D'), 0, 45)					
-		
-	love.graphics.print('Time to render bounding boxes: ' .. 
-		Profiler:getAverage('renderBoundingBoxes'), 0, 60)			
-
-	love.graphics.print('Time to check collisions: ' .. 
-		Profiler:getAverage('checkCollisions'), 0, 75)	
-
+	Profiler:stop('renderBoundingBoxes')	
+			
 	love.graphics.print(
 		'hx: '.. 
 		self.hero.position[1] .. 
 		' hy: ' .. 
 		self.hero.position[2], 
-		0, 90)
+		0, 15)
+		
+	table.sort(Profiler.list, function(a, b) return a.average > b.average end)
+	local sy = 30
+	for name, item in ipairs(Profiler.list) do	
+		love.graphics.print(item. name .. ': ' .. item.average, 0, sy)
+		sy = sy + 15
+	end	
 end
 
 return ShearTestScene

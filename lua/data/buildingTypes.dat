@@ -1,6 +1,6 @@
 {
 	{
-		heights = { 9, 9 },
+		heights = { 3, 8 },
 		roofStyles = { 'r1', 'r2' },
 		wallStyles = { 'w1', 'w2' },
 		design = 
@@ -13,16 +13,44 @@
 		}
 	},
 	{
-		heights = { 3, 5 },
+		heights = { 3, 8 },
 		roofStyles = { 'r1', 'r2' },
 		wallStyles = { 'w1', 'w2' },
 		design = 
 		{
-			'ATTTTTTTTTTTW',
+			'ATTTWZZZATTTW',
+			'L    TTT    R',
 			'L           R',
 			'L           R',
-			'L    BBB    R',
-			'CBBBDZZZCBBBD'
+			'CBBBBBBBBBBBD'
+		}
+	},
+	{
+		heights = { 7, 9 },
+		roofStyles = { 'r1', 'r2' },
+		wallStyles = { 'w1', 'w2' },
+		design = 
+		{
+			'ATTTTTTTTTTW',
+			'L          R',
+			'L          R',
+			'L          R',
+			'L          R',
+			'CBBBBBBBBBBD'
+		}
+	},
+	{
+		heights = { 2, 5 },
+		roofStyles = { 'r1', 'r2' },
+		wallStyles = { 'w1', 'w2' },
+		design = 
+		{
+			'ATTTTTTW',
+			'L      R',
+			'L      R',
+			'L      R',
+			'L      R',
+			'CBBBBBBD'
 		}
 	}
 }

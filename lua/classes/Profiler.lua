@@ -1,5 +1,5 @@
 local class = require 'libs/30log/30log'
-local Profiler = class('Profiler', { items = {} })
+local Profiler = class('Profiler', { items = {}, list = {} })
 local instance = Profiler()
 
 function Profiler.new() 
@@ -19,7 +19,9 @@ end
 
 function Profiler:start(name)
 	if not self.items[name] then
-		self.items[name] = { startTime = 0, counts = 0, average = 0}
+		local item = { name = name, startTime = 0, counts = 0, average = 0}
+		self.items[name] = item
+		self.list[#self.list + 1] = item
 	end
 	
 	self.items[name].startTime = love.timer.getTime()
