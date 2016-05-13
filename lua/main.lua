@@ -25,6 +25,9 @@ function love.load()
 	print('|                       love.load()                                  |')
 	print('----------------------------------------------------------------------')
 	
+	local thread = love.thread.newThread('threads/world.lua')
+	thread:start()
+	
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 12)
 	FontManager:addFont(font, 'Courier12')
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 16)
