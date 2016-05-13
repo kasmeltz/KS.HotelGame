@@ -259,7 +259,6 @@ function ShearTestScene:createBuildingFromType(buildingType)
 				table.insert(roof.triangles, t1)
 				table.insert(roof.triangles, t2)						
 				-- insert bounding boxes to match the structure
-				print(cx, cx - ss, cy, cy + ss)
 				local box = { cx, cy, cx - ss, cy + ss, groundFloor }
 				table.insert(building.boundingBoxes, box)
 				table.insert(building.movedBoxes,{0,0,0,0,0,0})
@@ -316,10 +315,6 @@ function ShearTestScene:addObjectToScene(object)
 end
 
 function ShearTestScene:addActorToScene(actor)
-	actor.movedPosition[1] = actor.position[1]
-	actor.movedPosition[2] = actor.position[2]
-	actor.movedPosition[3] = actor.position[3]
-		
 	local scene = self.scene
 	table.insert(scene.actors, actor)	
 end
@@ -408,9 +403,9 @@ function ShearTestScene:translate3Dto2D()
 	
 	-- update actors according to camera
 	for _, actor in ipairs(scene.actors) do
-		actor.movedPosition[1] = actor.movedPosition[1] - camera[1]
-		actor.movedPosition[2] = actor.movedPosition[2] - camera[2]
-		actor.movedPosition[3] = actor.movedPosition[3] - camera[3]
+		actor.movedPosition[1] = actor.position[1] - camera[1]
+		actor.movedPosition[2] = actor.position[2] - camera[2]
+		actor.movedPosition[3] = actor.position[3] - camera[3]
 	end
 	
 	-- create 2D points for actors
@@ -500,7 +495,7 @@ function ShearTestScene:distToSegment(px, py, x1, y1, x2, y2)
 end
 
 function ShearTestScene:findClosestBoundingBox(actor)
-	local position = actor.movedPosition
+	local position = actor.position
 	
 	local d1, d2, d3, d4 = 999, 999, 999, 999
 	for _, object in ipairs(self.scene.objects) do
@@ -566,8 +561,10 @@ function ShearTestScene:update(dt)
 	if dist < 0.1 then
 		hero.position[1] = hero.oldPosition[1]
 		hero.position[2] = hero.oldPosition[2]
+		hero.position[1] = hero.oldPosition[1]
+		hero.position[2] = hero.oldPosition[2]
 	end	
-	
+
 	Profiler:stop('checkCollisions')	
 	
 	camera[1] = hero.position[1]
@@ -664,8 +661,8 @@ function ShearTestScene:draw()
 		
 	Profiler:start('renderBoundingBoxes')	
 	
-	self:createBoundingBoxes2D()	
-	self:drawBoundingBoxes()
+	--self:createBoundingBoxes2D()	
+	--self:drawBoundingBoxes()
 	
 	Profiler:stop('renderBoundingBoxes')
 	
