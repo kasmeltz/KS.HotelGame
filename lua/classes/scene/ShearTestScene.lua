@@ -18,14 +18,14 @@ function ShearTestScene:findMiddle(mesh)
 	end
 end
 
-function ShearTestScene:createRoofSection(sx, ex, sy, ey)
+function ShearTestScene:createRoofSection(sx, ex, sy, ey, z)
 	local t1 = 
 	{
 		vertices = 
 		{
-			{ex, ey, -1, 0, 1},
-			{ex, sy, -1, 0, 0},
-			{sx, ey, -1, 1, 1}
+			{ex, ey, z, 0, 1},
+			{ex, sy, z, 0, 0},
+			{sx, ey, z, 1, 1}
 		}, 
 		normal = { 0, 0, -1 }
 	}
@@ -34,9 +34,9 @@ function ShearTestScene:createRoofSection(sx, ex, sy, ey)
 	{
 		vertices = 
 		{
-			{ex, sy, -1, 0, 0},
-			{sx, sy, -1, 1, 0},
-			{sx, ey, -1, 1, 1}
+			{ex, sy, z, 0, 0},
+			{sx, sy, z, 1, 0},
+			{sx, ey, z, 1, 1}
 		}, 		
 		normal = { 0, 0, -1 }
 	}
@@ -44,14 +44,14 @@ function ShearTestScene:createRoofSection(sx, ex, sy, ey)
 	return t1, t2
 end
 
-function ShearTestScene:createWallSection(sx, ex, sy, ey, nx, ny, level)
+function ShearTestScene:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 	local t1 = 
 	{
 		vertices = 
 		{
-			{sx, sy, level, 0, 1},
-			{sx, sy, level + 1, 0, 0},
-			{ex, ey, level, 1, 1},
+			{sx, sy, ez, 0, 1},
+			{sx, sy, sz, 0, 0},
+			{ex, ey, ez, 1, 1},
 		}, 
 		normal = { nx, ny, 0 }
 	}
@@ -59,9 +59,9 @@ function ShearTestScene:createWallSection(sx, ex, sy, ey, nx, ny, level)
 	{
 		vertices = 
 		{
-			{sx, sy, level + 1, 0, 0},
-			{ex, ey, level + 1, 1, 0},
-			{ex, ey, level, 1, 1},
+			{sx, sy, sz, 0, 0},
+			{ex, ey, sz, 1, 0},
+			{ex, ey, ez, 1, 1},
 		}, 
 		normal = { nx, ny, 0 }
 	}
@@ -69,40 +69,46 @@ function ShearTestScene:createWallSection(sx, ex, sy, ey, nx, ny, level)
 	return t1, t2
 end
 
-function ShearTestScene:createBuilding(pos)
+function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, position, roofImage, buildingImage)
 	local building = {}
-	building.position = pos
+	building.position = position
 	
 	building[1] = 
 	{
-		texture = self.roofImage,		
+		texture = roofImage	
 	}
 	
 	local roof = building[1]
-	local t1, t2 = self:createRoofSection(-0.5, 0.5, -0.5, 0.5)
+	local t1, t2 = self:createRoofSection(sx, ex, sy, ey, sz)
 	roof[#roof + 1] = t1
 	roof[#roof + 1] = t2
 	
 	building[2] = 
 	{
-		texture = self.wallImage,		
+		texture = buildingImage		
 	}
 	
 	local walls = building[2]	
-	for i = 2, 6 do
-		local level = -i
-		local t1, t2 = self:createWallSection(0.5, 0.5, -0.5, 0.5, -1, 0, level)
-		walls[#walls + 1] = t1
-		walls[#walls + 1] = t2
-		local t1, t2 = self:createWallSection(-0.5, -0.5, -0.5, 0.5, 1, 0, level)
-		walls[#walls + 1] = t1
-		walls[#walls + 1] = t2		
-		local t1, t2 = self:createWallSection(-0.5, 0.5, -0.5, -0.5, 0, 1, level)
-		walls[#walls + 1] = t1
-		walls[#walls + 1] = t2
-		local t1, t2 = self:createWallSection(-0.5, 0.5, 0.5, 0.5, 0, -1, level)
-		walls[#walls + 1] = t1
-		walls[#walls + 1] = t2		
+	for y = sy, ey - 0.5, 0.5 do
+		for z = sz - 0.5, ez, -0.5 do
+			local t1, t2 = self:createWallSection(sx, sx, y, y + 0.5, z + 0.5, z, 1, 0)
+			walls[#walls + 1] = t1
+			walls[#walls + 1] = t2
+			local t1, t2 = self:createWallSection(ex, ex, y, y + 0.5, z + 0.5, z, -1, 0)
+			walls[#walls + 1] = t1
+			walls[#walls + 1] = t2		
+		end
+	end
+	
+	for x = sx, ex - 0.5, 0.5 do
+		for z = sz - 0.5, ez, -0.5 do	
+			local t1, t2 = self:createWallSection(x, x + 0.5, sy, sy, z + 0.5, z, 0, 1)
+			walls[#walls + 1] = t1
+			walls[#walls + 1] = t2
+			local t1, t2 = self:createWallSection(x, x + 0.5, ey, ey, z + 0.5, z, 0, -1)
+			walls[#walls + 1] = t1
+			walls[#walls + 1] = t2		
+		end
 	end
 
 	for _, mesh in ipairs(building) do
@@ -114,8 +120,21 @@ end
 
 function ShearTestScene:init()
 	ShearTestScene.super.init(self)
-	self.roofImage = love.graphics.newImage('data/images/roof.jpg')
-	self.wallImage = love.graphics.newImage('data/images/building3.png')
+	local roofImages = {}
+	roofImages[1] = love.graphics.newImage('data/images/roof.jpg')
+	roofImages[2] = love.graphics.newImage('data/images/roof2.jpg')
+	roofImages[3] = love.graphics.newImage('data/images/roof3.jpg')
+	roofImages[4] = love.graphics.newImage('data/images/roof4.jpg')
+	self.roofImages = roofImages
+	
+	local buildingImages = {}
+	buildingImages[1] = love.graphics.newImage('data/images/building3.png')
+	buildingImages[2] = love.graphics.newImage('data/images/building4.jpg')
+	buildingImages[3] = love.graphics.newImage('data/images/building5.png')
+	buildingImages[4] = love.graphics.newImage('data/images/building6.jpg')
+	buildingImages[5] = love.graphics.newImage('data/images/building7.jpg')	
+	self.buildingImages = buildingImages
+	
 	local drawingMesh = love.graphics.newMesh(3, 'triangles', 'dynamic')
 	self.drawingMesh = drawingMesh		
 end
@@ -123,7 +142,7 @@ end
 local cam = {0, 0, -5}
 
 local building1Pos = {0, 0, 0}
-local building2Pos = {6, 0, 0}
+local building2Pos = {10, 0, 0}
 local building3Pos = {0, 6, 0}
 local building4Pos = {6, 6, 0}
 local building5Pos = {-10, 0, 0}
@@ -223,20 +242,22 @@ end
 function ShearTestScene:draw()	
 	self.meshesToRender = {}
 	
-	local bldg = self:createBuilding(building1Pos)
+	local bldg = self:createBuilding(-2, 2, -1, 1, -1, -5, building1Pos, self.roofImages[1], self.buildingImages[1])	
+	self:addMeshesToScene(bldg)
+	
+	local bldg = self:createBuilding(-2, 2, -1, 1, -1, -5, building2Pos, self.roofImages[2], self.buildingImages[2])
 	self:addMeshesToScene(bldg)
 
-	local bldg = self:createBuilding(building2Pos)
+	--[[
+	local bldg = self:createBuilding(building3Pos, self.roofImages[3], self.buildingImages[3])
 	self:addMeshesToScene(bldg)
 
-	local bldg = self:createBuilding(building3Pos)
+	local bldg = self:createBuilding(building4Pos, self.roofImages[4], self.buildingImages[4])
 	self:addMeshesToScene(bldg)
 
-	local bldg = self:createBuilding(building4Pos)
+	local bldg = self:createBuilding(building5Pos, self.roofImages[5], self.buildingImages[2])
 	self:addMeshesToScene(bldg)
-
-	local bldg = self:createBuilding(building5Pos)
-	self:addMeshesToScene(bldg)
+	]]
 
 	self:renderMeshes()	
 end
