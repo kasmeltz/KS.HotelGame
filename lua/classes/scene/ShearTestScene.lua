@@ -35,10 +35,11 @@ function ShearTestScene:init()
 
 	local buildingObjects = {}
 	
+	
 	buildingObjects[#buildingObjects + 1] = 
 		self:createBuilding(-2, 2, -1, 1, 1, -5, 0.5,
 		building1Pos, self.roofImages[1], self.buildingImages[1])		
-		
+	
 	buildingObjects[#buildingObjects + 1] = 
 		self:createBuilding(-2, 2, -1, 1, -1, -5, 0.5,
 		building2Pos, self.roofImages[2], self.buildingImages[2])
@@ -87,7 +88,8 @@ function ShearTestScene:createRoofSection(sx, ex, sy, ey, z)
 			{0, 0, 0, 0, 0},
 			{0, 0, 0, 1, 1},
 		},
-		normal = { 0, 0, -1 }
+		normal = { 0, 0, -1 },
+		vertices2D = {}
 	}
 	
 	local t2 = 
@@ -104,7 +106,8 @@ function ShearTestScene:createRoofSection(sx, ex, sy, ey, z)
 			{0, 0, 0, 1, 0},
 			{0, 0, 0, 1, 1},
 		},
-		normal = { 0, 0, -1 }
+		normal = { 0, 0, -1 },
+		vertices2D = {}
 	}
 	
 	return t1, t2
@@ -125,7 +128,8 @@ function ShearTestScene:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 			{0, 0, 0, 0, 0},
 			{0, 0, 0, 1, 1},
 		},
-		normal = { nx, ny, 0 }
+		normal = { nx, ny, 0 },
+		vertices2D = {}
 	}
 	local t2 = 
 	{
@@ -141,7 +145,8 @@ function ShearTestScene:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 			{0, 0, 0, 1, 0},
 			{0, 0, 0, 1, 1},
 		},
-		normal = { nx, ny, 0 }
+		normal = { nx, ny, 0 },
+		vertices2D = {}
 	}
 	
 	return t1, t2
@@ -153,6 +158,7 @@ function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, ss, position, roo
 	building.meshes = {}
 	building.boundingBoxes = {}
 	building.movedBoxes = {}
+	building.boundingBoxes2D = {}
 	
 	local roof = 
 	{
@@ -167,9 +173,10 @@ function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, ss, position, roo
 			table.insert(roof.triangles, t1)
 			table.insert(roof.triangles, t2)						
 			-- insert bounding boxes to match the structure
-			local box = { x, x + ss, y, y + ss, ez }
+			local box = { x, y, x + ss, y + ss, ez }
 			table.insert(building.boundingBoxes, box)
-			table.insert(building.movedBoxes, box)
+			table.insert(building.movedBoxes,{0,0,0,0,0,0})
+			table.insert(building.boundingBoxes2D,{0,0,0,0})
 		end
 	end
 	
@@ -240,8 +247,8 @@ function ShearTestScene:addObjectToScene(object)
 	for idx, box in ipairs(object.boundingBoxes) do
 		local movedBox = object.movedBoxes[idx]
 		movedBox[1] = box[1] + position[1] + camera[1]
-		movedBox[2] = box[2] + position[1] + camera[1]		
-		movedBox[3] = box[3] + position[2] + camera[2]
+		movedBox[2] = box[2] + position[2] + camera[2]		
+		movedBox[3] = box[3] + position[1] + camera[1]
 		movedBox[4] = box[4] + position[2] + camera[2]
 		movedBox[5] = box[5] + position[3] + camera[3]
 	end
@@ -284,42 +291,65 @@ function ShearTestScene:renderMeshes()
 		function(a,b) 
 			return a.distanceToCamera > b.distanceToCamera 
 		end)
-		
-	-- transform triangles to 2d space		
+
 	local sw = self.screenWidth
 	local sh = self.screenHeight
 	local hsw = sw / 2
 	local hsh = sh / 2	
-	local drawingMesh = self.drawingMesh
 	
-	local vertices2D = {}	
+	-- test triangle visibility
 	for _, triangle in ipairs(orderedTriangles) do
+		triangle.visible = false
 		for i, vertex in ipairs(triangle.movedVertices) do
 			local tx = (vertex[1] / vertex[3] * sw) + hsw
 			local ty = (-vertex[2] / vertex[3] * sh) + hsh	
-			vertices2D[i] = { tx, ty, vertex[4], vertex[5] }
+			triangle.vertices2D[i] = { tx, ty, vertex[4], vertex[5] }
 		end
 
-		local insideScreen = false
-		for _, vertex in ipairs(vertices2D) do
+		for _, vertex in ipairs(triangle.vertices2D) do
 			-- lazy way is to check that vertex is contained within bounding box that is bigger than screen
 			if (vertex[1] >= -400 and vertex[1] <= sw + 400 and vertex[2] >= -400 and vertex[2] <= sh + 400) then
-				insideScreen = true
 				triangle.mesh.object.rendered = true
+				triangle.visible = true
 				break
 			end					
 		end
-		
-		if insideScreen then		
-			for i, vertex in ipairs(vertices2D) do
+	end
+
+	-- render triangles
+	local drawingMesh = self.drawingMesh
+	for _, triangle in ipairs(orderedTriangles) do
+		if triangle.visible then
+			for i, vertex in ipairs(triangle.vertices2D) do
 				drawingMesh:setVertex(i, vertex[1], vertex[2], vertex[3], vertex[4], 255, 255, 255, 255)
 			end		
 			drawingMesh:setTexture(triangle.texture)
 			love.graphics.draw(drawingMesh, 0, 0)
 		end
-	end	
+	end		
+end
+
+function ShearTestScene:createBoundingBoxes()
+	local sw = self.screenWidth
+	local sh = self.screenHeight
+	local hsw = sw / 2
+	local hsh = sh / 2	
 	
-	
+	for _, object in ipairs(self.scene) do
+		if object.rendered then
+			for idx, box in ipairs(object.movedBoxes) do				
+				local box2D = object.boundingBoxes2D[idx]
+				local x1 = (box[1] / box[5] * sw) + hsw
+				local y1 = (-box[2] / box[5] * sh) + hsh	
+				local x2 = (box[3] / box[5] * sw) + hsw
+				local y2 = (-box[4] / box[5] * sh) + hsh			
+				box2D[1] = x1
+				box2D[2] = y1
+				box2D[3] = x2
+				box2D[4] = y2			
+			end
+		end
+	end
 end
 
 function ShearTestScene:clearScene()
@@ -332,6 +362,17 @@ function ShearTestScene:clearScene()
 	for i = 1, #meshesToRender do
 		meshesToRender[i] = nil
 	end	
+end
+
+function ShearTestScene:drawBoundingBoxes()
+	for _, object in ipairs(self.scene) do
+		if object.rendered then
+			for idx, box in ipairs(object.movedBoxes) do				
+				local box2D = object.boundingBoxes2D[idx]
+				love.graphics.rectangle('line',box2D[1], box2D[2], box2D[3] - box2D[1], box2D[4] - box2D[2])
+			end
+		end
+	end								
 end
 
 function ShearTestScene:draw()	
@@ -351,11 +392,22 @@ function ShearTestScene:draw()
 
 	Profiler:stop('renderMeshes')
 	
+	Profiler:start('createBoundingBoxes')
+	
+	self:createBoundingBoxes()
+	
+	Profiler:stop('createBoundingBoxes')
+	
 	love.graphics.print('Time to add objects to secene: ' .. 
 		Profiler:getAverage('addObjectsToScene'), 0, 15)
 		
 	love.graphics.print('Time to render meshes: ' .. 
 		Profiler:getAverage('renderMeshes'), 0, 30)		
+		
+	love.graphics.print('Time to create bounding boxes: ' .. 
+		Profiler:getAverage('createBoundingBoxes'), 0, 45)				
+		
+	self:drawBoundingBoxes()
 end
 
 function ShearTestScene:update(dt)	

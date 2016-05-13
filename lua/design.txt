@@ -134,3 +134,14 @@ If the player sells drugs they can get arrested.
 If the player starts the conversation with the banker then the player will be given a loan with a value and terms that vary depending on how they answered the questions.
 
 The results of the banker conversation will also affect starting skills and stats.
+
+
+
+
+
+Rendering strategy
+
+At start of draw frame send any required data to worker threads
+Do anything we need to do on the main thread directly
+Wait for data to come back from worker threads
+Render scene
