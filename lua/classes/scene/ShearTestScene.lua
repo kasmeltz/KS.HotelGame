@@ -1,3 +1,6 @@
+local Profiler = require 'classes/Profiler'
+Profiler = Profiler:getInstance()
+
 local Scene = require 'classes/scene/Scene'
 local ShearTestScene = Scene:extend('ShearTestScene')
 
@@ -30,32 +33,35 @@ function ShearTestScene:init()
 	local building4Pos = {6, 6, 0}
 	local building5Pos = {-10, 0, 0}
 
-	local buildingMeshes = {}
+	local buildingObjects = {}
 	
-	buildingMeshes[#buildingMeshes + 1] = 
+	buildingObjects[#buildingObjects + 1] = 
 		self:createBuilding(-2, 2, -1, 1, 1, -5, 0.5,
 		building1Pos, self.roofImages[1], self.buildingImages[1])		
 		
-	buildingMeshes[#buildingMeshes + 1] = 
+	buildingObjects[#buildingObjects + 1] = 
 		self:createBuilding(-2, 2, -1, 1, -1, -5, 0.5,
 		building2Pos, self.roofImages[2], self.buildingImages[2])
 		
-	buildingMeshes[#buildingMeshes + 1] = 
+	buildingObjects[#buildingObjects + 1] = 
 		self:createBuilding(-3, 3, -0.5, 0.5, -1, -5, 0.5,
 		building3Pos, self.roofImages[3], self.buildingImages[3])
 		
-	buildingMeshes[#buildingMeshes + 1] = 
+	buildingObjects[#buildingObjects + 1] = 
 		self:createBuilding(-0.25, 0.25, -1, 1, -1, -5, 0.5,
 		building4Pos, self.roofImages[4], self.buildingImages[4])
 		
-	self.buildingMeshes = buildingMeshes
+	self.buildingObjects = buildingObjects
 		
 	self.meshesToRender = {}
+	self.scene = {}
 end
 
+function ShearTestScene:show()
+end
 
 function ShearTestScene:findMiddle(mesh)
-	for _, triangle in ipairs(mesh) do	
+	for _, triangle in ipairs(mesh.triangles) do	
 		local mx, my, mz = 0, 0, 0
 		for _, vertex in ipairs(triangle.vertices) do
 			mx = mx + vertex[1]
@@ -143,70 +149,83 @@ end
 
 function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, ss, position, roofImage, buildingImage)
 	local building = {}
-	building.position = position
+	building.position = position	
+	building.meshes = {}
+	building.boundingBoxes = {}
+	building.movedBoxes = {}
 	
-	building[1] = 
+	local roof = 
 	{
-		texture = roofImage	
+		texture = roofImage,
+		triangles = {}
 	}
 	
-	local roof = building[1]
 	for x = sx, ex - ss, ss do
 		for y = sy, ey - ss, ss do
+			-- roof structure must follow the walls
 			local t1, t2 = self:createRoofSection(x, x + ss, y, y + ss, sz)
-			roof[#roof + 1] = t1
-			roof[#roof + 1] = t2
+			table.insert(roof.triangles, t1)
+			table.insert(roof.triangles, t2)						
+			-- insert bounding boxes to match the structure
+			local box = { x, x + ss, y, y + ss, ez }
+			table.insert(building.boundingBoxes, box)
+			table.insert(building.movedBoxes, box)
 		end
 	end
 	
-	building[2] = 
-	{
-		texture = buildingImage		
-	}
+	table.insert(building.meshes, roof)		
 	
-	local walls = building[2]	
+	local walls =
+	{
+		texture = buildingImage,
+		triangles = {}
+	}
 	for y = sy, ey - ss, ss do
 		for z = sz - ss, ez, -ss do
 			local t1, t2 = self:createWallSection(sx, sx, y, y + ss, z + ss, z, 1, 0)
-			walls[#walls + 1] = t1
-			walls[#walls + 1] = t2
+			table.insert(walls.triangles, t1)
+			table.insert(walls.triangles, t2)
 			local t1, t2 = self:createWallSection(ex, ex, y, y + ss, z + ss, z, -1, 0)
-			walls[#walls + 1] = t1
-			walls[#walls + 1] = t2		
+			table.insert(walls.triangles, t1)
+			table.insert(walls.triangles, t2)
 		end
 	end
 	
 	for x = sx, ex - ss, ss do
 		for z = sz - ss, ez, -ss do	
 			local t1, t2 = self:createWallSection(x, x + ss, sy, sy, z + ss, z, 0, 1)
-			walls[#walls + 1] = t1
-			walls[#walls + 1] = t2
+			table.insert(walls.triangles, t1)
+			table.insert(walls.triangles, t2)
 			local t1, t2 = self:createWallSection(x, x + ss, ey, ey, z + ss, z, 0, -1)
-			walls[#walls + 1] = t1
-			walls[#walls + 1] = t2		
+			table.insert(walls.triangles, t1)
+			table.insert(walls.triangles, t2)
 		end
 	end
 
-	for _, mesh in ipairs(building) do
+	table.insert(building.meshes, walls)
+	
+	for _, mesh in ipairs(building.meshes) do
 		self:findMiddle(mesh)
 	end
 	
 	return building
 end
 
-function ShearTestScene:addMeshesToScene(meshes)
+function ShearTestScene:addObjectToScene(object)
 	local meshesToRender = self.meshesToRender
-	local position = meshes.position
+	local position = object.position
 	local camera = self.camera
-	local sw = self.screenWidth
-	local sh = self.screenHeight
-	local hsw = sw / 2
-	local hsh = sh / 2	
+
+	object.rendered = false
+	
+	local scene = self.scene
+	table.insert(scene, object)	
 	
 	-- move mesh according to object and camera
-	for _, mesh in ipairs(meshes) do
-		for _, triangle in ipairs(mesh) do
-			triangle.visible = true
+	for _, mesh in ipairs(object.meshes) do		
+		mesh.object = object
+		for _, triangle in ipairs(mesh.triangles) do
+			triangle.mesh = mesh
 			for idx, vertex in ipairs(triangle.vertices) do
 				local movedVertex = triangle.movedVertices[idx]
 				movedVertex[1] = vertex[1] + position[1] + camera[1]
@@ -217,6 +236,15 @@ function ShearTestScene:addMeshesToScene(meshes)
 		mesh.position = position
 		meshesToRender[#meshesToRender + 1] = mesh
 	end		
+	
+	for idx, box in ipairs(object.boundingBoxes) do
+		local movedBox = object.movedBoxes[idx]
+		movedBox[1] = box[1] + position[1] + camera[1]
+		movedBox[2] = box[2] + position[1] + camera[1]		
+		movedBox[3] = box[3] + position[2] + camera[2]
+		movedBox[4] = box[4] + position[2] + camera[2]
+		movedBox[5] = box[5] + position[3] + camera[3]
+	end
 end
 
 local orderedTriangles = {}	
@@ -231,7 +259,7 @@ function ShearTestScene:renderMeshes()
 	-- sort triangles	
 	for _, mesh in ipairs(meshesToRender) do
 		local pos = mesh.position
-		for _, triangle in ipairs(mesh) do	
+		for _, triangle in ipairs(mesh.triangles) do	
 			local n = triangle.normal
 			local middle = triangle.middle
 			local mx = middle[1] + pos[1]
@@ -262,7 +290,7 @@ function ShearTestScene:renderMeshes()
 	local sh = self.screenHeight
 	local hsw = sw / 2
 	local hsh = sh / 2	
-	local drawingMesh = self.drawingMesh	
+	local drawingMesh = self.drawingMesh
 	
 	local vertices2D = {}	
 	for _, triangle in ipairs(orderedTriangles) do
@@ -275,8 +303,9 @@ function ShearTestScene:renderMeshes()
 		local insideScreen = false
 		for _, vertex in ipairs(vertices2D) do
 			-- lazy way is to check that vertex is contained within bounding box that is bigger than screen
-			if (vertex[1] >= -600 and vertex[1] <= sw + 600 and vertex[2] >= -450 and vertex[2] <= sh + 450) then
+			if (vertex[1] >= -400 and vertex[1] <= sw + 400 and vertex[2] >= -400 and vertex[2] <= sh + 400) then
 				insideScreen = true
+				triangle.mesh.object.rendered = true
 				break
 			end					
 		end
@@ -289,40 +318,42 @@ function ShearTestScene:renderMeshes()
 			love.graphics.draw(drawingMesh, 0, 0)
 		end
 	end	
+	
+	
 end
 
-local frame = 1
-local timeToAddMeshes = 0
-local timeToRender = 0
-function ShearTestScene:draw()	
-	local startTime = love.timer.getTime()
+function ShearTestScene:clearScene()
+	local scene = self.scene
+	for i = 1, #scene do
+		scene[i] = nil
+	end
 	
 	local meshesToRender = self.meshesToRender
 	for i = 1, #meshesToRender do
 		meshesToRender[i] = nil
-	end
+	end	
+end
 
-	local buildingMeshes = self.buildingMeshes
-	for _, bldg in ipairs(buildingMeshes) do
-		self:addMeshesToScene(bldg)
-	end
+function ShearTestScene:draw()	
+	Profiler:measure('addObjectsToScene', 
+		function()
+			self:clearScene()	
+			local buildingObjects = self.buildingObjects
+			for _, bldg in ipairs(buildingObjects) do
+				self:addObjectToScene(bldg)
+			end	
+		end)
 	
-	local endTime = love.timer.getTime()
+	Profiler:measure('renderMeshes', 
+		function()
+			self:renderMeshes()	
+		end)
 	
-	timeToAddMeshes = timeToAddMeshes + (endTime - startTime)
-	
-	startTime = love.timer.getTime()
-	
-	self:renderMeshes()	
-	
-	endTime = love.timer.getTime()
-	
-	timeToRender = timeToRender + (endTime - startTime)
-
-	love.graphics.print('Time to add meshes: ' .. (timeToAddMeshes / frame), 0, 20)	
-	love.graphics.print('Time to render: ' .. (timeToRender / frame), 0, 35)
-	
-	frame = frame + 1
+	love.graphics.print('Time to add objects to secene: ' .. 
+		Profiler:getAverage('addObjectsToScene'), 0, 15)
+		
+	love.graphics.print('Time to render meshes: ' .. 
+		Profiler:getAverage('renderMeshes'), 0, 30)		
 end
 
 function ShearTestScene:update(dt)	
