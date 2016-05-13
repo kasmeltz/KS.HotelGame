@@ -33,19 +33,19 @@ function ShearTestScene:init()
 	local buildingMeshes = {}
 	
 	buildingMeshes[#buildingMeshes + 1] = 
-		self:createBuilding(-2, 2, -1, 1, 1, -5, 
+		self:createBuilding(-2, 2, -1, 1, 1, -5, 0.5,
 		building1Pos, self.roofImages[1], self.buildingImages[1])		
 		
 	buildingMeshes[#buildingMeshes + 1] = 
-		self:createBuilding(-2, 2, -1, 1, -1, -5, 
+		self:createBuilding(-2, 2, -1, 1, -1, -5, 0.5,
 		building2Pos, self.roofImages[2], self.buildingImages[2])
 		
 	buildingMeshes[#buildingMeshes + 1] = 
-		self:createBuilding(-3, 3, -0.5, 0.5, -1, -5, 
+		self:createBuilding(-3, 3, -0.5, 0.5, -1, -5, 0.5,
 		building3Pos, self.roofImages[3], self.buildingImages[3])
 		
 	buildingMeshes[#buildingMeshes + 1] = 
-		self:createBuilding(-0.25, 0.25, -1, 1, -1, -5, 
+		self:createBuilding(-0.25, 0.25, -1, 1, -1, -5, 0.5,
 		building4Pos, self.roofImages[4], self.buildingImages[4])
 		
 	self.buildingMeshes = buildingMeshes
@@ -141,7 +141,7 @@ function ShearTestScene:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 	return t1, t2
 end
 
-function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, position, roofImage, buildingImage)
+function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, ss, position, roofImage, buildingImage)
 	local building = {}
 	building.position = position
 	
@@ -161,23 +161,23 @@ function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, position, roofIma
 	}
 	
 	local walls = building[2]	
-	for y = sy, ey - 0.5, 0.5 do
-		for z = sz - 0.5, ez, -0.5 do
-			local t1, t2 = self:createWallSection(sx, sx, y, y + 0.5, z + 0.5, z, 1, 0)
+	for y = sy, ey - ss, ss do
+		for z = sz - ss, ez, -ss do
+			local t1, t2 = self:createWallSection(sx, sx, y, y + ss, z + ss, z, 1, 0)
 			walls[#walls + 1] = t1
 			walls[#walls + 1] = t2
-			local t1, t2 = self:createWallSection(ex, ex, y, y + 0.5, z + 0.5, z, -1, 0)
+			local t1, t2 = self:createWallSection(ex, ex, y, y + ss, z + ss, z, -1, 0)
 			walls[#walls + 1] = t1
 			walls[#walls + 1] = t2		
 		end
 	end
 	
-	for x = sx, ex - 0.5, 0.5 do
-		for z = sz - 0.5, ez, -0.5 do	
-			local t1, t2 = self:createWallSection(x, x + 0.5, sy, sy, z + 0.5, z, 0, 1)
+	for x = sx, ex - ss, ss do
+		for z = sz - ss, ez, -ss do	
+			local t1, t2 = self:createWallSection(x, x + ss, sy, sy, z + ss, z, 0, 1)
 			walls[#walls + 1] = t1
 			walls[#walls + 1] = t2
-			local t1, t2 = self:createWallSection(x, x + 0.5, ey, ey, z + 0.5, z, 0, -1)
+			local t1, t2 = self:createWallSection(x, x + ss, ey, ey, z + ss, z, 0, -1)
 			walls[#walls + 1] = t1
 			walls[#walls + 1] = t2		
 		end
