@@ -3,8 +3,6 @@ print('----------------------------------------------------------------------')
 print('|                       START LUA EXECUTION                          |')
 print('----------------------------------------------------------------------')
 
-require 'libs/ImageData-FFI'
-
 local SceneManager = require 'classes/scene/SceneManager'
 SceneManager = SceneManager:getInstance()
 local FontManager = require 'classes/scene/FontManager'
@@ -27,9 +25,6 @@ function love.load()
 	print('|                       love.load()                                  |')
 	print('----------------------------------------------------------------------')
 	
-	local buildingThread = love.thread.newThread('threads/buildings.lua')
-	buildingThread:start()
-
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 12)
 	FontManager:addFont(font, 'Courier12')
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 16)
@@ -95,4 +90,8 @@ function love.keyreleased(key, scancode)
 			break
 		end
 	end		
+end
+
+function love.threaderror(thread, errorstr)
+  print("Thread error!\n"..errorstr)
 end
