@@ -1,10 +1,58 @@
 local Scene = require 'classes/scene/Scene'
 local ShearTestScene = Scene:extend('ShearTestScene')
 
-local cpml = require 'libs/cpml'
+function ShearTestScene:init()
+	ShearTestScene.super.init(self)
+	local roofImages = {}
+	roofImages[1] = love.graphics.newImage('data/images/roof.jpg')
+	roofImages[2] = love.graphics.newImage('data/images/roof2.jpg')
+	roofImages[3] = love.graphics.newImage('data/images/roof3.jpg')
+	roofImages[4] = love.graphics.newImage('data/images/roof4.jpg')
+	self.roofImages = roofImages
+	
+	local buildingImages = {}
+	buildingImages[1] = love.graphics.newImage('data/images/building3.png')
+	buildingImages[2] = love.graphics.newImage('data/images/building4.jpg')
+	buildingImages[3] = love.graphics.newImage('data/images/building5.png')
+	buildingImages[4] = love.graphics.newImage('data/images/building6.jpg')
+	buildingImages[5] = love.graphics.newImage('data/images/building7.jpg')	
+	self.buildingImages = buildingImages
+	
+	local drawingMesh = love.graphics.newMesh(3, 'triangles', 'dynamic')
+	self.drawingMesh = drawingMesh		
+	
+	local camera = {-3, -2, -10}
+	self.camera = camera
 
-local roofMesh
-local wallMesh
+	local building1Pos = {0, 0, 0}
+	local building2Pos = {10, 0, 0}
+	local building3Pos = {0, 6, 0}
+	local building4Pos = {6, 6, 0}
+	local building5Pos = {-10, 0, 0}
+
+	local buildingMeshes = {}
+	
+	buildingMeshes[#buildingMeshes + 1] = 
+		self:createBuilding(-2, 2, -1, 1, 1, -5, 
+		building1Pos, self.roofImages[1], self.buildingImages[1])		
+		
+	buildingMeshes[#buildingMeshes + 1] = 
+		self:createBuilding(-2, 2, -1, 1, -1, -5, 
+		building2Pos, self.roofImages[2], self.buildingImages[2])
+		
+	buildingMeshes[#buildingMeshes + 1] = 
+		self:createBuilding(-3, 3, -0.5, 0.5, -1, -5, 
+		building3Pos, self.roofImages[3], self.buildingImages[3])
+		
+	buildingMeshes[#buildingMeshes + 1] = 
+		self:createBuilding(-0.25, 0.25, -1, 1, -1, -5, 
+		building4Pos, self.roofImages[4], self.buildingImages[4])
+		
+	self.buildingMeshes = buildingMeshes
+		
+	self.meshesToRender = {}
+end
+
 
 function ShearTestScene:findMiddle(mesh)
 	for _, triangle in ipairs(mesh) do	
@@ -142,43 +190,6 @@ function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, position, roofIma
 	return building
 end
 
-function ShearTestScene:init()
-	ShearTestScene.super.init(self)
-	local roofImages = {}
-	roofImages[1] = love.graphics.newImage('data/images/roof.jpg')
-	roofImages[2] = love.graphics.newImage('data/images/roof2.jpg')
-	roofImages[3] = love.graphics.newImage('data/images/roof3.jpg')
-	roofImages[4] = love.graphics.newImage('data/images/roof4.jpg')
-	self.roofImages = roofImages
-	
-	local buildingImages = {}
-	buildingImages[1] = love.graphics.newImage('data/images/building3.png')
-	buildingImages[2] = love.graphics.newImage('data/images/building4.jpg')
-	buildingImages[3] = love.graphics.newImage('data/images/building5.png')
-	buildingImages[4] = love.graphics.newImage('data/images/building6.jpg')
-	buildingImages[5] = love.graphics.newImage('data/images/building7.jpg')	
-	self.buildingImages = buildingImages
-	
-	local drawingMesh = love.graphics.newMesh(3, 'triangles', 'dynamic')
-	self.drawingMesh = drawingMesh		
-	
-	local camera = {0, 0, -7}
-	self.camera = camera
-
-	local building1Pos = {0, 0, 0}
-	local building2Pos = {10, 0, 0}
-	local building3Pos = {0, 6, 0}
-	local building4Pos = {6, 6, 0}
-	local building5Pos = {-10, 0, 0}
-
-	local buildingMeshes = {}
-	buildingMeshes[#buildingMeshes + 1] = self:createBuilding(-2, 2, -1, 1, 1, -5, building1Pos, self.roofImages[1], self.buildingImages[1])		
-	buildingMeshes[#buildingMeshes + 1] = self:createBuilding(-2, 2, -1, 1, -1, -5, building2Pos, self.roofImages[2], self.buildingImages[2])
-	buildingMeshes[#buildingMeshes + 1] = self:createBuilding(-3, 3, -0.5, 0.5, -1, -5, building3Pos, self.roofImages[3], self.buildingImages[3])
-	buildingMeshes[#buildingMeshes + 1] = self:createBuilding(-0.25, 0.25, -1, 1, -1, -5, building4Pos, self.roofImages[4], self.buildingImages[4])
-	self.buildingMeshes = buildingMeshes
-end
-
 function ShearTestScene:addMeshesToScene(meshes)
 	local meshesToRender = self.meshesToRender
 	local position = meshes.position
@@ -199,12 +210,16 @@ function ShearTestScene:addMeshesToScene(meshes)
 	end		
 end
 
+local orderedTriangles = {}	
 function ShearTestScene:renderMeshes()
 	local meshesToRender = self.meshesToRender
 	local camera = self.camera
-
-	-- sort triangles
-	local orderedTriangles = {}	
+	
+	for i = 1, #orderedTriangles do
+		orderedTriangles[i] = nil
+	end
+	
+	-- sort triangles	
 	for _, mesh in ipairs(meshesToRender) do
 		local pos = mesh.position
 		for _, triangle in ipairs(mesh) do	
@@ -272,7 +287,11 @@ local timeToRender = 0
 function ShearTestScene:draw()	
 	local startTime = love.timer.getTime()
 	
-	self.meshesToRender = {}	
+	local meshesToRender = self.meshesToRender
+	for i = 1, #meshesToRender do
+		meshesToRender[i] = nil
+	end
+
 	local buildingMeshes = self.buildingMeshes
 	for _, bldg in ipairs(buildingMeshes) do
 		self:addMeshesToScene(bldg)
@@ -290,8 +309,8 @@ function ShearTestScene:draw()
 	
 	timeToRender = timeToRender + (endTime - startTime)
 
-	love.graphics.print('Time to add meshes: ' .. (timeToAddMeshes / frame), 10, 10)	
-	love.graphics.print('Time to render: ' .. (timeToRender / frame), 10, 30)
+	love.graphics.print('Time to add meshes: ' .. (timeToAddMeshes / frame), 0, 20)	
+	love.graphics.print('Time to render: ' .. (timeToRender / frame), 0, 35)
 	
 	frame = frame + 1
 end
