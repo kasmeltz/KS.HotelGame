@@ -21,12 +21,19 @@ function ShearTestScene:init()
 	buildingImages[5] = love.graphics.newImage('data/images/building7.jpg')	
 	self.buildingImages = buildingImages
 	
+	local roadImages = {}
+	roadImages[1] = love.graphics.newImage('data/images/road1.jpg')
+	self.roadImages = roadImages
+	
 	local drawingMesh = love.graphics.newMesh(3, 'triangles', 'dynamic')
 	self.drawingMesh = drawingMesh		
 	
-	local camera = {0, 0, -10}
+	local camera = {0, 0, 5}
 	self.camera = camera
 
+	local groundFloor = -5
+	self.groundFloor = groundFloor
+	
 	local building1Pos = {0, -6, 0}
 	local building2Pos = {10, 0, 0}
 	local building3Pos = {0, 6, 0}
@@ -36,33 +43,39 @@ function ShearTestScene:init()
 	local buildingObjects = {}	
 	
 	buildingObjects[#buildingObjects + 1] = 
-		self:createBuilding(-2, 2, -1, 1, 1, -5, 0.5,
+		self:createBuilding(-2, 2, -1, 1, 1, groundFloor, 0.5,
 		building1Pos, self.roofImages[1], self.buildingImages[1])		
 	
 	buildingObjects[#buildingObjects + 1] = 
-		self:createBuilding(-2, 2, -1, 1, -1, -5, 0.5,
+		self:createBuilding(-2, 2, -1, 1, 4, groundFloor, 0.5,
 		building2Pos, self.roofImages[2], self.buildingImages[2])
 		
 	buildingObjects[#buildingObjects + 1] = 
-		self:createBuilding(-3, 3, -0.5, 0.5, -1, -5, 0.5,
+		self:createBuilding(-3, 3, -0.5, 0.5, -4, groundFloor, 0.5,
 		building3Pos, self.roofImages[3], self.buildingImages[3])
 		
 	buildingObjects[#buildingObjects + 1] = 
-		self:createBuilding(-0.25, 0.25, -1, 1, -1, -5, 0.5,
+		self:createBuilding(-0.25, 0.25, -1, 1, 2, groundFloor, 0.5,
 		building4Pos, self.roofImages[4], self.buildingImages[4])
 		
 	self.buildingObjects = buildingObjects
 		
+	self.actordToRender = {}
 	self.meshesToRender = {}
-	self.scene = {}
+	self.scene = 
+	{
+		objects = {},
+		actors = {}
+	}
 	self.orderedTriangles = {}
 	
 	self.hero = 
 	{
-		position = {0, 0, -5},
-		oldPosition = {0, 0, 0},
+		position = {0, 0, groundFloor},
+		movedPosition = {0, 0, groundFloor},
+		oldPosition = {0, 0, groundFloor},
 		position2D = {0, 0},		
-	}
+	}	
 end
 
 function ShearTestScene:show()
@@ -227,37 +240,44 @@ end
 function ShearTestScene:addObjectToScene(object)
 	local meshesToRender = self.meshesToRender
 	local position = object.position
-	local camera = self.camera
 
-	object.rendered = false
-	
-	local scene = self.scene
-	table.insert(scene, object)	
-	
-	-- move mesh according to object and camera
+	-- update mesh position
 	for _, mesh in ipairs(object.meshes) do		
 		mesh.object = object
 		for _, triangle in ipairs(mesh.triangles) do
 			triangle.mesh = mesh
 			for idx, vertex in ipairs(triangle.vertices) do
 				local movedVertex = triangle.movedVertices[idx]
-				movedVertex[1] = vertex[1] + position[1] - camera[1]
-				movedVertex[2] = vertex[2] + position[2] - camera[2]
-				movedVertex[3] = vertex[3] + position[3] + camera[3]
+				movedVertex[1] = vertex[1] + position[1]
+				movedVertex[2] = vertex[2] + position[2]
+				movedVertex[3] = vertex[3] + position[3]
 			end				
 		end
 		mesh.position = position
 		meshesToRender[#meshesToRender + 1] = mesh
 	end		
 	
+	-- update bounding boxes
 	for idx, box in ipairs(object.boundingBoxes) do
 		local movedBox = object.movedBoxes[idx]
-		movedBox[1] = box[1] + position[1] - camera[1]
-		movedBox[2] = box[2] + position[2] - camera[2]		
-		movedBox[3] = box[3] + position[1] - camera[1]
-		movedBox[4] = box[4] + position[2] - camera[2]
-		movedBox[5] = box[5] + position[3] + camera[3]
+		movedBox[1] = box[1] + position[1]
+		movedBox[2] = box[2] + position[2]
+		movedBox[3] = box[3] + position[1]
+		movedBox[4] = box[4] + position[2]
+		movedBox[5] = box[5] + position[3]
 	end
+	
+	local scene = self.scene
+	table.insert(scene.objects, object)		
+end
+
+function ShearTestScene:addActorToScene(actor)
+	actor.movedPosition[1] = actor.position[1]
+	actor.movedPosition[2] = actor.position[2]
+	actor.movedPosition[3] = actor.position[3]
+		
+	local scene = self.scene
+	table.insert(scene.actors, actor)	
 end
 
 function ShearTestScene:translate3Dto2D()
@@ -265,6 +285,31 @@ function ShearTestScene:translate3Dto2D()
 	local camera = self.camera
 	local orderedTriangles = self.orderedTriangles
 	
+	local scene = self.scene
+	
+	-- update objects according to camera
+	for _, object in ipairs(scene.objects) do
+		for _, mesh in ipairs(object.meshes) do		
+			for _, triangle in ipairs(mesh.triangles) do
+				for idx, vertex in ipairs(triangle.vertices) do
+					local movedVertex = triangle.movedVertices[idx]
+					movedVertex[1] = movedVertex[1] - camera[1]
+					movedVertex[2] = movedVertex[2] - camera[2]
+					movedVertex[3] = movedVertex[3] - camera[3]
+				end				
+			end
+		end		
+		
+		for idx, box in ipairs(object.boundingBoxes) do
+			local movedBox = object.movedBoxes[idx]
+			movedBox[1] = movedBox[1] - camera[1]
+			movedBox[2] = movedBox[2] - camera[2]		
+			movedBox[3] = movedBox[3] - camera[1]
+			movedBox[4] = movedBox[4] - camera[2]
+			movedBox[5] = movedBox[5] - camera[3]
+		end	
+	end
+		
 	-- sort triangles	
 	for _, mesh in ipairs(meshesToRender) do
 		local pos = mesh.position
@@ -276,12 +321,12 @@ function ShearTestScene:translate3Dto2D()
 			local mz = middle[3] + pos[3]
 			local lx = mx - camera[1]
 			local ly = my - camera[2]
-			local lz = mz + camera[3]			
+			local lz = mz - camera[3]			
 			local dot = n[1] * lx + n[2] * ly + n[3] * lz		
 			if dot > 0 then
 				local dx = mx + camera[1]
 				local dy = my + camera[2]
-				local dz = mz - camera[3]
+				local dz = mz + camera[3]
 				triangle.distanceToCamera = (dx * dx) + (dy * dy) + (dz * dz)
 				triangle.texture = mesh.texture
 				orderedTriangles[#orderedTriangles + 1] = triangle
@@ -299,7 +344,7 @@ function ShearTestScene:translate3Dto2D()
 	local hsw = sw / 2
 	local hsh = sh / 2	
 	
-	-- test triangle visibility
+	-- created 2D points for meshes and test triangle visibility
 	for _, triangle in ipairs(orderedTriangles) do
 		triangle.visible = false
 		for i, vertex in ipairs(triangle.movedVertices) do
@@ -311,57 +356,58 @@ function ShearTestScene:translate3Dto2D()
 		for _, vertex in ipairs(triangle.vertices2D) do
 			-- lazy way is to check that vertex is contained within bounding box that is bigger than screen
 			if (vertex[1] >= -400 and vertex[1] <= sw + 400 and vertex[2] >= -400 and vertex[2] <= sh + 400) then
-				triangle.mesh.object.rendered = true
 				triangle.visible = true
 				break
 			end					
 		end		
 	end
+	
+	-- update actors according to camera
+	for _, actor in ipairs(scene.actors) do
+		actor.movedPosition[1] = actor.movedPosition[1] - camera[1]
+		actor.movedPosition[2] = actor.movedPosition[2] - camera[2]
+		actor.movedPosition[3] = actor.movedPosition[3] - camera[3]
+	end
+	
+	-- create 2D points for actors
+	for _, actor in ipairs(scene.actors) do
+		local x = actor.movedPosition[1]
+		local y = actor.movedPosition[2]
+		local z = actor.movedPosition[3]
+		actor.position2D[1] = (x / z * sw) + hsw
+		actor.position2D[2] = (-y / z * sh) + hsh
+	end
 end
 
-function ShearTestScene:renderMeshes()
-	local orderedTriangles = self.orderedTriangles
-
-	-- render triangles
-	local drawingMesh = self.drawingMesh
-	for _, triangle in ipairs(orderedTriangles) do
-		if triangle.visible then
-			for i, vertex in ipairs(triangle.vertices2D) do
-				drawingMesh:setVertex(i, vertex[1], vertex[2], vertex[3], vertex[4], 255, 255, 255, 255)
-			end		
-			drawingMesh:setTexture(triangle.texture)
-			love.graphics.draw(drawingMesh, 0, 0)
-		end
-	end		
-end
-
-function ShearTestScene:createBoundingBoxes()
+function ShearTestScene:createBoundingBoxes2D()
 	local sw = self.screenWidth
 	local sh = self.screenHeight
 	local hsw = sw / 2
 	local hsh = sh / 2	
 	
 	for _, object in ipairs(self.scene) do
-		if object.rendered then
-			for idx, box in ipairs(object.movedBoxes) do				
-				local box2D = object.boundingBoxes2D[idx]
-				local x1 = (box[1] / box[5] * sw) + hsw
-				local y1 = (-box[2] / box[5] * sh) + hsh	
-				local x2 = (box[3] / box[5] * sw) + hsw
-				local y2 = (-box[4] / box[5] * sh) + hsh			
-				box2D[1] = x1
-				box2D[2] = y1
-				box2D[3] = x2
-				box2D[4] = y2			
-			end
+		for idx, box in ipairs(object.movedBoxes) do				
+			local box2D = object.boundingBoxes2D[idx]
+			local x1 = (box[1] / box[5] * sw) + hsw
+			local y1 = (-box[2] / box[5] * sh) + hsh	
+			local x2 = (box[3] / box[5] * sw) + hsw
+			local y2 = (-box[4] / box[5] * sh) + hsh			
+			box2D[1] = x1
+			box2D[2] = y1
+			box2D[3] = x2
+			box2D[4] = y2			
 		end
 	end
 end
 
 function ShearTestScene:clearScene()
 	local scene = self.scene
-	for i = 1, #scene do
-		scene[i] = nil
+	for i = 1, #scene.actors do
+		scene.actors[i] = nil
+	end
+
+	for i = 1, #scene.objects do
+		scene.objects[i] = nil
 	end
 	
 	local meshesToRender = self.meshesToRender
@@ -373,66 +419,6 @@ function ShearTestScene:clearScene()
 	for i = 1, #orderedTriangles do
 		orderedTriangles[i] = nil
 	end
-end
-
-function ShearTestScene:drawBoundingBoxes()
-	for _, object in ipairs(self.scene) do
-		if object.rendered then
-			for idx, box in ipairs(object.movedBoxes) do				
-				local box2D = object.boundingBoxes2D[idx]
-				love.graphics.rectangle('line',box2D[1], box2D[2], box2D[3] - box2D[1], box2D[4] - box2D[2])
-			end
-		end
-	end
-end
-
-function ShearTestScene:renderHero()
-	local hero = self.hero
-	local camera = self.camera
-	local position = hero.position
-	local sw = self.screenWidth
-	local sh = self.screenHeight
-	local hsw = sw / 2
-	local hsh = sh / 2	
-		
-	local x = position[1] - camera[1]
-	local y = position[2] - camera[2]
-	local z = position[3] + camera[3]
-	
-	local sx = (x / z * sw) + hsw
-	local sy = (-y / z * sh) + hsh
-	
-	hero.position2D[1] = sx
-	hero.position2D[2] = sy
-	
-	love.graphics.circle('fill', sx, sy, 10)
-end
-
-function ShearTestScene:draw()			
-	self:renderHero()
-
-	Profiler:start('renderMeshes')
-	
-	self:renderMeshes()	
-
-	Profiler:stop('renderMeshes')
-	
-	love.graphics.print('Time to add objects to secene: ' .. 
-		Profiler:getAverage('addObjectsToScene'), 0, 15)
-		
-	love.graphics.print('Time to render meshes: ' .. 
-		Profiler:getAverage('renderMeshes'), 0, 30)		
-		
-	love.graphics.print('Time to translate 3d to 2d: ' .. 
-		Profiler:getAverage('translate3Dto2D'), 0, 45)					
-		
-	love.graphics.print('Time to create bounding boxes: ' .. 
-		Profiler:getAverage('createBoundingBoxes'), 0, 60)			
-
-	love.graphics.print('Time to check collisions: ' .. 
-		Profiler:getAverage('checkCollisions'), 0, 75)				
-		
-	--self:drawBoundingBoxes()
 end
 
 function ShearTestScene:sqr(x) 
@@ -470,18 +456,16 @@ function ShearTestScene:distToSegment(px, py, x1, y1, x2, y2)
 end
 
 function ShearTestScene:findClosestBoundingBox(actor)
-	local position = actor.position2D
+	local position = actor.movedPosition
 	
 	local d1, d2, d3, d4 = 999, 999, 999, 999
-	for _, object in ipairs(self.scene) do
-		if object.rendered then
-			for idx, box in ipairs(object.movedBoxes) do				
-				local box2D = object.boundingBoxes2D[idx]
-				d1 = math.min(d1, self:distToSegment(position[1], position[2], box2D[1], box2D[2], box2D[1], box2D[4]))
-				d2 = math.min(d2, self:distToSegment(position[1], position[2], box2D[3], box2D[2], box2D[3], box2D[4]))
-				d3 = math.min(d3, self:distToSegment(position[1], position[2], box2D[1], box2D[2], box2D[3], box2D[2]))
-				d4 = math.min(d4, self:distToSegment(position[1], position[2], box2D[1], box2D[4], box2D[3], box2D[4]))
-			end
+	for _, object in ipairs(self.scene.objects) do
+		for idx, box in ipairs(object.movedBoxes) do				
+			local box = object.movedBoxes[idx]
+			d1 = math.min(d1, self:distToSegment(position[1], position[2], box[1], box[2], box[1], box[4]))
+			d2 = math.min(d2, self:distToSegment(position[1], position[2], box[3], box[2], box[3], box[4]))
+			d3 = math.min(d3, self:distToSegment(position[1], position[2], box[1], box[2], box[3], box[2]))
+			d4 = math.min(d4, self:distToSegment(position[1], position[2], box[1], box[4], box[3], box[4]))
 		end
 	end
 	
@@ -517,47 +501,125 @@ function ShearTestScene:update(dt)
 	local hero = self.hero
 	
 	hero.oldPosition[1] = hero.position[1]
-	hero.oldPosition[2] = hero.position[2]	
-	
-	self:handleInput(dt)
-	
-	camera[1] = hero.position[1]
-	camera[2] = hero.position[2]		
+	hero.oldPosition[2] = hero.position[2]		
 
-	Profiler:start('addObjectsToScene')
-		
+	self:handleInput(dt)	
+	
+	Profiler:start('addObjectsToScene')		
 	self:clearScene()	
 	local buildingObjects = self.buildingObjects
 	for _, bldg in ipairs(buildingObjects) do
 		self:addObjectToScene(bldg)
-	end	
-	
+	end		
+	self:addActorToScene(hero)
 	Profiler:stop('addObjectsToScene')
-	
-	Profiler:start('translate3Dto2D')
-	
-	self:translate3Dto2D()
-	
-	Profiler:stop('translate3Dto2D')
-	
-	Profiler:start('createBoundingBoxes')
-	
-	self:createBoundingBoxes()
-	
-	Profiler:stop('createBoundingBoxes')
-
-	Profiler:start('checkCollisions')
-	
+		
+	Profiler:start('checkCollisions')	
 	local dist = self:findClosestBoundingBox(hero)
-	if dist < 5 then
+	print(dist)
+	if dist < 0.1 then
 		hero.position[1] = hero.oldPosition[1]
 		hero.position[2] = hero.oldPosition[2]
-		camera[1] = hero.position[1]
-		camera[2] = hero.position[2]		
-	end
+	end	
+	Profiler:stop('checkCollisions')	
 	
-	Profiler:stop('checkCollisions')
-			
+	camera[1] = hero.position[1]
+	camera[2] = hero.position[2]			
+	
+	Profiler:start('translate3Dto2D')	
+	self:translate3Dto2D()	
+	Profiler:stop('translate3Dto2D')
+end
+
+
+function ShearTestScene:renderMeshes()
+	local orderedTriangles = self.orderedTriangles
+
+	-- render triangles
+	local drawingMesh = self.drawingMesh
+	for _, triangle in ipairs(orderedTriangles) do
+		if triangle.visible then
+			for i, vertex in ipairs(triangle.vertices2D) do
+				drawingMesh:setVertex(i, vertex[1], vertex[2], vertex[3], vertex[4], 255, 255, 255, 255)
+			end		
+			drawingMesh:setTexture(triangle.texture)
+			love.graphics.draw(drawingMesh, 0, 0)
+		end
+	end		
+end
+
+function ShearTestScene:drawBoundingBoxes()
+	for _, object in ipairs(self.scene) do
+		if object.rendered then
+			for idx, box in ipairs(object.movedBoxes) do				
+				local box2D = object.boundingBoxes2D[idx]
+				love.graphics.rectangle('line',box2D[1], box2D[2], box2D[3] - box2D[1], box2D[4] - box2D[2])
+			end
+		end
+	end
+end
+
+function ShearTestScene:drawRoad()
+	local camera = self.camera
+	local sw = self.screenWidth
+	local sh = self.screenHeight
+	local hsw = sw / 2
+	local hsh = sh / 2	
+		
+	local x = camera[1]
+	local y = camera[2]
+	local z = self.groundFloor - camera[3] 
+	
+	local sx = (x / z * sw) + hsw
+	local sy = (-y / z * sh) + hsh
+	local tx = math.floor(sx / 128)
+	local ty = math.floor(sx / 128)	
+	local ox = sx % 128
+	local oy = sy % 128
+	
+	local img = self.roadImages[1]
+	for x = -ox, 1200, 128 do
+		for y = -oy, 900, 128 do
+			love.graphics.draw(img, x, y, 0, 2)
+		end
+	end
+end
+
+function ShearTestScene:renderHero()
+	local hero = self.hero		
+	love.graphics.circle('fill', hero.position2D[1], hero.position2D[2], 10)
+end
+
+function ShearTestScene:draw()	
+	--self:drawRoad()
+		
+	self:renderHero()
+
+	Profiler:start('renderMeshes')
+	
+	self:renderMeshes()	
+
+	Profiler:stop('renderMeshes')
+		
+	Profiler:start('renderBoundingBoxes')	
+	--self:createBoundingBoxes2D()	
+	--self:drawBoundingBoxes()
+	Profiler:stop('renderBoundingBoxes')
+	
+	love.graphics.print('Time to add objects to secene: ' .. 
+		Profiler:getAverage('addObjectsToScene'), 0, 15)
+		
+	love.graphics.print('Time to render meshes: ' .. 
+		Profiler:getAverage('renderMeshes'), 0, 30)		
+		
+	love.graphics.print('Time to translate 3d to 2d: ' .. 
+		Profiler:getAverage('translate3Dto2D'), 0, 45)					
+		
+	love.graphics.print('Time to render bounding boxes: ' .. 
+		Profiler:getAverage('renderBoundingBoxes'), 0, 60)			
+
+	love.graphics.print('Time to check collisions: ' .. 
+		Profiler:getAverage('checkCollisions'), 0, 75)						
 end
 
 return ShearTestScene
