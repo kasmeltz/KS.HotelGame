@@ -27,6 +27,12 @@ function ShearTestScene:createRoofSection(sx, ex, sy, ey, z)
 			{ex, sy, z, 0, 0},
 			{sx, ey, z, 1, 1}
 		}, 
+		movedVertices =
+		{
+			{0, 0, 0, 0, 1},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 1, 1},
+		},
 		normal = { 0, 0, -1 }
 	}
 	
@@ -38,6 +44,12 @@ function ShearTestScene:createRoofSection(sx, ex, sy, ey, z)
 			{sx, sy, z, 1, 0},
 			{sx, ey, z, 1, 1}
 		}, 		
+		movedVertices = 
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 1, 0},
+			{0, 0, 0, 1, 1},
+		},
 		normal = { 0, 0, -1 }
 	}
 	
@@ -53,6 +65,12 @@ function ShearTestScene:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 			{sx, sy, sz, 0, 0},
 			{ex, ey, ez, 1, 1},
 		}, 
+		movedVertices =
+		{
+			{0, 0, 0, 0, 1},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 1, 1},
+		},
 		normal = { nx, ny, 0 }
 	}
 	local t2 = 
@@ -63,6 +81,12 @@ function ShearTestScene:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 			{ex, ey, sz, 1, 0},
 			{ex, ey, ez, 1, 1},
 		}, 
+		movedVertices =
+		{
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 1, 0},
+			{0, 0, 0, 1, 1},
+		},
 		normal = { nx, ny, 0 }
 	}
 	
@@ -137,44 +161,47 @@ function ShearTestScene:init()
 	
 	local drawingMesh = love.graphics.newMesh(3, 'triangles', 'dynamic')
 	self.drawingMesh = drawingMesh		
+	
+	local camera = {0, 0, -7}
+	self.camera = camera
+
+	local building1Pos = {0, 0, 0}
+	local building2Pos = {10, 0, 0}
+	local building3Pos = {0, 6, 0}
+	local building4Pos = {6, 6, 0}
+	local building5Pos = {-10, 0, 0}
+
+	local buildingMeshes = {}
+	buildingMeshes[#buildingMeshes + 1] = self:createBuilding(-2, 2, -1, 1, 1, -5, building1Pos, self.roofImages[1], self.buildingImages[1])		
+	buildingMeshes[#buildingMeshes + 1] = self:createBuilding(-2, 2, -1, 1, -1, -5, building2Pos, self.roofImages[2], self.buildingImages[2])
+	buildingMeshes[#buildingMeshes + 1] = self:createBuilding(-3, 3, -0.5, 0.5, -1, -5, building3Pos, self.roofImages[3], self.buildingImages[3])
+	buildingMeshes[#buildingMeshes + 1] = self:createBuilding(-0.25, 0.25, -1, 1, -1, -5, building4Pos, self.roofImages[4], self.buildingImages[4])
+	self.buildingMeshes = buildingMeshes
 end
-
-local cam = {0, 0, -5}
-
-local building1Pos = {0, 0, 0}
-local building2Pos = {10, 0, 0}
-local building3Pos = {0, 6, 0}
-local building4Pos = {6, 6, 0}
-local building5Pos = {-10, 0, 0}
 
 function ShearTestScene:addMeshesToScene(meshes)
 	local meshesToRender = self.meshesToRender
 	local position = meshes.position
+	local camera = self.camera
 	
 	-- move mesh according to object and camera
 	for _, mesh in ipairs(meshes) do
-		local movedMesh = { texture = mesh.texture, position = position }
 		for _, triangle in ipairs(mesh) do
-			local movedTriangle = { normal = triangle.normal, middle = triangle.middle,  vertices = {} }
-			for _, vertex in ipairs(triangle.vertices) do	
-				local movedVertex = 
-				{			
-					vertex[1] + cam[1] + position[1], 
-					vertex[2] + cam[2] + position[2], 
-					vertex[3] + cam[3] + position[3], 
-					vertex[4], 
-					vertex[5] 
-				}
-				movedTriangle.vertices[#movedTriangle.vertices + 1] = movedVertex
+			for idx, vertex in ipairs(triangle.vertices) do
+				local movedVertex = triangle.movedVertices[idx]
+				movedVertex[1] = vertex[1] + camera[1] + position[1]
+				movedVertex[2] = vertex[2] + camera[2] + position[2]
+				movedVertex[3] = vertex[3] + camera[3] + position[3]
 			end		
-			movedMesh[#movedMesh + 1] = movedTriangle
 		end
-		meshesToRender[#meshesToRender + 1] = movedMesh
+		mesh.position = position
+		meshesToRender[#meshesToRender + 1] = mesh
 	end		
 end
 
 function ShearTestScene:renderMeshes()
 	local meshesToRender = self.meshesToRender
+	local camera = self.camera
 
 	-- sort triangles
 	local orderedTriangles = {}	
@@ -186,14 +213,14 @@ function ShearTestScene:renderMeshes()
 			local mx = middle[1] + pos[1]
 			local my = middle[2] + pos[2]
 			local mz = middle[3] + pos[3]
-			local lx = mx + cam[1]
-			local ly = my + cam[2]
-			local lz = mz + cam[3]			
+			local lx = mx + camera[1]
+			local ly = my + camera[2]
+			local lz = mz + camera[3]			
 			local dot = n[1] * lx + n[2] * ly + n[3] * lz		
 			if dot > 0 then
-				local dx = mx - cam[1]
-				local dy = my - cam[2]
-				local dz = mz - cam[3]
+				local dx = mx - camera[1]
+				local dy = my - camera[2]
+				local dz = mz - camera[3]
 				triangle.distanceToCamera = (dx * dx) + (dy * dy) + (dz * dz)
 				triangle.texture = mesh.texture
 				orderedTriangles[#orderedTriangles + 1] = triangle
@@ -215,7 +242,7 @@ function ShearTestScene:renderMeshes()
 	
 	local vertices2D = {}	
 	for _, triangle in ipairs(orderedTriangles) do
-		for i, vertex in ipairs(triangle.vertices) do
+		for i, vertex in ipairs(triangle.movedVertices) do
 			local tx = (vertex[1] / vertex[3] * sw) + hsw
 			local ty = (-vertex[2] / vertex[3] * sh) + hsh	
 			vertices2D[i] = { tx, ty, vertex[4], vertex[5] }
@@ -239,47 +266,56 @@ function ShearTestScene:renderMeshes()
 	end	
 end
 
+local frame = 1
+local timeToAddMeshes = 0
+local timeToRender = 0
 function ShearTestScene:draw()	
-	self.meshesToRender = {}
+	local startTime = love.timer.getTime()
 	
-	local bldg = self:createBuilding(-2, 2, -1, 1, -1, -5, building1Pos, self.roofImages[1], self.buildingImages[1])	
-	self:addMeshesToScene(bldg)
+	self.meshesToRender = {}	
+	local buildingMeshes = self.buildingMeshes
+	for _, bldg in ipairs(buildingMeshes) do
+		self:addMeshesToScene(bldg)
+	end
 	
-	local bldg = self:createBuilding(-2, 2, -1, 1, -1, -5, building2Pos, self.roofImages[2], self.buildingImages[2])
-	self:addMeshesToScene(bldg)
-
-	--[[
-	local bldg = self:createBuilding(building3Pos, self.roofImages[3], self.buildingImages[3])
-	self:addMeshesToScene(bldg)
-
-	local bldg = self:createBuilding(building4Pos, self.roofImages[4], self.buildingImages[4])
-	self:addMeshesToScene(bldg)
-
-	local bldg = self:createBuilding(building5Pos, self.roofImages[5], self.buildingImages[2])
-	self:addMeshesToScene(bldg)
-	]]
-
+	local endTime = love.timer.getTime()
+	
+	timeToAddMeshes = timeToAddMeshes + (endTime - startTime)
+	
+	startTime = love.timer.getTime()
+	
 	self:renderMeshes()	
+	
+	endTime = love.timer.getTime()
+	
+	timeToRender = timeToRender + (endTime - startTime)
+
+	love.graphics.print('Time to add meshes: ' .. (timeToAddMeshes / frame), 10, 10)	
+	love.graphics.print('Time to render: ' .. (timeToRender / frame), 10, 30)
+	
+	frame = frame + 1
 end
 
 function ShearTestScene:update(dt)	
+	local camera = self.camera
+	
 	if love.keyboard.isDown('a') then
-		cam[1] = cam[1] - dt * 5
+		camera[1] = camera[1] - dt * 5
 	end
 	if love.keyboard.isDown('d') then
-		cam[1] = cam[1] + dt * 5
+		camera[1] = camera[1] + dt * 5
 	end
 	if love.keyboard.isDown('w') then
-		cam[2] = cam[2] + dt * 5
+		camera[2] = camera[2] + dt * 5
 	end
 	if love.keyboard.isDown('s') then
-		cam[2] = cam[2] - dt * 5
+		camera[2] = camera[2] - dt * 5
 	end
 	if love.keyboard.isDown('q') then
-		cam[3] = cam[3] - dt * 5
+		camera[3] = camera[3] - dt * 5
 	end
 	if love.keyboard.isDown('e') then
-		cam[3] = cam[3] + dt * 5
+		camera[3] = camera[3] + dt * 5
 	end	
 end
 
