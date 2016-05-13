@@ -4,8 +4,17 @@ Profiler = Profiler:getInstance()
 local Scene = require 'classes/scene/Scene'
 local ShearTestScene = Scene:extend('ShearTestScene')
 
+function ShearTestScene:loadBuildingTypes()
+	local text, size = love.filesystem.read('data/buildingTypes.dat')
+	local condition = assert(loadstring('return ' .. text))
+	return condition()
+end
+
 function ShearTestScene:init()
 	ShearTestScene.super.init(self)
+	
+	self.buildingTypes = self:loadBuildingTypes()
+	
 	local roofImages = {}
 	roofImages[1] = love.graphics.newImage('data/images/roof.jpg')
 	roofImages[2] = love.graphics.newImage('data/images/roof2.jpg')
@@ -38,29 +47,30 @@ function ShearTestScene:init()
 	local groundFloor = -5
 	self.groundFloor = groundFloor
 	
-	local building1Pos = {0, -6, 0}
-	local building2Pos = {10, 0, 0}
-	local building3Pos = {0, 6, 0}
-	local building4Pos = {6, 6, 0}
-	local building5Pos = {-10, 0, 0}
-
 	local buildingObjects = {}	
+
+	local bo = 	self:createBuildingFromType(self.buildingTypes[1])
+	bo.position = { 0, -6, 0 }		
+	buildingObjects[#buildingObjects + 1] = bo
 	
+	--[[
 	buildingObjects[#buildingObjects + 1] = 
-		self:createBuilding(-2, 2, -1, 1, 1, groundFloor, 0.5,
+		self:createBuilding(-2, 2, -1, 1, 1, groundFloor, 1,
 		building1Pos, self.roofImages[1], self.buildingImages[1])		
 	
 	buildingObjects[#buildingObjects + 1] = 
-		self:createBuilding(-2, 2, -1, 1, 4, groundFloor, 0.5,
+		self:createBuilding(-2, 2, -1, 1, 4, groundFloor, 1,
 		building2Pos, self.roofImages[2], self.buildingImages[2])
 		
 	buildingObjects[#buildingObjects + 1] = 
-		self:createBuilding(-3, 3, -0.5, 0.5, -4, groundFloor, 0.5,
+		self:createBuilding(-3, 3, -0.5, 0.5, -4, groundFloor, 1,
 		building3Pos, self.roofImages[3], self.buildingImages[3])
 		
 	buildingObjects[#buildingObjects + 1] = 
 		self:createBuilding(-0.25, 0.25, -1, 1, 2, groundFloor, 0.5,
 		building4Pos, self.roofImages[4], self.buildingImages[4])
+		
+		]]
 		
 	self.buildingObjects = buildingObjects
 		
@@ -75,7 +85,7 @@ function ShearTestScene:init()
 	
 	self.hero = 
 	{
-		position = {0, 0, groundFloor},
+		position = {5.15, -9.725, groundFloor},
 		movedPosition = {0, 0, groundFloor},
 		oldPosition = {0, 0, groundFloor},
 		position2D = {0, 0},		
@@ -176,6 +186,18 @@ function ShearTestScene:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 	return t1, t2
 end
 
+function ShearTestScene:addWallSections(walls, sx, ex, sy, ey, sz, ez, ss, nx, ny)
+	for z = sz - ss, ez, -ss do
+		local t1, t2 = self:createWallSection(sx, ex, sy, ey, z + ss, z, nx, ny)
+		table.insert(walls.triangles, t1)
+		table.insert(walls.triangles, t2)
+		local t1, t2 = self:createWallSection(sx, ex, sy, ey, z + ss, z, nx, ny)
+		table.insert(walls.triangles, t1)
+		table.insert(walls.triangles, t2)
+	end
+end
+
+--[[
 function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, ss, position, roofImage, buildingImage)
 	local building = {}
 	building.position = position	
@@ -233,7 +255,85 @@ function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, ss, position, roo
 	end
 	
 	table.insert(building.meshes, roof)				
+		
+	for _, mesh in ipairs(building.meshes) do
+		self:findMiddle(mesh)
+	end
 	
+	return building
+end
+]]
+
+function ShearTestScene:createBuildingFromType(buildingType)
+	local building = {}
+	building.meshes = {}
+	building.boundingBoxes = {}
+	building.movedBoxes = {}
+	building.boundingBoxes2D = {}
+	
+	local groundFloor = self.groundFloor
+	local height = math.random(buildingType.heights[1], buildingType.heights[2])	
+	local wallHeight = groundFloor + height
+	local design = buildingType.design
+	
+	local walls =
+	{
+		texture = self.buildingImages[1],
+		triangles = {}
+	}
+	
+	local roof = 
+	{
+		texture = self.roofImages[1],
+		triangles = {}
+	}
+	
+	local dh = #design
+	local dw = #design[1]	
+	local ss = 1
+	
+	local cy = -(dh / 2)	
+	for dy = 1, dh do
+		local text = design[dy]
+		local cx = (dw / 2)
+		for dx = 1, dw do
+			local c = text:sub(dx,dx)
+			if c == 'R'then
+				self:addWallSections(walls, cx - ss, cx - ss, cy, cy + ss, wallHeight, groundFloor, 1, 1, 0)
+			elseif c == 'L' then	
+				self:addWallSections(walls, cx, cx, cy, cy + ss, wallHeight, groundFloor, 1, -1, 0)
+			elseif c == 'T' then				
+				self:addWallSections(walls, cx, cx - ss, cy, cy, wallHeight, groundFloor, 1, 0, 1)				
+			elseif c == 'B' then				
+				self:addWallSections(walls, cx, cx - ss, cy + ss, cy + ss, wallHeight, groundFloor, 1, 0, -1)
+			elseif c == 'A' then
+				self:addWallSections(walls, cx, cx, cy, cy + ss, wallHeight, groundFloor, 1, -1, 0)
+				self:addWallSections(walls, cx, cx - ss, cy, cy, wallHeight, groundFloor, 1, 0, 1)
+			elseif c == 'C' then
+				self:addWallSections(walls, cx, cx - ss, cy + ss, cy + ss, wallHeight, groundFloor, 1, 0, -1)
+				self:addWallSections(walls, cx, cx, cy, cy + ss, wallHeight, groundFloor, 1, -1, 0)
+			elseif c == 'W' then	
+				self:addWallSections(walls, cx - ss, cx - ss, cy, cy + ss, wallHeight, groundFloor, 1, 1, 0)
+				self:addWallSections(walls, cx, cx - ss, cy, cy, wallHeight, groundFloor, 1, 0, 1)
+			elseif c == 'D' then	
+				self:addWallSections(walls, cx, cx - ss, cy + ss, cy + ss, wallHeight, groundFloor, 1, 0, -1)
+				self:addWallSections(walls, cx - ss, cx - ss, cy, cy + ss, wallHeight, groundFloor, 1, 1, 0)
+			end
+			
+			if c ~= 'Z'then
+				local t1, t2 = self:createRoofSection(cx, cx - ss, cy, cy + ss, wallHeight)
+				table.insert(roof.triangles, t1)
+				table.insert(roof.triangles, t2)						
+			end
+			
+			cx = cx - ss
+		end
+		cy = cy + ss
+	end	
+	
+	table.insert(building.meshes, walls)		
+	table.insert(building.meshes, roof)			
+
 	for _, mesh in ipairs(building.meshes) do
 		self:findMiddle(mesh)
 	end
@@ -340,7 +440,7 @@ function ShearTestScene:translate3Dto2D()
 	
 	table.sort(orderedTriangles, 
 		function(a,b) 
-			return a.distanceToCamera > b.distanceToCamera 
+			return a.distanceToCamera < b.distanceToCamera 
 		end)
 		
 	local sw = self.screenWidth
@@ -541,7 +641,7 @@ function ShearTestScene:update(dt)
 end
 
 
-function ShearTestScene:renderMeshes()
+function ShearTestScene:renderTriangles()
 	local orderedTriangles = self.orderedTriangles
 
 	-- render triangles
@@ -619,9 +719,11 @@ function ShearTestScene:draw()
 		
 	self:renderHero()
 
-	Profiler:start('renderMeshes')	
-	self:renderMeshes()	
-	Profiler:stop('renderMeshes')
+	Profiler:start('renderTriangles')
+	
+	self:renderTriangles()	
+	
+	Profiler:stop('renderTriangles')
 		
 	Profiler:start('renderBoundingBoxes')	
 	
@@ -634,7 +736,7 @@ function ShearTestScene:draw()
 		Profiler:getAverage('addObjectsToScene'), 0, 15)
 		
 	love.graphics.print('Time to render meshes: ' .. 
-		Profiler:getAverage('renderMeshes'), 0, 30)		
+		Profiler:getAverage('renderTriangles'), 0, 30)		
 		
 	love.graphics.print('Time to translate 3d to 2d: ' .. 
 		Profiler:getAverage('translate3Dto2D'), 0, 45)					
@@ -643,7 +745,14 @@ function ShearTestScene:draw()
 		Profiler:getAverage('renderBoundingBoxes'), 0, 60)			
 
 	love.graphics.print('Time to check collisions: ' .. 
-		Profiler:getAverage('checkCollisions'), 0, 75)						
+		Profiler:getAverage('checkCollisions'), 0, 75)	
+
+	love.graphics.print(
+		'hx: '.. 
+		self.hero.position[1] .. 
+		' hy: ' .. 
+		self.hero.position[2], 
+		0, 90)
 end
 
 return ShearTestScene
