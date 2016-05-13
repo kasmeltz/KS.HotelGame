@@ -39,7 +39,6 @@ function ShearTestScene:init()
 		self:createBuilding(-2, 2, -1, 1, 1, -5, 0.5,
 		building1Pos, self.roofImages[1], self.buildingImages[1])		
 	
-	--[[
 	buildingObjects[#buildingObjects + 1] = 
 		self:createBuilding(-2, 2, -1, 1, -1, -5, 0.5,
 		building2Pos, self.roofImages[2], self.buildingImages[2])
@@ -51,7 +50,6 @@ function ShearTestScene:init()
 	buildingObjects[#buildingObjects + 1] = 
 		self:createBuilding(-0.25, 0.25, -1, 1, -1, -5, 0.5,
 		building4Pos, self.roofImages[4], self.buildingImages[4])
-	]]
 		
 	self.buildingObjects = buildingObjects
 		
@@ -472,6 +470,25 @@ function ShearTestScene:distToSegment(px, py, x1, y1, x2, y2)
     return math.sqrt(self:distToSegmentSquared(px, py, x1, y1, x2, y2))
 end
 
+function ShearTestScene:findClosestBoundingBox(actor)
+	local position = actor.position2D
+	
+	local d1, d2, d3, d4 = 999, 999, 999, 999
+	for _, object in ipairs(self.scene) do
+		if object.rendered then
+			for idx, box in ipairs(object.movedBoxes) do				
+				local box2D = object.boundingBoxes2D[idx]
+				d1 = math.min(d1, self:distToSegment(position[1], position[2], box2D[1], box2D[2], box2D[1], box2D[4]))
+				d2 = math.min(d2, self:distToSegment(position[1], position[2], box2D[3], box2D[2], box2D[3], box2D[4]))
+				d3 = math.min(d3, self:distToSegment(position[1], position[2], box2D[1], box2D[2], box2D[3], box2D[2]))
+				d4 = math.min(d4, self:distToSegment(position[1], position[2], box2D[1], box2D[4], box2D[3], box2D[4]))
+			end
+		end
+	end
+	
+	return math.min(d4, math.min(d3, math.min(d1, d2)))
+end
+
 function ShearTestScene:handleInput(dt)
 	local camera = self.camera
 	local hero = self.hero
@@ -496,27 +513,17 @@ function ShearTestScene:handleInput(dt)
 	end	
 end
 
-function ShearTestScene:checkCollisions(actor)
-	local position = actor.position2D
-	
-	local d1, d2, d3, d4
-	for _, object in ipairs(self.scene) do
-		if object.rendered then
-			for idx, box in ipairs(object.movedBoxes) do				
-				local box2D = object.boundingBoxes2D[idx]
-				d1 = self:distToSegment(position[1], position[2], box2D[1], box2D[2], box2D[1], box2D[4])		
-				d2 = self:distToSegment(position[1], position[2], box2D[3], box2D[2], box2D[3], box2D[4])		
-				d3 = self:distToSegment(position[1], position[2], box2D[1], box2D[2], box2D[3], box2D[2])		
-				d4 = self:distToSegment(position[1], position[2], box2D[1], box2D[4], box2D[3], box2D[4])		
-			end
-		end
-	end
-	
-	return math.min(d4, math.min(d3, math.min(d1, d2)))
-end
-
 function ShearTestScene:update(dt)	
+	local camera = self.camera
 	local hero = self.hero
+	
+	hero.oldPosition[1] = hero.position[1]
+	hero.oldPosition[2] = hero.position[2]	
+	
+	self:handleInput(dt)
+	
+	camera[1] = hero.position[1]
+	camera[2] = hero.position[2]		
 
 	Profiler:start('addObjectsToScene')
 		
@@ -540,30 +547,18 @@ function ShearTestScene:update(dt)
 	
 	Profiler:stop('createBoundingBoxes')
 
-	hero.oldPosition[1] = hero.position[1]
-	hero.oldPosition[2] = hero.position[2]
-	
-	self:handleInput(dt)
-
 	Profiler:start('checkCollisions')
 	
-	if self:checkCollisions(hero) then
-		print('================================')
-		print('old position: ' .. hero.oldPosition[1] .. ', ' .. hero.oldPosition[2])
-		print('new position: ' .. hero.position[1] .. ', ' .. hero.position[2])
-		print('================================')
-	
+	local dist = self:findClosestBoundingBox(hero)
+	if dist < 10 then
 		hero.position[1] = hero.oldPosition[1]
 		hero.position[2] = hero.oldPosition[2]
+		camera[1] = hero.position[1]
+		camera[2] = hero.position[2]		
 	end
 	
 	Profiler:stop('checkCollisions')
-	
-	local camera = self.camera
-	local hero = self.hero
-		
-	camera[1] = hero.position[1]
-	camera[2] = hero.position[2]
+			
 end
 
 return ShearTestScene
