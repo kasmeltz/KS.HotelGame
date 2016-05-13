@@ -167,28 +167,6 @@ function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, ss, position, roo
 	building.movedBoxes = {}
 	building.boundingBoxes2D = {}
 	
-	local roof = 
-	{
-		texture = roofImage,
-		triangles = {}
-	}
-	
-	for x = sx, ex - ss, ss do
-		for y = sy, ey - ss, ss do
-			-- roof structure must follow the walls
-			local t1, t2 = self:createRoofSection(x, x + ss, y, y + ss, sz)
-			table.insert(roof.triangles, t1)
-			table.insert(roof.triangles, t2)						
-			-- insert bounding boxes to match the structure
-			local box = { x, y, x + ss, y + ss, ez }
-			table.insert(building.boundingBoxes, box)
-			table.insert(building.movedBoxes,{0,0,0,0,0,0})
-			table.insert(building.boundingBoxes2D,{0,0,0,0})
-		end
-	end
-	
-	table.insert(building.meshes, roof)		
-	
 	local walls =
 	{
 		texture = buildingImage,
@@ -217,6 +195,27 @@ function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, ss, position, roo
 	end
 
 	table.insert(building.meshes, walls)
+	
+	local roof = 
+	{
+		texture = roofImage,
+		triangles = {}
+	}
+	for x = sx, ex - ss, ss do
+		for y = sy, ey - ss, ss do
+			-- one roof zection must be on top of every wall
+			local t1, t2 = self:createRoofSection(x, x + ss, y, y + ss, sz)
+			table.insert(roof.triangles, t1)
+			table.insert(roof.triangles, t2)						
+			-- insert bounding boxes to match the structure
+			local box = { x, y, x + ss, y + ss, ez }
+			table.insert(building.boundingBoxes, box)
+			table.insert(building.movedBoxes,{0,0,0,0,0,0})
+			table.insert(building.boundingBoxes2D,{0,0,0,0})
+		end
+	end
+	
+	table.insert(building.meshes, roof)				
 	
 	for _, mesh in ipairs(building.meshes) do
 		self:findMiddle(mesh)
@@ -410,6 +409,8 @@ function ShearTestScene:renderHero()
 end
 
 function ShearTestScene:draw()			
+	self:renderHero()
+
 	Profiler:start('renderMeshes')
 	
 	self:renderMeshes()	
@@ -431,9 +432,7 @@ function ShearTestScene:draw()
 	love.graphics.print('Time to check collisions: ' .. 
 		Profiler:getAverage('checkCollisions'), 0, 75)				
 		
-	self:drawBoundingBoxes()
-	
-	self:renderHero()
+	--self:drawBoundingBoxes()
 end
 
 function ShearTestScene:sqr(x) 
@@ -550,7 +549,7 @@ function ShearTestScene:update(dt)
 	Profiler:start('checkCollisions')
 	
 	local dist = self:findClosestBoundingBox(hero)
-	if dist < 10 then
+	if dist < 5 then
 		hero.position[1] = hero.oldPosition[1]
 		hero.position[2] = hero.oldPosition[2]
 		camera[1] = hero.position[1]
