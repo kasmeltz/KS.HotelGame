@@ -151,9 +151,13 @@ function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, ss, position, roo
 	}
 	
 	local roof = building[1]
-	local t1, t2 = self:createRoofSection(sx, ex, sy, ey, sz)
-	roof[#roof + 1] = t1
-	roof[#roof + 1] = t2
+	for x = sx, ex - ss, ss do
+		for y = sy, ey - ss, ss do
+			local t1, t2 = self:createRoofSection(x, x + ss, y, y + ss, sz)
+			roof[#roof + 1] = t1
+			roof[#roof + 1] = t2
+		end
+	end
 	
 	building[2] = 
 	{
@@ -194,16 +198,21 @@ function ShearTestScene:addMeshesToScene(meshes)
 	local meshesToRender = self.meshesToRender
 	local position = meshes.position
 	local camera = self.camera
+	local sw = self.screenWidth
+	local sh = self.screenHeight
+	local hsw = sw / 2
+	local hsh = sh / 2	
 	
 	-- move mesh according to object and camera
 	for _, mesh in ipairs(meshes) do
 		for _, triangle in ipairs(mesh) do
+			triangle.visible = true
 			for idx, vertex in ipairs(triangle.vertices) do
 				local movedVertex = triangle.movedVertices[idx]
-				movedVertex[1] = vertex[1] + camera[1] + position[1]
-				movedVertex[2] = vertex[2] + camera[2] + position[2]
-				movedVertex[3] = vertex[3] + camera[3] + position[3]
-			end		
+				movedVertex[1] = vertex[1] + position[1] + camera[1]
+				movedVertex[2] = vertex[2] + position[2] + camera[2]
+				movedVertex[3] = vertex[3] + position[3] + camera[3]
+			end				
 		end
 		mesh.position = position
 		meshesToRender[#meshesToRender + 1] = mesh
@@ -265,10 +274,11 @@ function ShearTestScene:renderMeshes()
 
 		local insideScreen = false
 		for _, vertex in ipairs(vertices2D) do
-			if vertex[1] > 0 or vertex[1] < sw or vertex[2] > 0 or vertex[2] < sh then
+			-- lazy way is to check that vertex is contained within bounding box that is bigger than screen
+			if (vertex[1] >= -600 and vertex[1] <= sw + 600 and vertex[2] >= -450 and vertex[2] <= sh + 450) then
 				insideScreen = true
 				break
-			end
+			end					
 		end
 		
 		if insideScreen then		
