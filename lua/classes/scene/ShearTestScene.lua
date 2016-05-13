@@ -335,19 +335,21 @@ function ShearTestScene:clearScene()
 end
 
 function ShearTestScene:draw()	
-	Profiler:measure('addObjectsToScene', 
-		function()
-			self:clearScene()	
-			local buildingObjects = self.buildingObjects
-			for _, bldg in ipairs(buildingObjects) do
-				self:addObjectToScene(bldg)
-			end	
-		end)
+	Profiler:start('addObjectsToScene')
 	
-	Profiler:measure('renderMeshes', 
-		function()
-			self:renderMeshes()	
-		end)
+	self:clearScene()	
+	local buildingObjects = self.buildingObjects
+	for _, bldg in ipairs(buildingObjects) do
+		self:addObjectToScene(bldg)
+	end	
+	
+	Profiler:stop('addObjectsToScene')
+	
+	Profiler:start('renderMeshes')
+	
+	self:renderMeshes()	
+
+	Profiler:stop('renderMeshes')
 	
 	love.graphics.print('Time to add objects to secene: ' .. 
 		Profiler:getAverage('addObjectsToScene'), 0, 15)

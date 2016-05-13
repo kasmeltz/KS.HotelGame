@@ -17,17 +17,18 @@ function Profiler:getInstance()
   return instance
 end
 
-function Profiler:measure(name, fn)
-	local startTime = love.timer.getTime()
-	fn()
-	local endTime = love.timer.getTime()
-	
-	 if not self.items[name] then
-		self.items[name] = { counts = 0, average = 0}
+function Profiler:start(name)
+	if not self.items[name] then
+		self.items[name] = { startTime = 0, counts = 0, average = 0}
 	end
 	
-	local elapsed = endTime - startTime
+	self.items[name].startTime = love.timer.getTime()
+end
+
+function Profiler:stop(name)
+	local endTime = love.timer.getTime()		
 	local item = self.items[name]	
+	local elapsed = endTime - item.startTime
 	
 	--[[
 	CMAn1 = (xn1 + n * CMAn) / n1
