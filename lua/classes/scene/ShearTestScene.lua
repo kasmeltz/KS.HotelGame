@@ -25,6 +25,10 @@ function ShearTestScene:init()
 	roadImages[1] = love.graphics.newImage('data/images/road1.jpg')
 	self.roadImages = roadImages
 	
+	local sideWalkImages = {}
+	sideWalkImages[1] = love.graphics.newImage('data/images/sidewalk.jpg')
+	self.sideWalkImages = sideWalkImages
+	
 	local drawingMesh = love.graphics.newMesh(3, 'triangles', 'dynamic')
 	self.drawingMesh = drawingMesh		
 	
@@ -505,29 +509,34 @@ function ShearTestScene:update(dt)
 
 	self:handleInput(dt)	
 	
-	Profiler:start('addObjectsToScene')		
+	Profiler:start('addObjectsToScene')	
+	
 	self:clearScene()	
 	local buildingObjects = self.buildingObjects
 	for _, bldg in ipairs(buildingObjects) do
 		self:addObjectToScene(bldg)
 	end		
 	self:addActorToScene(hero)
+	
 	Profiler:stop('addObjectsToScene')
 		
 	Profiler:start('checkCollisions')	
+	
 	local dist = self:findClosestBoundingBox(hero)
-	print(dist)
 	if dist < 0.1 then
 		hero.position[1] = hero.oldPosition[1]
 		hero.position[2] = hero.oldPosition[2]
 	end	
+	
 	Profiler:stop('checkCollisions')	
 	
 	camera[1] = hero.position[1]
 	camera[2] = hero.position[2]			
 	
 	Profiler:start('translate3Dto2D')	
+	
 	self:translate3Dto2D()	
+	
 	Profiler:stop('translate3Dto2D')
 end
 
@@ -553,7 +562,12 @@ function ShearTestScene:drawBoundingBoxes()
 		if object.rendered then
 			for idx, box in ipairs(object.movedBoxes) do				
 				local box2D = object.boundingBoxes2D[idx]
-				love.graphics.rectangle('line',box2D[1], box2D[2], box2D[3] - box2D[1], box2D[4] - box2D[2])
+				love.graphics.rectangle(
+					'line',
+					box2D[1], 
+					box2D[2], 
+					box2D[3] - box2D[1], 
+					box2D[4] - box2D[2])
 			end
 		end
 	end
@@ -577,11 +591,21 @@ function ShearTestScene:drawRoad()
 	local ox = sx % 128
 	local oy = sy % 128
 	
-	local img = self.roadImages[1]
-	for x = -ox, 1200, 128 do
-		for y = -oy, 900, 128 do
-			love.graphics.draw(img, x, y, 0, 2)
+	local roadImg = self.roadImages[1]
+	local sidewalkImg = self.sideWalkImages[1]
+	
+	local cy = ty	
+	for y = -oy, 900, 128 do
+		local cx = tx
+		for x = -ox, 1200, 128 do		
+			if cx == 10 then
+				love.graphics.draw(roadImg, x, y, 0, 2)
+			else
+				love.graphics.draw(sidewalkImg, x, y, 0, 2)
+			end
+			cx = cx + 1
 		end
+		cy = cy + 1
 	end
 end
 
@@ -591,19 +615,19 @@ function ShearTestScene:renderHero()
 end
 
 function ShearTestScene:draw()	
-	--self:drawRoad()
+	self:drawRoad()
 		
 	self:renderHero()
 
-	Profiler:start('renderMeshes')
-	
+	Profiler:start('renderMeshes')	
 	self:renderMeshes()	
-
 	Profiler:stop('renderMeshes')
 		
 	Profiler:start('renderBoundingBoxes')	
-	--self:createBoundingBoxes2D()	
-	--self:drawBoundingBoxes()
+	
+	self:createBoundingBoxes2D()	
+	self:drawBoundingBoxes()
+	
 	Profiler:stop('renderBoundingBoxes')
 	
 	love.graphics.print('Time to add objects to secene: ' .. 
