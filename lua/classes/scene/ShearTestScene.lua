@@ -24,10 +24,10 @@ function ShearTestScene:init()
 	local drawingMesh = love.graphics.newMesh(3, 'triangles', 'dynamic')
 	self.drawingMesh = drawingMesh		
 	
-	local camera = {-3, -2, -10}
+	local camera = {0, 0, -3}
 	self.camera = camera
 
-	local building1Pos = {0, 0, 0}
+	local building1Pos = {0, -6, 0}
 	local building2Pos = {10, 0, 0}
 	local building3Pos = {0, 6, 0}
 	local building4Pos = {6, 6, 0}
@@ -56,6 +56,11 @@ function ShearTestScene:init()
 		
 	self.meshesToRender = {}
 	self.scene = {}
+	
+	self.hero = 
+	{
+		position = { 0, 0, -5 }
+	}
 end
 
 function ShearTestScene:show()
@@ -235,8 +240,8 @@ function ShearTestScene:addObjectToScene(object)
 			triangle.mesh = mesh
 			for idx, vertex in ipairs(triangle.vertices) do
 				local movedVertex = triangle.movedVertices[idx]
-				movedVertex[1] = vertex[1] + position[1] + camera[1]
-				movedVertex[2] = vertex[2] + position[2] + camera[2]
+				movedVertex[1] = vertex[1] + position[1] - camera[1]
+				movedVertex[2] = vertex[2] + position[2] - camera[2]
 				movedVertex[3] = vertex[3] + position[3] + camera[3]
 			end				
 		end
@@ -246,10 +251,10 @@ function ShearTestScene:addObjectToScene(object)
 	
 	for idx, box in ipairs(object.boundingBoxes) do
 		local movedBox = object.movedBoxes[idx]
-		movedBox[1] = box[1] + position[1] + camera[1]
-		movedBox[2] = box[2] + position[2] + camera[2]		
-		movedBox[3] = box[3] + position[1] + camera[1]
-		movedBox[4] = box[4] + position[2] + camera[2]
+		movedBox[1] = box[1] + position[1] - camera[1]
+		movedBox[2] = box[2] + position[2] - camera[2]		
+		movedBox[3] = box[3] + position[1] - camera[1]
+		movedBox[4] = box[4] + position[2] - camera[2]
 		movedBox[5] = box[5] + position[3] + camera[3]
 	end
 end
@@ -272,13 +277,13 @@ function ShearTestScene:renderMeshes()
 			local mx = middle[1] + pos[1]
 			local my = middle[2] + pos[2]
 			local mz = middle[3] + pos[3]
-			local lx = mx + camera[1]
-			local ly = my + camera[2]
+			local lx = mx - camera[1]
+			local ly = my - camera[2]
 			local lz = mz + camera[3]			
 			local dot = n[1] * lx + n[2] * ly + n[3] * lz		
 			if dot > 0 then
-				local dx = mx - camera[1]
-				local dy = my - camera[2]
+				local dx = mx + camera[1]
+				local dy = my + camera[2]
 				local dz = mz - camera[3]
 				triangle.distanceToCamera = (dx * dx) + (dy * dy) + (dz * dz)
 				triangle.texture = mesh.texture
@@ -372,7 +377,26 @@ function ShearTestScene:drawBoundingBoxes()
 				love.graphics.rectangle('line',box2D[1], box2D[2], box2D[3] - box2D[1], box2D[4] - box2D[2])
 			end
 		end
-	end								
+	end
+end
+
+function ShearTestScene:renderHero()
+	local hero = self.hero
+	local camera = self.camera
+	local position = hero.position
+	local sw = self.screenWidth
+	local sh = self.screenHeight
+	local hsw = sw / 2
+	local hsh = sh / 2	
+		
+	local x = position[1] - camera[1]
+	local y = position[2] - camera[2]
+	local z = position[3] + camera[3]
+	
+	local sx = (x / z * sw) + hsw
+	local sy = (-y / z * sh) + hsh
+	
+	love.graphics.circle('fill', sx, sy, 10)
 end
 
 function ShearTestScene:draw()	
@@ -407,23 +431,26 @@ function ShearTestScene:draw()
 	love.graphics.print('Time to create bounding boxes: ' .. 
 		Profiler:getAverage('createBoundingBoxes'), 0, 45)				
 		
-	self:drawBoundingBoxes()
+	--self:drawBoundingBoxes()
+	
+	self:renderHero()
 end
 
 function ShearTestScene:update(dt)	
 	local camera = self.camera
+	local hero = self.hero
 	
 	if love.keyboard.isDown('a') then
-		camera[1] = camera[1] - dt * 5
+		hero.position[1] = hero.position[1] + dt * 5
 	end
 	if love.keyboard.isDown('d') then
-		camera[1] = camera[1] + dt * 5
+		hero.position[1] = hero.position[1] - dt * 5
 	end
 	if love.keyboard.isDown('w') then
-		camera[2] = camera[2] + dt * 5
+		hero.position[2] = hero.position[2] - dt * 5
 	end
 	if love.keyboard.isDown('s') then
-		camera[2] = camera[2] - dt * 5
+		hero.position[2] = hero.position[2] + dt * 5
 	end
 	if love.keyboard.isDown('q') then
 		camera[3] = camera[3] - dt * 5
@@ -431,6 +458,9 @@ function ShearTestScene:update(dt)
 	if love.keyboard.isDown('e') then
 		camera[3] = camera[3] + dt * 5
 	end	
+	
+	camera[1] = hero.position[1]
+	camera[2] = hero.position[2]
 end
 
 return ShearTestScene
