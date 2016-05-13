@@ -213,12 +213,21 @@ function ShearTestScene:renderMeshes()
 			vertices2D[i] = { tx, ty, vertex[4], vertex[5] }
 		end
 
-		-- TO DO check to see if transformed vertices are within screen coordinates		
-		for i, vertex in ipairs(vertices2D) do
-			drawingMesh:setVertex(i, vertex[1], vertex[2], vertex[3], vertex[4], 255, 255, 255, 255)
-		end		
-		drawingMesh:setTexture(triangle.texture)
-		love.graphics.draw(drawingMesh, 0, 0)
+		local insideScreen = false
+		for _, vertex in ipairs(vertices2D) do
+			if vertex[1] > 0 or vertex[1] < sw or vertex[2] > 0 or vertex[2] < sh then
+				insideScreen = true
+				break
+			end
+		end
+		
+		if insideScreen then		
+			for i, vertex in ipairs(vertices2D) do
+				drawingMesh:setVertex(i, vertex[1], vertex[2], vertex[3], vertex[4], 255, 255, 255, 255)
+			end		
+			drawingMesh:setTexture(triangle.texture)
+			love.graphics.draw(drawingMesh, 0, 0)
+		end
 	end	
 end
 
