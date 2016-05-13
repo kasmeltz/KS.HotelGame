@@ -21,6 +21,14 @@ function ShearTestScene:findMiddle(mesh)
 	end
 end
 
+function ShearTestScene:createBuilding(pos)
+	local building = {}
+	building.position = pos
+	building[1] = roofMesh
+	building[2] = wallMesh	
+	return building
+end
+
 function ShearTestScene:init()
 	ShearTestScene.super.init(self)
 	self.roofImage = love.graphics.newImage('data/images/roof.jpg')
@@ -133,7 +141,7 @@ function ShearTestScene:init()
 	self:findMiddle(wallMesh)
 end
 
-local cam = {0, 0, -7}
+local cam = {0, 0, -10}
 
 local building1Pos = {0, 0, 0}
 local building2Pos = {6, 0, 0}
@@ -141,28 +149,30 @@ local building3Pos = {0, 6, 0}
 local building4Pos = {6, 6, 0}
 local building5Pos = {-10, 0, 0}
 
-function ShearTestScene:addMeshToRender(mesh, pos)
+function ShearTestScene:addMeshesToScene(meshes)
 	local meshesToRender = self.meshesToRender
+	local position = meshes.position
 	
-	-- move verts according to object and camera
-	local movedMesh = { texture = mesh.texture, position = pos }
-	for _, triangle in ipairs(mesh) do
-		local movedTriangle = { normal = triangle.normal, middle = triangle.middle,  vertices = {} }
-		for _, vertex in ipairs(triangle.vertices) do	
-			local movedVertex = 
-			{			
-				vertex[1] + cam[1] + pos[1], 
-				vertex[2] + cam[2] + pos[2], 
-				vertex[3] + cam[3] + pos[3], 
-				vertex[4], 
-				vertex[5] 
-			}
-			movedTriangle.vertices[#movedTriangle.vertices + 1] = movedVertex
-		end		
-		movedMesh[#movedMesh + 1] = movedTriangle
-	end
-	
-	meshesToRender[#meshesToRender + 1] = movedMesh
+	-- move mesh according to object and camera
+	for _, mesh in ipairs(meshes) do
+		local movedMesh = { texture = mesh.texture, position = position }
+		for _, triangle in ipairs(mesh) do
+			local movedTriangle = { normal = triangle.normal, middle = triangle.middle,  vertices = {} }
+			for _, vertex in ipairs(triangle.vertices) do	
+				local movedVertex = 
+				{			
+					vertex[1] + cam[1] + position[1], 
+					vertex[2] + cam[2] + position[2], 
+					vertex[3] + cam[3] + position[3], 
+					vertex[4], 
+					vertex[5] 
+				}
+				movedTriangle.vertices[#movedTriangle.vertices + 1] = movedVertex
+			end		
+			movedMesh[#movedMesh + 1] = movedTriangle
+		end
+		meshesToRender[#meshesToRender + 1] = movedMesh
+	end		
 end
 
 function ShearTestScene:renderMeshes()
@@ -234,38 +244,42 @@ end
 function ShearTestScene:draw()	
 	self.meshesToRender = {}
 	
-	self:addMeshToRender(wallMesh, building1Pos)
-	self:addMeshToRender(roofMesh, building1Pos)	
-	self:addMeshToRender(wallMesh, building2Pos)
-	self:addMeshToRender(roofMesh, building2Pos)	
-	self:addMeshToRender(wallMesh, building3Pos)
-	self:addMeshToRender(roofMesh, building3Pos)	
-	self:addMeshToRender(wallMesh, building4Pos)
-	self:addMeshToRender(roofMesh, building4Pos)	
-	self:addMeshToRender(wallMesh, building5Pos)
-	self:addMeshToRender(roofMesh, building5Pos)	
+	local bldg = self:createBuilding(building1Pos)
+	self:addMeshesToScene(bldg)
+
+	local bldg = self:createBuilding(building2Pos)
+	self:addMeshesToScene(bldg)
+
+	local bldg = self:createBuilding(building3Pos)
+	self:addMeshesToScene(bldg)
+
+	local bldg = self:createBuilding(building4Pos)
+	self:addMeshesToScene(bldg)
+
+	local bldg = self:createBuilding(building5Pos)
+	self:addMeshesToScene(bldg)
 
 	self:renderMeshes()	
 end
 
 function ShearTestScene:update(dt)	
 	if love.keyboard.isDown('a') then
-		cam[1] = cam[1] - dt * 2
+		cam[1] = cam[1] - dt * 5
 	end
 	if love.keyboard.isDown('d') then
-		cam[1] = cam[1] + dt * 2
+		cam[1] = cam[1] + dt * 5
 	end
 	if love.keyboard.isDown('w') then
-		cam[2] = cam[2] + dt * 2
+		cam[2] = cam[2] + dt * 5
 	end
 	if love.keyboard.isDown('s') then
-		cam[2] = cam[2] - dt * 2
+		cam[2] = cam[2] - dt * 5
 	end
 	if love.keyboard.isDown('q') then
-		cam[3] = cam[3] - dt * 2
+		cam[3] = cam[3] - dt * 5
 	end
 	if love.keyboard.isDown('e') then
-		cam[3] = cam[3] + dt * 2
+		cam[3] = cam[3] + dt * 5
 	end	
 end
 
