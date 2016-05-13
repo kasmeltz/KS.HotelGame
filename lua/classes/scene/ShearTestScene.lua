@@ -112,15 +112,15 @@ function ShearTestScene:createRoofSection(sx, ex, sy, ey, z)
 	{
 		vertices = 
 		{
-			{ex, ey, z, 0, 1},
-			{ex, sy, z, 0, 0},
-			{sx, ey, z, 1, 1}
+			{ex, ey, z, 1, 1},
+			{ex, sy, z, 1, 0},
+			{sx, ey, z, 0, 1}
 		}, 
 		movedVertices =
 		{
-			{0, 0, 0, 0, 1},
-			{0, 0, 0, 0, 0},
 			{0, 0, 0, 1, 1},
+			{0, 0, 0, 1, 0},
+			{0, 0, 0, 0, 1},
 		},
 		normal = { 0, 0, -1 },
 		vertices2D = {}
@@ -130,15 +130,15 @@ function ShearTestScene:createRoofSection(sx, ex, sy, ey, z)
 	{
 		vertices = 
 		{
-			{ex, sy, z, 0, 0},
-			{sx, sy, z, 1, 0},
-			{sx, ey, z, 1, 1}
+			{ex, sy, z, 1, 0},
+			{sx, sy, z, 0, 0},
+			{sx, ey, z, 0, 1}
 		}, 		
 		movedVertices = 
 		{
-			{0, 0, 0, 0, 0},
 			{0, 0, 0, 1, 0},
-			{0, 0, 0, 1, 1},
+			{0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 1},
 		},
 		normal = { 0, 0, -1 },
 		vertices2D = {}
@@ -197,73 +197,6 @@ function ShearTestScene:addWallSections(walls, sx, ex, sy, ey, sz, ez, ss, nx, n
 	end
 end
 
---[[
-function ShearTestScene:createBuilding(sx, ex, sy, ey, sz, ez, ss, position, roofImage, buildingImage)
-	local building = {}
-	building.position = position	
-	building.meshes = {}
-	building.boundingBoxes = {}
-	building.movedBoxes = {}
-	building.boundingBoxes2D = {}
-	
-	local walls =
-	{
-		texture = buildingImage,
-		triangles = {}
-	}
-	for y = sy, ey - ss, ss do
-		for z = sz - ss, ez, -ss do
-			local t1, t2 = self:createWallSection(sx, sx, y, y + ss, z + ss, z, 1, 0)
-			table.insert(walls.triangles, t1)
-			table.insert(walls.triangles, t2)
-			local t1, t2 = self:createWallSection(ex, ex, y, y + ss, z + ss, z, -1, 0)
-			table.insert(walls.triangles, t1)
-			table.insert(walls.triangles, t2)
-		end
-	end
-	
-	for x = sx, ex - ss, ss do
-		for z = sz - ss, ez, -ss do	
-			local t1, t2 = self:createWallSection(x, x + ss, sy, sy, z + ss, z, 0, 1)
-			table.insert(walls.triangles, t1)
-			table.insert(walls.triangles, t2)
-			local t1, t2 = self:createWallSection(x, x + ss, ey, ey, z + ss, z, 0, -1)
-			table.insert(walls.triangles, t1)
-			table.insert(walls.triangles, t2)
-		end
-	end
-
-	table.insert(building.meshes, walls)
-	
-	local roof = 
-	{
-		texture = roofImage,
-		triangles = {}
-	}
-	for x = sx, ex - ss, ss do
-		for y = sy, ey - ss, ss do
-			-- one roof zection must be on top of every wall
-			local t1, t2 = self:createRoofSection(x, x + ss, y, y + ss, sz)
-			table.insert(roof.triangles, t1)
-			table.insert(roof.triangles, t2)						
-			-- insert bounding boxes to match the structure
-			local box = { x, y, x + ss, y + ss, ez }
-			table.insert(building.boundingBoxes, box)
-			table.insert(building.movedBoxes,{0,0,0,0,0,0})
-			table.insert(building.boundingBoxes2D,{0,0,0,0})
-		end
-	end
-	
-	table.insert(building.meshes, roof)				
-		
-	for _, mesh in ipairs(building.meshes) do
-		self:findMiddle(mesh)
-	end
-	
-	return building
-end
-]]
-
 function ShearTestScene:createBuildingFromType(buildingType)
 	local building = {}
 	building.meshes = {}
@@ -273,7 +206,7 @@ function ShearTestScene:createBuildingFromType(buildingType)
 	
 	local groundFloor = self.groundFloor
 	local height = math.random(buildingType.heights[1], buildingType.heights[2])	
-	local wallHeight = groundFloor + height
+	local roofHeight = groundFloor + height
 	local design = buildingType.design
 	
 	local walls =
@@ -299,31 +232,38 @@ function ShearTestScene:createBuildingFromType(buildingType)
 		for dx = 1, dw do
 			local c = text:sub(dx,dx)
 			if c == 'R'then
-				self:addWallSections(walls, cx - ss, cx - ss, cy, cy + ss, wallHeight, groundFloor, 1, 1, 0)
+				self:addWallSections(walls, cx - ss, cx - ss, cy, cy + ss, roofHeight, groundFloor, 1, 1, 0)
 			elseif c == 'L' then	
-				self:addWallSections(walls, cx, cx, cy, cy + ss, wallHeight, groundFloor, 1, -1, 0)
+				self:addWallSections(walls, cx, cx, cy, cy + ss, roofHeight, groundFloor, 1, -1, 0)
 			elseif c == 'T' then				
-				self:addWallSections(walls, cx, cx - ss, cy, cy, wallHeight, groundFloor, 1, 0, 1)				
+				self:addWallSections(walls, cx, cx - ss, cy, cy, roofHeight, groundFloor, 1, 0, 1)				
 			elseif c == 'B' then				
-				self:addWallSections(walls, cx, cx - ss, cy + ss, cy + ss, wallHeight, groundFloor, 1, 0, -1)
+				self:addWallSections(walls, cx, cx - ss, cy + ss, cy + ss, roofHeight, groundFloor, 1, 0, -1)
 			elseif c == 'A' then
-				self:addWallSections(walls, cx, cx, cy, cy + ss, wallHeight, groundFloor, 1, -1, 0)
-				self:addWallSections(walls, cx, cx - ss, cy, cy, wallHeight, groundFloor, 1, 0, 1)
+				self:addWallSections(walls, cx, cx, cy, cy + ss, roofHeight, groundFloor, 1, -1, 0)
+				self:addWallSections(walls, cx, cx - ss, cy, cy, roofHeight, groundFloor, 1, 0, 1)
 			elseif c == 'C' then
-				self:addWallSections(walls, cx, cx - ss, cy + ss, cy + ss, wallHeight, groundFloor, 1, 0, -1)
-				self:addWallSections(walls, cx, cx, cy, cy + ss, wallHeight, groundFloor, 1, -1, 0)
+				self:addWallSections(walls, cx, cx - ss, cy + ss, cy + ss, roofHeight, groundFloor, 1, 0, -1)
+				self:addWallSections(walls, cx, cx, cy, cy + ss, roofHeight, groundFloor, 1, -1, 0)
 			elseif c == 'W' then	
-				self:addWallSections(walls, cx - ss, cx - ss, cy, cy + ss, wallHeight, groundFloor, 1, 1, 0)
-				self:addWallSections(walls, cx, cx - ss, cy, cy, wallHeight, groundFloor, 1, 0, 1)
+				self:addWallSections(walls, cx - ss, cx - ss, cy, cy + ss, roofHeight, groundFloor, 1, 1, 0)
+				self:addWallSections(walls, cx, cx - ss, cy, cy, roofHeight, groundFloor, 1, 0, 1)
 			elseif c == 'D' then	
-				self:addWallSections(walls, cx, cx - ss, cy + ss, cy + ss, wallHeight, groundFloor, 1, 0, -1)
-				self:addWallSections(walls, cx - ss, cx - ss, cy, cy + ss, wallHeight, groundFloor, 1, 1, 0)
+				self:addWallSections(walls, cx, cx - ss, cy + ss, cy + ss, roofHeight, groundFloor, 1, 0, -1)
+				self:addWallSections(walls, cx - ss, cx - ss, cy, cy + ss, roofHeight, groundFloor, 1, 1, 0)
 			end
 			
 			if c ~= 'Z'then
-				local t1, t2 = self:createRoofSection(cx, cx - ss, cy, cy + ss, wallHeight)
+				-- one roof zection must be on top of every wall
+				local t1, t2 = self:createRoofSection(cx, cx - ss, cy, cy + ss, roofHeight)
 				table.insert(roof.triangles, t1)
 				table.insert(roof.triangles, t2)						
+				-- insert bounding boxes to match the structure
+				print(cx, cx - ss, cy, cy + ss)
+				local box = { cx, cy, cx - ss, cy + ss, groundFloor }
+				table.insert(building.boundingBoxes, box)
+				table.insert(building.movedBoxes,{0,0,0,0,0,0})
+				table.insert(building.boundingBoxes2D,{0,0,0,0})							
 			end
 			
 			cx = cx - ss
@@ -489,8 +429,8 @@ function ShearTestScene:createBoundingBoxes2D()
 	local hsw = sw / 2
 	local hsh = sh / 2	
 	
-	for _, object in ipairs(self.scene) do
-		for idx, box in ipairs(object.movedBoxes) do				
+	for _, object in ipairs(self.scene.objects) do
+		for idx, box in ipairs(object.movedBoxes) do	
 			local box2D = object.boundingBoxes2D[idx]
 			local x1 = (box[1] / box[5] * sw) + hsw
 			local y1 = (-box[2] / box[5] * sh) + hsh	
@@ -658,17 +598,15 @@ function ShearTestScene:renderTriangles()
 end
 
 function ShearTestScene:drawBoundingBoxes()
-	for _, object in ipairs(self.scene) do
-		if object.rendered then
-			for idx, box in ipairs(object.movedBoxes) do				
-				local box2D = object.boundingBoxes2D[idx]
-				love.graphics.rectangle(
-					'line',
-					box2D[1], 
-					box2D[2], 
-					box2D[3] - box2D[1], 
-					box2D[4] - box2D[2])
-			end
+	for _, object in ipairs(self.scene.objects) do
+		for idx, box in ipairs(object.movedBoxes) do				
+			local box2D = object.boundingBoxes2D[idx]
+			love.graphics.rectangle(
+				'line',
+				box2D[1], 
+				box2D[2], 
+				box2D[3] - box2D[1], 
+				box2D[4] - box2D[2])
 		end
 	end
 end
@@ -715,8 +653,7 @@ function ShearTestScene:renderHero()
 end
 
 function ShearTestScene:draw()	
-	self:drawRoad()
-		
+	self:drawRoad()		
 	self:renderHero()
 
 	Profiler:start('renderTriangles')
