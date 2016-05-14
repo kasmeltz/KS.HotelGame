@@ -1,3 +1,5 @@
+local FontManager = require 'classes/scene/FontManager'
+FontManager = FontManager:getInstance()
 local Profiler = require 'classes/Profiler'
 Profiler = Profiler:getInstance()
 
@@ -80,7 +82,7 @@ function ShearTestScene:init()
 	self.sceneBoundingBox = {}	
 	self.sceneBoundingArea = 3
 	self.sceneBoundingCameraFactor = 0.5
-	
+
 	self.cameraZoomTop = 5
 	self.cameraZoomBottom = 1
 	
@@ -89,6 +91,34 @@ function ShearTestScene:init()
 	collectgarbage()
 
 	self:update(0.001)	
+	
+	self.wallShader = love.graphics.newShader(
+[[
+	extern vec2 v1;
+	extern vec2 v2;
+	extern vec2 v3;
+	extern vec2 v4;
+	
+	vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords )
+	{			
+		v1 + v2 + v3 + v4;
+		
+		//if (screen_coords == v1) {
+		//			return(1,1,1,1);
+		//}
+		//return (0,0,0,0);
+		
+		//number y = screen_coords.y / v4.y;
+	
+		/*vec4 color = */
+		
+		//vec4 texcolor = Texel(texture, texture_coords);
+		//return texcolor * color;
+		
+		return vec4(screen_coords.y / v4.y, 0, 0, 1);
+	}
+]]
+	)
 end
 
 function ShearTestScene:show()
@@ -109,37 +139,51 @@ end
 function ShearTestScene:createRoofSection(sx, ex, sy, ey, z)
 	local t1 = 
 	{
+		order = 1,
 		vertices = 
 		{
-			{ex, ey, z, 1, 1},
-			{ex, sy, z, 1, 0},
-			{sx, ey, z, 0, 1}
+			{ex, ey, z},
+			{ex, sy, z},
+			{sx, ey, z},
 		}, 
 		movedVertices =
 		{
-			{0, 0, 0, 1, 1},
-			{0, 0, 0, 1, 0},
-			{0, 0, 0, 0, 1},
+			{0, 0, 0},
+			{0, 0, 0},
+			{0, 0, 0},
 		},
 		normal = { 0, 0, -1 },
+		uv = 
+		{
+			{1, 1},
+			{1, 0}, 
+			{0, 1},
+		},		
 		vertices2D = {{0,0}, {0,0}, {0,0}}
 	}
 	
 	local t2 = 
 	{
+		order = 2,
 		vertices = 
 		{
-			{ex, sy, z, 1, 0},
-			{sx, sy, z, 0, 0},
-			{sx, ey, z, 0, 1}
+			{ex, sy, z},
+			{sx, sy, z},
+			{sx, ey, z},
 		}, 		
 		movedVertices = 
 		{
-			{0, 0, 0, 1, 0},
-			{0, 0, 0, 0, 0},
-			{0, 0, 0, 0, 1},
+			{0, 0, 0},
+			{0, 0, 0},
+			{0, 0, 0},
 		},
 		normal = { 0, 0, -1 },
+		uv = 
+		{
+			{1, 0},
+			{0, 0}, 
+			{0, 1},
+		},		
 		vertices2D = {{0,0}, {0,0}, {0,0}}
 	}
 	
@@ -149,36 +193,50 @@ end
 function ShearTestScene:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 	local t1 = 
 	{
+		order = 1,
 		vertices = 
 		{
-			{sx, sy, ez, 0, 1},
-			{sx, sy, sz, 0, 0},
-			{ex, ey, ez, 1, 1},
+			{sx, sy, ez},
+			{sx, sy, sz},
+			{ex, ey, ez},
 		}, 
 		movedVertices =
 		{
-			{0, 0, 0, 0, 1},
-			{0, 0, 0, 0, 0},
-			{0, 0, 0, 1, 1},
+			{0, 0, 0},
+			{0, 0, 0},
+			{0, 0, 0},
 		},
 		normal = { nx, ny, 0 },
+		uv = 
+		{
+			{0, 1},
+			{0, 0}, 
+			{1, 1},
+		},	
 		vertices2D = {{0,0}, {0,0}, {0,0}}
 	}
 	local t2 = 
 	{
+		order = 2,
 		vertices = 
 		{
-			{sx, sy, sz, 0, 0},
-			{ex, ey, sz, 1, 0},
-			{ex, ey, ez, 1, 1},
+			{sx, sy, sz},
+			{ex, ey, sz},
+			{ex, ey, ez},
 		}, 
 		movedVertices =
 		{
-			{0, 0, 0, 0, 0},
-			{0, 0, 0, 1, 0},
-			{0, 0, 0, 1, 1},
+			{0, 0, 0},
+			{0, 0, 0},
+			{0, 0, 0},
 		},
 		normal = { nx, ny, 0 },
+		uv = 
+		{
+			{0, 0},
+			{1, 0}, 
+			{1, 1},
+		},	
 		vertices2D = {{0,0}, {0,0}, {0,0}}
 	}
 	
@@ -187,10 +245,6 @@ end
 
 function ShearTestScene:addWallSections(walls, sx, ex, sy, ey, sz, ez, ss, nx, ny)
 	--for z = sz - ss, ez, -ss do
-		--local t1, t2 = self:createWallSection(sx, ex, sy, ey, z + ss, z, nx, ny)
-		local t1, t2 = self:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
-		table.insert(walls.triangles, t1)
-		table.insert(walls.triangles, t2)
 		--local t1, t2 = self:createWallSection(sx, ex, sy, ey, z + ss, z, nx, ny)
 		local t1, t2 = self:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 		table.insert(walls.triangles, t1)
@@ -290,7 +344,12 @@ end
 function ShearTestScene:addObjectToScene(object)
 	local meshesToRender = self.meshesToRender
 	local position = object.position
-	local sceneBoundingBox = self.sceneBoundingBox 
+	
+	local sceneBoundingBox = self.sceneBoundingBox 	
+	local sbx1 = sceneBoundingBox[1]
+	local sby1 = sceneBoundingBox[2]
+	local sbx2 = sceneBoundingBox[3]
+	local sby2 = sceneBoundingBox[4]
 
 	-- check if object should even be in scene
 	local abox = object.aggregateBoundingBox
@@ -300,12 +359,37 @@ function ShearTestScene:addObjectToScene(object)
 	local ay2 = abox[4] + position[2]
 	
 	-- check if object should appear in scene
-	if 	ax1 >= sceneBoundingBox[3] or
-		ay1 >= sceneBoundingBox[4] or
-		ax2 <= sceneBoundingBox[1] or
-		ay2 <= sceneBoundingBox[2] then			
+	if 	ax1 >= sbx2 or
+		ay1 >= sby2 or
+		ax2 <= sbx1 or
+		ay2 <= sby1 then			
 			return
 	end
+		
+	-- update mesh position
+	for _, mesh in ipairs(object.meshes) do		
+		mesh.object = object
+		for _, triangle in ipairs(mesh.triangles) do
+			triangle.mesh = mesh
+			triangle.visible = false
+			for idx, vertex in ipairs(triangle.vertices) do
+				local movedVertex = triangle.movedVertices[idx]
+				movedVertex[1] = vertex[1] + position[1]
+				movedVertex[2] = vertex[2] + position[2]
+				movedVertex[3] = vertex[3] + position[3]
+				
+				-- check if mesh should appear in scene
+				if 	movedVertex[1] >= sbx1 and
+					movedVertex[1] <= sbx2 and
+					movedVertex[2] >= sby1 and
+					movedVertex[2] <= sby2 then
+						triangle.visible = true
+				end
+			end				
+		end
+		mesh.position = position
+		meshesToRender[#meshesToRender + 1] = mesh
+	end	
 	
 	-- update bounding boxes
 	for idx, box in ipairs(object.boundingBoxes) do
@@ -316,23 +400,7 @@ function ShearTestScene:addObjectToScene(object)
 		movedBox[4] = box[4] + position[2]
 		movedBox[5] = box[5] + position[3]			
 	end
-		
-	-- update mesh position
-	for _, mesh in ipairs(object.meshes) do		
-		mesh.object = object
-		for _, triangle in ipairs(mesh.triangles) do
-			triangle.mesh = mesh
-			for idx, vertex in ipairs(triangle.vertices) do
-				local movedVertex = triangle.movedVertices[idx]
-				movedVertex[1] = vertex[1] + position[1]
-				movedVertex[2] = vertex[2] + position[2]
-				movedVertex[3] = vertex[3] + position[3]
-			end				
-		end
-		mesh.position = position
-		meshesToRender[#meshesToRender + 1] = mesh
-	end			
-	
+				
 	local scene = self.scene
 	table.insert(scene.objects, object)		
 end
@@ -355,12 +423,14 @@ function ShearTestScene:translate3Dto2D()
 	for _, object in ipairs(scene.objects) do
 		for _, mesh in ipairs(object.meshes) do		
 			for _, triangle in ipairs(mesh.triangles) do
-				for idx, vertex in ipairs(triangle.vertices) do
-					local movedVertex = triangle.movedVertices[idx]
-					movedVertex[1] = movedVertex[1] - camera[1]
-					movedVertex[2] = movedVertex[2] - camera[2]
-					movedVertex[3] = movedVertex[3] - camera[3]
-				end				
+				if triangle.visible then
+					for idx, vertex in ipairs(triangle.vertices) do
+						local movedVertex = triangle.movedVertices[idx]
+						movedVertex[1] = movedVertex[1] - camera[1]
+						movedVertex[2] = movedVertex[2] - camera[2]
+						movedVertex[3] = movedVertex[3] - camera[3]
+					end
+				end
 			end
 		end		
 		
@@ -381,23 +451,25 @@ function ShearTestScene:translate3Dto2D()
 	-- sort triangles	
 	for _, mesh in ipairs(meshesToRender) do
 		local pos = mesh.position
-		for _, triangle in ipairs(mesh.triangles) do	
-			local n = triangle.normal
-			local middle = triangle.middle
-			local mx = middle[1] + pos[1]
-			local my = middle[2] + pos[2]
-			local mz = middle[3] + pos[3]
-			local lx = mx - camera[1]
-			local ly = my - camera[2]
-			local lz = mz - camera[3]			
-			local dot = n[1] * lx + n[2] * ly + n[3] * lz	
-			if dot > 0 then
-				local dx = mx - camera[1]
-				local dy = my - camera[2]
-				local dz = mz - camera[3]
-				triangle.distanceToCamera = (dx * dx) + (dy * dy) + (dz * dz)
-				triangle.texture = mesh.texture
-				orderedTriangles[#orderedTriangles + 1] = triangle
+		for _, triangle in ipairs(mesh.triangles) do
+			if triangle.visible then
+				local n = triangle.normal
+				local middle = triangle.middle
+				local mx = middle[1] + pos[1]
+				local my = middle[2] + pos[2]
+				local mz = middle[3] + pos[3]
+				local lx = mx - camera[1]
+				local ly = my - camera[2]
+				local lz = mz - camera[3]			
+				local dot = n[1] * lx + n[2] * ly + n[3] * lz	
+				if dot > 0 then
+					local dx = mx - camera[1]
+					local dy = my - camera[2]
+					local dz = mz - camera[3]
+					triangle.distanceToCamera = (dx * dx) + (dy * dy) + (dz * dz)
+					triangle.texture = mesh.texture
+					orderedTriangles[#orderedTriangles + 1] = triangle
+				end
 			end
 		end
 	end
@@ -428,8 +500,6 @@ function ShearTestScene:translate3Dto2D()
 			local ty = (-vertex[2] / vertex[3] * sh) + hsh	
 			triangle.vertices2D[i][1] = tx
 			triangle.vertices2D[i][2] = ty
-			triangle.vertices2D[i][3] = vertex[4]
-			triangle.vertices2D[i][4] = vertex[5]
 		end
 
 		for _, vertex in ipairs(triangle.vertices2D) do
@@ -618,18 +688,18 @@ function ShearTestScene:update(dt)
 	self:addActorToScene(hero)
 	
 	Profiler:stop('Add Objects To Scene')
-		
-	Profiler:start('Check Collisions')	
-	
-	local dist = self:findClosestBoundingBox(hero)
-	if dist < 0.1 then
-		hero.position[1] = hero.oldPosition[1]
-		hero.position[2] = hero.oldPosition[2]
-		hero.position[1] = hero.oldPosition[1]
-		hero.position[2] = hero.oldPosition[2]
-	end	
 
-	Profiler:stop('Check Collisions')	
+	if not self.drawDebug then
+		Profiler:start('Check Collisions')		
+		local dist = self:findClosestBoundingBox(hero)
+		if dist < 0.1 then
+			hero.position[1] = hero.oldPosition[1]
+			hero.position[2] = hero.oldPosition[2]
+			hero.position[1] = hero.oldPosition[1]
+			hero.position[2] = hero.oldPosition[2]
+		end	
+		Profiler:stop('Check Collisions')	
+	end
 	
 	camera[1] = hero.position[1]
 	camera[2] = hero.position[2]			
@@ -644,17 +714,76 @@ end
 function ShearTestScene:renderTriangles()
 	local orderedTriangles = self.orderedTriangles
 	
+	local wallShader = self.wallShader
+	love.graphics.setShader(wallShader)
+	
 	-- render triangles
+	love.graphics.setLineWidth(2)
 	local drawingMesh = self.drawingMesh
-	for _, triangle in ipairs(orderedTriangles) do
+	for idx, triangle in ipairs(orderedTriangles) do
+		local mesh = triangle.mesh
 		if triangle.visible then
 			for i, vertex in ipairs(triangle.vertices2D) do
-				drawingMesh:setVertex(i, vertex[1], vertex[2], vertex[3], vertex[4], 255, 255, 255, 255)
+				drawingMesh:setVertex(i, vertex[1], vertex[2], triangle.uv[i][1], triangle.uv[i][2], 255, 255, 255, 255)
 			end		
-			drawingMesh:setTexture(triangle.texture)
+			drawingMesh:setTexture(triangle.texture)			
+			
+			local mesh = triangle.mesh
+			--[[
+			local evenIdx = math.floor(idx /2) * 2
+
+			local v1 = mesh.triangles[idx].vertices2D[1]
+			local v2 = mesh.triangles[idx].vertices2D[2]
+			local v3 = mesh.triangles[idx].vertices2D[3]
+			local v4 = mesh.triangles[idx].vertices2D[2]
+			
+			wallShader:send('v1', v1)
+			wallShader:send('v2', v2)
+			wallShader:send('v3', v3)
+			wallShader:send('v4', v4)
+			
+			print('======================')
+			print(v1[1], v1[2])
+			print(v2[1], v2[2])
+			print(v3[1], v3[2])
+			print(v4[1], v4[2])
+			print('======================')
+				]]		
 			love.graphics.draw(drawingMesh, 0, 0)
 		end
-	end		
+	end
+	love.graphics.setShader()
+			
+	if self.drawDebug then
+		love.graphics.setFont(FontManager:getFont('Courier16'))
+		for idx, triangle in ipairs(orderedTriangles) do
+			local mesh = triangle.mesh
+			if triangle.visible then					
+				local x1 = triangle.vertices2D[1][1]
+				local y1 = triangle.vertices2D[1][2]
+				local x2 = triangle.vertices2D[2][1]
+				local y2 = triangle.vertices2D[2][2]
+				local x3 = triangle.vertices2D[3][1]
+				local y3 = triangle.vertices2D[3][2]
+				local mx = (x1 + x2 + x3) / 3
+				local my = (y1 + y2 + y3) / 3				
+				
+				love.graphics.setColor(255,255,0)
+				love.graphics.polygon('line', 
+					x1, y1, x2, y2, x3, y3)
+		
+				love.graphics.setColor(0, 255, 255)									
+				love.graphics.print('1', (x1 + mx)/ 2, (y1 + my) / 2)
+				love.graphics.print('2', (x2 + mx)/ 2, (y2 + my) / 2)
+				love.graphics.print('3', (x3 + mx)/ 2, (y3 + my) / 2)
+				
+				love.graphics.setColor(255,255,255)
+				love.graphics.print(idx .. ': ' .. triangle.order, mx, my)
+					
+				love.graphics.setColor(255,255,255)
+			end
+		end	
+	end
 end
 
 function ShearTestScene:drawBoundingBoxes()
@@ -723,7 +852,7 @@ function ShearTestScene:renderHero()
 end
 
 function ShearTestScene:draw()
-	self.drawDebug = false
+	--self.drawDebug = false
 
 	Profiler:start('Render Road')	
 	
@@ -761,6 +890,13 @@ function ShearTestScene:draw()
 			
 		sy = sy + 15		
 		sy = sy + 15
+		
+		love.graphics.print('triangles rendered: ' .. #self.orderedTriangles, 0, sy)
+				
+		sy = sy + 15	
+		sy = sy + 15
+		
+	
 		love.graphics.print('sceneBoundingBox: ['.. 
 			self.sceneBoundingBox[1] .. ', ' ..
 			self.sceneBoundingBox[2] .. ', ' ..
