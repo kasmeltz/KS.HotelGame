@@ -58,6 +58,8 @@ function love.load()
 end
 
 function love.update(dt)
+	collectgarbage("step", 1000)
+
 	gameWorld:update(dt)
 	
 	local vs = SceneManager.visibleScenes
@@ -65,7 +67,7 @@ function love.update(dt)
 	for i = 1, #vs do
 		local vScene = vs[i]
 		vScene:update(dt)
-	end		
+	end	
 end
 
 function love.draw()

@@ -52,7 +52,7 @@ function ShearTestScene:init()
 	for i = 1, 500 do
 		local t = math.random(1,4)
 		local bo = 	self:createBuildingFromType(self.buildingTypes[t])
-		bo.position = { math.random(0,500) - 250, math.random(0,500) - 250, 0 }
+		bo.position = { math.random(0,200) - 100, math.random(0,200) - 100, 0 }
 		buildingObjects[#buildingObjects + 1] = bo
 	end
 		
@@ -78,6 +78,11 @@ function ShearTestScene:init()
 	self.sceneBoundingBox = {}	
 	self.sceneBoundingArea = 3
 	self.sceneBoundingCameraFactor = 0.5
+	
+	self.cameraZoomTop = 5
+	self.cameraZoomBottom = 1
+	
+	collectgarbage()
 end
 
 function ShearTestScene:show()
@@ -111,7 +116,7 @@ function ShearTestScene:createRoofSection(sx, ex, sy, ey, z)
 			{0, 0, 0, 0, 1},
 		},
 		normal = { 0, 0, -1 },
-		vertices2D = {}
+		vertices2D = {{0,0}, {0,0}, {0,0}}
 	}
 	
 	local t2 = 
@@ -129,7 +134,7 @@ function ShearTestScene:createRoofSection(sx, ex, sy, ey, z)
 			{0, 0, 0, 0, 1},
 		},
 		normal = { 0, 0, -1 },
-		vertices2D = {}
+		vertices2D = {{0,0}, {0,0}, {0,0}}
 	}
 	
 	return t1, t2
@@ -151,7 +156,7 @@ function ShearTestScene:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 			{0, 0, 0, 1, 1},
 		},
 		normal = { nx, ny, 0 },
-		vertices2D = {}
+		vertices2D = {{0,0}, {0,0}, {0,0}}
 	}
 	local t2 = 
 	{
@@ -168,7 +173,7 @@ function ShearTestScene:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 			{0, 0, 0, 1, 1},
 		},
 		normal = { nx, ny, 0 },
-		vertices2D = {}
+		vertices2D = {{0,0}, {0,0}, {0,0}}
 	}
 	
 	return t1, t2
@@ -414,7 +419,10 @@ function ShearTestScene:translate3Dto2D()
 		for i, vertex in ipairs(triangle.movedVertices) do
 			local tx = (vertex[1] / vertex[3] * sw) + hsw
 			local ty = (-vertex[2] / vertex[3] * sh) + hsh	
-			triangle.vertices2D[i] = { tx, ty, vertex[4], vertex[5] }
+			triangle.vertices2D[i][1] = tx
+			triangle.vertices2D[i][2] = ty
+			triangle.vertices2D[i][3] = vertex[4]
+			triangle.vertices2D[i][4] = vertex[5]
 		end
 
 		for _, vertex in ipairs(triangle.vertices2D) do
@@ -667,25 +675,30 @@ function ShearTestScene:drawRoad()
 	local x = camera[1]
 	local y = camera[2]
 	local z = self.groundFloor - camera[3] 
+		
+	local ss = -sw / z
+	local zf = ss / 64
 	
 	local sx = (x / z * sw) + hsw
 	local sy = (-y / z * sh) + hsh
-	local tx = math.floor(sx / 128)
-	local ty = math.floor(sx / 128)	
-	local ox = sx % 128
-	local oy = sy % 128
+	local tx = math.floor(sx / ss)
+	local ty = math.floor(sx / ss)	
+	local ox = sx % ss
+	local oy = sy % ss
+	
+	--print(sx, sy, tx, ty, ox, oy)
 	
 	local roadImg = self.roadImages[1]
 	local sidewalkImg = self.sideWalkImages[1]
 	
 	local cy = ty	
-	for y = -oy, 900, 128 do
+	for y = -oy, 900, ss do
 		local cx = tx
-		for x = -ox, 1200, 128 do		
+		for x = -ox, 1200, ss do		
 			if cx == 10 then
-				love.graphics.draw(roadImg, x, y, 0, 2)
+				love.graphics.draw(roadImg, x, y, 0, zf)
 			else
-				love.graphics.draw(sidewalkImg, x, y, 0, 2)
+				love.graphics.draw(sidewalkImg, x, y, 0, zf)
 			end
 			cx = cx + 1
 		end
@@ -719,11 +732,11 @@ function ShearTestScene:draw()
 		
 	Profiler:start('Render Bounding Boxes')	
 	
-	self:createBoundingBoxes2D()	
-	self:drawBoundingBoxes()
+	--self:createBoundingBoxes2D()	
+	--self:drawBoundingBoxes()
 	
 	Profiler:stop('Render Bounding Boxes')	
-			
+
 	local sy = 15
 	love.graphics.print(
 		'hx: '.. 
@@ -749,6 +762,16 @@ function ShearTestScene:draw()
 	love.graphics.print('camera Z: '.. self.camera[3], 0, sy)	
 	sy = sy + 15
 	sy = sy + 15	
+	
+	love.graphics.print('cameraZoomTop: '.. self.cameraZoomTop, 0, sy)
+	sy = sy + 15	
+	love.graphics.print('cameraZoomBottom: ' .. self.cameraZoomBottom, 0, sy)
+	sy = sy + 15
+	sy = sy + 15		
+
+	love.graphics.print('memory: ' .. collectgarbage('count')*1024, 0, sy)
+	sy = sy + 15
+	sy = sy + 15		
 		
 	table.sort(Profiler.list, function(a, b) return a.average > b.average end)	
 	for name, item in ipairs(Profiler.list) do	
@@ -773,6 +796,23 @@ function ShearTestScene:keyreleased(key)
 	if key == '4' then
 		self.sceneBoundingCameraFactor = self.sceneBoundingCameraFactor + 0.1
 	end		
+
+	if key == '5' then
+		self.cameraZoomTop = self.cameraZoomTop + 0.1
+	end		
+
+	if key == '6' then
+		self.cameraZoomTop = self.cameraZoomTop - 0.1
+	end		
+
+	if key == '7' then
+		self.cameraZoomBottom = self.cameraZoomBottom + 0.1
+	end		
+
+	if key == '8' then
+		self.cameraZoomBottom = self.cameraZoomBottom - 0.1
+	end		
+
 end
 
 return ShearTestScene
