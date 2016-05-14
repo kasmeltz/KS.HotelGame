@@ -48,11 +48,11 @@ function ShearTestScene:init()
 	self.groundFloor = groundFloor
 	
 	local buildingObjects = {}	
-
-	for i = 1, 50 do
+	
+	for i = 1, 500 do
 		local t = math.random(1,4)
 		local bo = 	self:createBuildingFromType(self.buildingTypes[t])
-		bo.position = { math.random(0,100) - 50, math.random(0,100) - 50, 0 }		
+		bo.position = { math.random(0,500) - 250, math.random(0,500) - 250, 0 }
 		buildingObjects[#buildingObjects + 1] = bo
 	end
 		
@@ -69,11 +69,15 @@ function ShearTestScene:init()
 	
 	self.hero = 
 	{
-		position = {5.15, -9.725, groundFloor},
+		position = { 0, -5, groundFloor},
 		movedPosition = {0, 0, groundFloor},
 		oldPosition = {0, 0, groundFloor},
 		position2D = {0, 0},		
 	}	
+	
+	self.sceneBoundingBox = {}	
+	self.sceneBoundingArea = 3
+	self.sceneBoundingCameraFactor = 0.5
 end
 
 function ShearTestScene:show()
@@ -184,6 +188,7 @@ end
 function ShearTestScene:createBuildingFromType(buildingType)
 	local building = {}
 	building.meshes = {}
+	building.aggregateBoundingBox = { 999, 999, -999, -999 }
 	building.boundingBoxes = {}
 	building.movedBoxes = {}
 	building.boundingBoxes2D = {}
@@ -243,10 +248,15 @@ function ShearTestScene:createBuildingFromType(buildingType)
 				table.insert(roof.triangles, t1)
 				table.insert(roof.triangles, t2)						
 				-- insert bounding boxes to match the structure
-				local box = { cx, cy, cx - ss, cy + ss, groundFloor }
+				local box = { cx - ss, cy, cx, cy + ss, groundFloor }
 				table.insert(building.boundingBoxes, box)
 				table.insert(building.movedBoxes,{0,0,0,0,0,0})
-				table.insert(building.boundingBoxes2D,{0,0,0,0})							
+				table.insert(building.boundingBoxes2D,{0,0,0,0})	
+				local abox = building.aggregateBoundingBox
+				if box[1] < abox[1] then abox[1] = box[1] end
+				if box[2] < abox[2] then abox[2] = box[2] end
+				if box[3] > abox[3] then abox[3] = box[3] end
+				if box[4] > abox[4] then abox[4] = box[4] end
 			end
 			
 			cx = cx - ss
@@ -267,7 +277,34 @@ end
 function ShearTestScene:addObjectToScene(object)
 	local meshesToRender = self.meshesToRender
 	local position = object.position
+	local sceneBoundingBox = self.sceneBoundingBox 
 
+	-- check if object should even be in scene
+	local abox = object.aggregateBoundingBox
+	local ax1 = abox[1] + position[1]
+	local ay1 = abox[2] + position[2]
+	local ax2 = abox[3] + position[1]
+	local ay2 = abox[4] + position[2]
+	
+	-- check if object should appear in scene
+	if 	ax1 >= sceneBoundingBox[3] or
+		ay1 >= sceneBoundingBox[4] or
+		ax2 <= sceneBoundingBox[1] or
+		ay2 <= sceneBoundingBox[2] then			
+			return
+	end
+	
+	-- update bounding boxes
+	for idx, box in ipairs(object.boundingBoxes) do
+		local movedBox = object.movedBoxes[idx]
+		movedBox[1] = box[1] + position[1]
+		movedBox[2] = box[2] + position[2]
+		movedBox[3] = box[3] + position[1]
+		movedBox[4] = box[4] + position[2]
+		movedBox[5] = box[5] + position[3]			
+	end
+		
+	
 	-- update mesh position
 	for _, mesh in ipairs(object.meshes) do		
 		mesh.object = object
@@ -282,17 +319,7 @@ function ShearTestScene:addObjectToScene(object)
 		end
 		mesh.position = position
 		meshesToRender[#meshesToRender + 1] = mesh
-	end		
-	
-	-- update bounding boxes
-	for idx, box in ipairs(object.boundingBoxes) do
-		local movedBox = object.movedBoxes[idx]
-		movedBox[1] = box[1] + position[1]
-		movedBox[2] = box[2] + position[2]
-		movedBox[3] = box[3] + position[1]
-		movedBox[4] = box[4] + position[2]
-		movedBox[5] = box[5] + position[3]
-	end
+	end			
 	
 	local scene = self.scene
 	table.insert(scene.objects, object)		
@@ -466,6 +493,16 @@ function ShearTestScene:clearScene()
 	for i = 1, #orderedTriangles do
 		orderedTriangles[i] = nil
 	end
+	
+	local camera = self.camera
+	local sceneBoundingBox = self.sceneBoundingBox 
+	
+	local area = self.sceneBoundingArea + (camera[3] * self.sceneBoundingCameraFactor)
+	
+	sceneBoundingBox[1] = camera[1] -area
+	sceneBoundingBox[2] = camera[2] -area
+	sceneBoundingBox[3] = camera[1] +area
+	sceneBoundingBox[4] = camera[2] +area
 end
 
 function ShearTestScene:sqr(x) 
@@ -536,10 +573,10 @@ function ShearTestScene:handleInput(dt)
 		hero.position[2] = hero.position[2] + dt * 5
 	end
 	if love.keyboard.isDown('q') then
-		camera[3] = camera[3] - dt * 5
+		camera[3] = camera[3] - dt * 10
 	end
 	if love.keyboard.isDown('e') then
-		camera[3] = camera[3] + dt * 5
+		camera[3] = camera[3] + dt * 10
 	end	
 end
 
@@ -550,20 +587,24 @@ function ShearTestScene:update(dt)
 	hero.oldPosition[1] = hero.position[1]
 	hero.oldPosition[2] = hero.position[2]		
 
+	Profiler:start('Handle Input')	
+	
 	self:handleInput(dt)	
 	
-	Profiler:start('addObjectsToScene')	
+	Profiler:stop('Handle Input')	
 	
-	self:clearScene()	
+	Profiler:start('Add Objects To Scene')	
+	
+	self:clearScene()
 	local buildingObjects = self.buildingObjects
 	for _, bldg in ipairs(buildingObjects) do
 		self:addObjectToScene(bldg)
 	end		
 	self:addActorToScene(hero)
 	
-	Profiler:stop('addObjectsToScene')
+	Profiler:stop('Add Objects To Scene')
 		
-	Profiler:start('checkCollisions')	
+	Profiler:start('Check Collisions')	
 	
 	local dist = self:findClosestBoundingBox(hero)
 	if dist < 0.1 then
@@ -573,16 +614,16 @@ function ShearTestScene:update(dt)
 		hero.position[2] = hero.oldPosition[2]
 	end	
 
-	Profiler:stop('checkCollisions')	
+	Profiler:stop('Check Collisions')	
 	
 	camera[1] = hero.position[1]
 	camera[2] = hero.position[2]			
 	
-	Profiler:start('translate3Dto2D')	
+	Profiler:start('Translate 3D to 2D')	
 	
 	self:translate3Dto2D()	
 	
-	Profiler:stop('translate3Dto2D')
+	Profiler:stop('Translate 3D to 2D')
 end
 
 
@@ -657,36 +698,81 @@ function ShearTestScene:renderHero()
 	love.graphics.circle('fill', hero.position2D[1], hero.position2D[2], 10)
 end
 
-function ShearTestScene:draw()	
+function ShearTestScene:draw()
+	Profiler:start('Render Road')	
+	
 	self:drawRoad()		
+	
+	Profiler:stop('Render Road')
+	
+	Profiler:start('Render Hero')	
+	
 	self:renderHero()
+	
+	Profiler:stop('Render Hero')	
 
-	Profiler:start('renderTriangles')
+	Profiler:start('Render Triangles')
 	
 	self:renderTriangles()	
 	
-	Profiler:stop('renderTriangles')
+	Profiler:stop('Render Triangles')
 		
-	Profiler:start('renderBoundingBoxes')	
+	Profiler:start('Render Bounding Boxes')	
 	
 	self:createBoundingBoxes2D()	
 	self:drawBoundingBoxes()
 	
-	Profiler:stop('renderBoundingBoxes')	
+	Profiler:stop('Render Bounding Boxes')	
 			
+	local sy = 15
 	love.graphics.print(
 		'hx: '.. 
 		self.hero.position[1] .. 
 		' hy: ' .. 
 		self.hero.position[2], 
-		0, 15)
+		0, sy)
+	
+	sy = sy + 15		
+	sy = sy + 15
+	love.graphics.print('sceneBoundingBox: ['.. 
+		self.sceneBoundingBox[1] .. ', ' ..
+		self.sceneBoundingBox[2] .. ', ' ..
+		self.sceneBoundingBox[3] .. ', ' ..
+		self.sceneBoundingBox[4] .. ']'
+			, 0, sy)
+			
+	sy = sy + 15	
+	love.graphics.print('sceneBoundingArea: '.. self.sceneBoundingArea, 0, sy)
+	sy = sy + 15	
+	love.graphics.print('sceneBoundingCameraFactor: ' .. self.sceneBoundingCameraFactor, 0, sy)
+	sy = sy + 15	
+	love.graphics.print('camera Z: '.. self.camera[3], 0, sy)	
+	sy = sy + 15
+	sy = sy + 15	
 		
-	table.sort(Profiler.list, function(a, b) return a.average > b.average end)
-	local sy = 30
+	table.sort(Profiler.list, function(a, b) return a.average > b.average end)	
 	for name, item in ipairs(Profiler.list) do	
 		love.graphics.print(item. name .. ': ' .. item.average, 0, sy)
 		sy = sy + 15
 	end	
+end
+
+function ShearTestScene:keyreleased(key)
+	if key == '1' then
+		self.sceneBoundingArea = self.sceneBoundingArea - 0.5
+	end	
+
+	if key == '2' then
+		self.sceneBoundingArea = self.sceneBoundingArea + 0.5
+	end	
+	
+	if key == '3' then
+		self.sceneBoundingCameraFactor = self.sceneBoundingCameraFactor - 0.1
+	end	
+
+	if key == '4' then
+		self.sceneBoundingCameraFactor = self.sceneBoundingCameraFactor + 0.1
+	end		
 end
 
 return ShearTestScene
