@@ -1,8 +1,16 @@
+local luabins = require 'luabins'
+
 print()
 print('----------------------------------------------------------------------')
 print('|                       START LUA EXECUTION                          |')
 print('----------------------------------------------------------------------')
 
+local jv = jit.version
+print('----------------------------------------------------------------------')
+print('|                       LuaJIT version                               |')
+print('----------------------------------------------------------------------')
+print(jv)
+	
 local SceneManager = require 'classes/scene/SceneManager'
 SceneManager = SceneManager:getInstance()
 local FontManager = require 'classes/scene/FontManager'
@@ -15,6 +23,7 @@ local GameWorld = require 'classes/simulation/GameWorld'
 local HotelScene = require 'classes/scene/HotelScene'
 local BankScene = require 'classes/scene/BankScene'
 local ShearTestScene = require 'classes/scene/ShearTestScene'
+local RenderingPipelineTest = require 'classes/scene/RenderingPipelineTest'
 local StoryScene = require 'classes/scene/StoryScene'
 local DialogueScene = require 'classes/scene/DialogueScene'
 local Character = require 'classes/simulation/Character'
@@ -23,10 +32,14 @@ local gameWorld
 function love.load()
 	print('----------------------------------------------------------------------')
 	print('|                       love.load()                                  |')
-	print('----------------------------------------------------------------------')
+	print('----------------------------------------------------------------------')		
+	local features = love.graphics.getSupported()
+	for k, v in pairs(features) do
+		print(k,v)
+	end
 	
-	local thread = love.thread.newThread('threads/world.lua')
-	thread:start()
+	--local thread = love.thread.newThread('threads/world.lua')
+	--thread:start()
 	
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 12)
 	FontManager:addFont(font, 'Courier12')
@@ -49,9 +62,12 @@ function love.load()
 	SceneManager:addScene(HotelScene:new(gameWorld), 'hotel')
 	SceneManager:addScene(StoryScene:new(gameWorld), 'story')
 	SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')
-	SceneManager:addScene(ShearTestScene:new(), 'shearTest')
 	
+	SceneManager:addScene(ShearTestScene:new(), 'shearTest')
 	SceneManager:show('shearTest')
+	
+	--SceneManager:addScene(RenderingPipelineTest:new(), 'renderingPipelineTest')	
+	--SceneManager:show('renderingPipelineTest')
 	
 	--SceneManager:show('bank')
 	--SceneManager:show('story', StoryFactory:createStory('begin', gameWorld))

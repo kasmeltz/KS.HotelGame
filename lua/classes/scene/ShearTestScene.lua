@@ -50,8 +50,10 @@ function ShearTestScene:init()
 	local buildingObjects = {}	
 	
 	for i = 1, 500 do
-		local t = math.random(1,4)
+		local t = math.random(1,#self.buildingTypes)
+		--local t = 1
 		local bo = 	self:createBuildingFromType(self.buildingTypes[t])
+		--bo.position = {-10, -28, 0}
 		bo.position = { math.random(0,400) - 200, math.random(0,400) - 200, 0 }
 		buildingObjects[#buildingObjects + 1] = bo
 	end
@@ -82,7 +84,9 @@ function ShearTestScene:init()
 	self.cameraZoomTop = 5
 	self.cameraZoomBottom = 1
 	
-	collectgarbage()
+	self.drawDebug = true	
+	
+	collectgarbage()	
 end
 
 function ShearTestScene:show()
@@ -701,7 +705,9 @@ function ShearTestScene:drawRoad()
 			else
 				love.graphics.draw(sidewalkImg, x, y, 0, zx, zy)
 			end
-			love.graphics.rectangle('line', x, y, ssx, ssy)
+			if self.drawDebug then
+				love.graphics.rectangle('line', x, y, ssx, ssy)
+			end
 			cx = cx + 1
 		end
 		cy = cy + 1
@@ -734,8 +740,11 @@ function ShearTestScene:draw()
 		
 	Profiler:start('Render Bounding Boxes')	
 	
-	self:createBoundingBoxes2D()	
-	self:drawBoundingBoxes()
+	if self.drawDebug then
+		self:createBoundingBoxes2D()	
+		self:drawBoundingBoxes()
+	end
+
 	
 	Profiler:stop('Render Bounding Boxes')	
 
