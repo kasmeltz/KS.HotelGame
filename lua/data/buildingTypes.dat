@@ -52,5 +52,48 @@
 			'L      R',
 			'CBBBBBBD'
 		}
-	}
+	},
+	{
+		heights = { 7, 9 },
+		roofStyles = { 'r1', 'r2' },
+		wallStyles = { 'w1', 'w2' },
+		design = 
+		{
+			'ATTTTW',
+			'L    R',
+			'L    R',
+			'L    R',
+			'L    R',
+			'L    R',
+			'L    R',
+			'L    R',
+			'L    R',
+			'L    R',
+			'CBBBBD'
+		}
+	},
+	{
+		heights = { 7, 9 },
+		roofStyles = { 'r1', 'r2' },
+		wallStyles = { 'w1', 'w2' },
+		design = 
+		{
+			'ATTTTTTTTTTTTTTTW',
+			'L              R',
+			'L              R',
+			'CBBBBBBBBBBBBBBD'
+		}
+	},
+	{
+		heights = { 2, 9 },
+		roofStyles = { 'r1', 'r2' },
+		wallStyles = { 'w1', 'w2' },
+		design = 
+		{
+			'ATTW',
+			'L  R',
+			'L  R',
+			'CBBD'
+		}
+	},
 }

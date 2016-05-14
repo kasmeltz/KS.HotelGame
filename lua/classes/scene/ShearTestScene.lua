@@ -52,7 +52,7 @@ function ShearTestScene:init()
 	for i = 1, 500 do
 		local t = math.random(1,4)
 		local bo = 	self:createBuildingFromType(self.buildingTypes[t])
-		bo.position = { math.random(0,200) - 100, math.random(0,200) - 100, 0 }
+		bo.position = { math.random(0,400) - 200, math.random(0,400) - 200, 0 }
 		buildingObjects[#buildingObjects + 1] = bo
 	end
 		
@@ -309,7 +309,6 @@ function ShearTestScene:addObjectToScene(object)
 		movedBox[5] = box[5] + position[3]			
 	end
 		
-	
 	-- update mesh position
 	for _, mesh in ipairs(object.meshes) do		
 		mesh.object = object
@@ -370,7 +369,7 @@ function ShearTestScene:translate3Dto2D()
 	Profiler:stop('Update Objects To Camera')
 	
 	Profiler:start('Calculate Triangle Distance')		
-		
+			
 	-- sort triangles	
 	for _, mesh in ipairs(meshesToRender) do
 		local pos = mesh.position
@@ -383,11 +382,11 @@ function ShearTestScene:translate3Dto2D()
 			local lx = mx - camera[1]
 			local ly = my - camera[2]
 			local lz = mz - camera[3]			
-			local dot = n[1] * lx + n[2] * ly + n[3] * lz		
+			local dot = n[1] * lx + n[2] * ly + n[3] * lz	
 			if dot > 0 then
-				local dx = mx + camera[1]
-				local dy = my + camera[2]
-				local dz = mz + camera[3]
+				local dx = mx - camera[1]
+				local dy = my - camera[2]
+				local dz = mz - camera[3]
 				triangle.distanceToCamera = (dx * dx) + (dy * dy) + (dz * dz)
 				triangle.texture = mesh.texture
 				orderedTriangles[#orderedTriangles + 1] = triangle
@@ -398,10 +397,10 @@ function ShearTestScene:translate3Dto2D()
 	Profiler:stop('Calculate Triangle Distance')		
 	
 	Profiler:start('Sort Triangles')		
-	
+		
 	table.sort(orderedTriangles, 
 		function(a,b) 
-			return a.distanceToCamera < b.distanceToCamera 
+			return a.distanceToCamera > b.distanceToCamera 
 		end)
 		
 	Profiler:stop('Sort Triangles')		

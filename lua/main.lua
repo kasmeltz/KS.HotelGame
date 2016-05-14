@@ -58,7 +58,7 @@ function love.load()
 end
 
 function love.update(dt)
-	collectgarbage("step", 1000)
+	collectgarbage("step", 500)
 
 	gameWorld:update(dt)
 	
