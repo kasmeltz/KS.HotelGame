@@ -69,7 +69,7 @@ function ShearTestScene:init()
 	
 	self.hero = 
 	{
-		position = { 0, -5, groundFloor},
+		position = { -0.4, -27.5, groundFloor},
 		movedPosition = {0, 0, groundFloor},
 		oldPosition = {0, 0, groundFloor},
 		position2D = {0, 0},		
@@ -675,30 +675,33 @@ function ShearTestScene:drawRoad()
 	local y = camera[2]
 	local z = self.groundFloor - camera[3] 
 		
-	local ss = -sw / z
-	local zf = ss / 64
+	local ssx = (-sw / z)
+	local ssy = (-sh / z)
 	
-	local sx = (x / z * sw) + hsw
-	local sy = (-y / z * sh) + hsh
-	local tx = math.floor(sx / ss)
-	local ty = math.floor(sx / ss)	
-	local ox = sx % ss
-	local oy = sy % ss
+	local sx = (x / z * sw) - (hsw)
+	local sy = (-y / z * sh) - (hsh)
 	
-	--print(sx, sy, tx, ty, ox, oy)
+	local tx = math.floor(sx / ssx)
+	local ty = math.floor(sy / ssy)	
+	local ox = sx % ssx
+	local oy = sy % ssy
 	
 	local roadImg = self.roadImages[1]
 	local sidewalkImg = self.sideWalkImages[1]
-	
+
+	local zx = ssx / 64
+	local zy = ssy / 64
+
 	local cy = ty	
-	for y = -oy, 900, ss do
+	for y = -oy, 900, ssy do
 		local cx = tx
-		for x = -ox, 1200, ss do		
+		for x = -ox, 1200, ssx do					
 			if cx == 10 then
-				love.graphics.draw(roadImg, x, y, 0, zf)
+				love.graphics.draw(roadImg, x, y, 0, zx, zy)
 			else
-				love.graphics.draw(sidewalkImg, x, y, 0, zf)
+				love.graphics.draw(sidewalkImg, x, y, 0, zx, zy)
 			end
+			love.graphics.rectangle('line', x, y, ssx, ssy)
 			cx = cx + 1
 		end
 		cy = cy + 1
@@ -731,8 +734,8 @@ function ShearTestScene:draw()
 		
 	Profiler:start('Render Bounding Boxes')	
 	
-	--self:createBoundingBoxes2D()	
-	--self:drawBoundingBoxes()
+	self:createBoundingBoxes2D()	
+	self:drawBoundingBoxes()
 	
 	Profiler:stop('Render Bounding Boxes')	
 
@@ -810,6 +813,13 @@ function ShearTestScene:keyreleased(key)
 
 	if key == '8' then
 		self.cameraZoomBottom = self.cameraZoomBottom - 0.1
+	end		
+		
+	if key == 'o' then
+		self.camera[3] = self.camera[3] - 1
+	end		
+	if key == 'p' then
+		self.camera[3] = self.camera[3] + 1
 	end		
 
 end

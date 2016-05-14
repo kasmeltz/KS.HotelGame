@@ -136,7 +136,7 @@ If the player starts the conversation with the banker then the player will be gi
 The results of the banker conversation will also affect starting skills and stats.
 
 
-
+You start with a low budget motel. Maybe hourly. Depends on how much of a loan you get. You can stay as a seedy motel ownder or decide to try and go for a big chain like Sheraton. Game choices!
 
 
 Rendering strategy
