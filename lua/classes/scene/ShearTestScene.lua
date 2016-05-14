@@ -49,14 +49,14 @@ function ShearTestScene:init()
 	
 	local buildingObjects = {}	
 	
-	for i = 1, 500 do
-		local t = math.random(1,#self.buildingTypes)
-		--local t = 1
+	--for i = 1, 20 do
+		--local t = love.math.random(1,#self.buildingTypes)
+		local t = 1
 		local bo = 	self:createBuildingFromType(self.buildingTypes[t])
-		--bo.position = {-10, -28, 0}
-		bo.position = { math.random(0,400) - 200, math.random(0,400) - 200, 0 }
+		bo.position = { 0, -9, 0 }
+		--bo.position = { love.math.random(0,100) - 50, love.math.random(0,100) - 50, 0 }
 		buildingObjects[#buildingObjects + 1] = bo
-	end
+	--end
 		
 	self.buildingObjects = buildingObjects
 		
@@ -71,7 +71,7 @@ function ShearTestScene:init()
 	
 	self.hero = 
 	{
-		position = { -0.4, -27.5, groundFloor},
+		position = { 0, 0, groundFloor},
 		movedPosition = {0, 0, groundFloor},
 		oldPosition = {0, 0, groundFloor},
 		position2D = {0, 0},		
@@ -86,7 +86,9 @@ function ShearTestScene:init()
 	
 	self.drawDebug = true	
 	
-	collectgarbage()	
+	collectgarbage()
+
+	self:update(0.001)	
 end
 
 function ShearTestScene:show()
@@ -184,14 +186,16 @@ function ShearTestScene:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 end
 
 function ShearTestScene:addWallSections(walls, sx, ex, sy, ey, sz, ez, ss, nx, ny)
-	for z = sz - ss, ez, -ss do
-		local t1, t2 = self:createWallSection(sx, ex, sy, ey, z + ss, z, nx, ny)
+	--for z = sz - ss, ez, -ss do
+		--local t1, t2 = self:createWallSection(sx, ex, sy, ey, z + ss, z, nx, ny)
+		local t1, t2 = self:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 		table.insert(walls.triangles, t1)
 		table.insert(walls.triangles, t2)
-		local t1, t2 = self:createWallSection(sx, ex, sy, ey, z + ss, z, nx, ny)
+		--local t1, t2 = self:createWallSection(sx, ex, sy, ey, z + ss, z, nx, ny)
+		local t1, t2 = self:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 		table.insert(walls.triangles, t1)
 		table.insert(walls.triangles, t2)
-	end
+	--end
 end
 
 function ShearTestScene:createBuildingFromType(buildingType)
@@ -637,10 +641,9 @@ function ShearTestScene:update(dt)
 	Profiler:stop('Translate 3D to 2D')
 end
 
-
 function ShearTestScene:renderTriangles()
 	local orderedTriangles = self.orderedTriangles
-
+	
 	-- render triangles
 	local drawingMesh = self.drawingMesh
 	for _, triangle in ipairs(orderedTriangles) do
@@ -720,6 +723,8 @@ function ShearTestScene:renderHero()
 end
 
 function ShearTestScene:draw()
+	self.drawDebug = false
+
 	Profiler:start('Render Road')	
 	
 	self:drawRoad()		
@@ -733,9 +738,7 @@ function ShearTestScene:draw()
 	Profiler:stop('Render Hero')	
 
 	Profiler:start('Render Triangles')
-	
 	self:renderTriangles()	
-	
 	Profiler:stop('Render Triangles')
 		
 	Profiler:start('Render Bounding Boxes')	
@@ -744,51 +747,53 @@ function ShearTestScene:draw()
 		self:createBoundingBoxes2D()	
 		self:drawBoundingBoxes()
 	end
-
 	
 	Profiler:stop('Render Bounding Boxes')	
 
-	local sy = 15
-	love.graphics.print(
-		'hx: '.. 
-		self.hero.position[1] .. 
-		' hy: ' .. 
-		self.hero.position[2], 
-		0, sy)
-	
-	sy = sy + 15		
-	sy = sy + 15
-	love.graphics.print('sceneBoundingBox: ['.. 
-		self.sceneBoundingBox[1] .. ', ' ..
-		self.sceneBoundingBox[2] .. ', ' ..
-		self.sceneBoundingBox[3] .. ', ' ..
-		self.sceneBoundingBox[4] .. ']'
-			, 0, sy)
+	if self.drawDebug then 	
+		local sy = 15
+		love.graphics.print(
+			'hx: '.. 
+			self.hero.position[1] .. 
+			' hy: ' .. 
+			self.hero.position[2], 
+			0, sy)
 			
-	sy = sy + 15	
-	love.graphics.print('sceneBoundingArea: '.. self.sceneBoundingArea, 0, sy)
-	sy = sy + 15	
-	love.graphics.print('sceneBoundingCameraFactor: ' .. self.sceneBoundingCameraFactor, 0, sy)
-	sy = sy + 15	
-	love.graphics.print('camera Z: '.. self.camera[3], 0, sy)	
-	sy = sy + 15
-	sy = sy + 15	
-	
-	love.graphics.print('cameraZoomTop: '.. self.cameraZoomTop, 0, sy)
-	sy = sy + 15	
-	love.graphics.print('cameraZoomBottom: ' .. self.cameraZoomBottom, 0, sy)
-	sy = sy + 15
-	sy = sy + 15		
-
-	love.graphics.print('memory: ' .. collectgarbage('count')*1024, 0, sy)
-	sy = sy + 15
-	sy = sy + 15		
-		
-	table.sort(Profiler.list, function(a, b) return a.average > b.average end)	
-	for name, item in ipairs(Profiler.list) do	
-		love.graphics.print(item. name .. ': ' .. item.average, 0, sy)
+		sy = sy + 15		
 		sy = sy + 15
-	end	
+		love.graphics.print('sceneBoundingBox: ['.. 
+			self.sceneBoundingBox[1] .. ', ' ..
+			self.sceneBoundingBox[2] .. ', ' ..
+			self.sceneBoundingBox[3] .. ', ' ..
+			self.sceneBoundingBox[4] .. ']'
+				, 0, sy)
+				
+		sy = sy + 15	
+		love.graphics.print('sceneBoundingArea: '.. self.sceneBoundingArea, 0, sy)
+		sy = sy + 15	
+		love.graphics.print('sceneBoundingCameraFactor: ' .. self.sceneBoundingCameraFactor, 0, sy)
+		sy = sy + 15	
+		love.graphics.print('camera Z: '.. self.camera[3], 0, sy)	
+		sy = sy + 15
+		sy = sy + 15	
+		
+		love.graphics.print('cameraZoomTop: '.. self.cameraZoomTop, 0, sy)
+		sy = sy + 15	
+		love.graphics.print('cameraZoomBottom: ' .. self.cameraZoomBottom, 0, sy)
+		sy = sy + 15
+		sy = sy + 15		
+
+		love.graphics.print('memory: ' .. collectgarbage('count')*1024, 0, sy)
+		sy = sy + 15
+		sy = sy + 15		
+			
+		table.sort(Profiler.list, function(a, b) return a.average > b.average end)	
+		for name, item in ipairs(Profiler.list) do	
+			love.graphics.print(item. name .. ': ' .. item.average, 0, sy)
+			sy = sy + 15
+		end	
+	
+	end
 end
 
 function ShearTestScene:keyreleased(key)

@@ -80,9 +80,12 @@ function love.update(dt)
 	
 	local vs = SceneManager.visibleScenes
 	
-	for i = 1, #vs do
+	for i = #vs, 1, -1 do
 		local vScene = vs[i]
 		vScene:update(dt)
+		if vScene.isBlocking then
+			break
+		end
 	end	
 end
 
