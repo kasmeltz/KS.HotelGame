@@ -96,7 +96,7 @@ function ShearTestScene:init(gameWorld)
 			direction = { 1, 0, -0.15 },
 			directional = { .022, .022, .02 },
 			ambient = { 0.012, 0.012, 0.01 },			
-			name = '5 a.m.'
+			name = '4 a.m.'
 		},
 		4, 0, 0)		
 		
@@ -104,10 +104,10 @@ function ShearTestScene:init(gameWorld)
 	self.dayNightCycle:addSnapShot(
 		{
 			position = { 600, 300, 100 },
-			positional = { 0.9, 0.85, 0.75 },
+			positional = { 0.9, 0.9, 0.75 },
 			direction = { 0, 0.5, -1 },
-			directional = { 0.35, 0.3, 0.2 },
-			ambient = { 0.45, 0.45, 0.4 },
+			directional = { 0.35, 0.35, 0.25 },
+			ambient = { 0.5, 0.5, 0.4 },
 			name = 'noon'
 		},
 		12, 0, 0)	
@@ -116,10 +116,10 @@ function ShearTestScene:init(gameWorld)
 	self.dayNightCycle:addSnapShot(
 		{
 			position = { 0, 450, 120 },
-			positional = { 0.45, 0.4, 0.4 },	
+			positional = { 0.42, 0.4, 0.4 },	
 			direction = { -1, 0, -0.15 },
-			directional = { .25, .24, .2 },
-			ambient = { 0.15, 0.1, 0.1 },
+			directional = { .24, .23, .2 },
+			ambient = { 0.12, 0.1, 0.1 },
 			name = '9 p.m.'
 		},
 		21, 0, 0)	
@@ -141,7 +141,7 @@ function ShearTestScene:init(gameWorld)
 		{
 			position = { 1200, 450, 120 },
 			positional = { 0, 0, 0 },		
-			direction = { 0, 0, 0 },
+			direction = { 1, 0, 0 },
 			directional = { 0, 0, 0 },
 			ambient = { 0.01, 0.01, 0.01 },			
 			name = '10:00:01 p.m.'
