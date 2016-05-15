@@ -23,18 +23,17 @@ function ShearTestScene:init(gameWorld)
 	self.buildingTypes = self:loadBuildingTypes()
 	
 	local roofImages = {}
-	roofImages[1] = love.graphics.newImage('data/images/roof.jpg')
+	roofImages[1] = love.graphics.newImage('data/images/roof1.jpg')
 	roofImages[2] = love.graphics.newImage('data/images/roof2.jpg')
 	roofImages[3] = love.graphics.newImage('data/images/roof3.jpg')
 	roofImages[4] = love.graphics.newImage('data/images/roof4.jpg')
 	self.roofImages = roofImages
 	
 	local buildingImages = {}
-	buildingImages[1] = love.graphics.newImage('data/images/building3.jpg')
-	buildingImages[2] = love.graphics.newImage('data/images/building4.jpg')
-	buildingImages[3] = love.graphics.newImage('data/images/building5.png')
-	buildingImages[4] = love.graphics.newImage('data/images/building6.jpg')
-	buildingImages[5] = love.graphics.newImage('data/images/building7.jpg')	
+	buildingImages[1] = love.graphics.newImage('data/images/building1.jpg')
+	buildingImages[2] = love.graphics.newImage('data/images/building2.jpg')
+	buildingImages[3] = love.graphics.newImage('data/images/building3.jpg')
+	buildingImages[4] = love.graphics.newImage('data/images/building4.jpg')
 	self.buildingImages = buildingImages
 	
 	local roadImages = {}
@@ -472,15 +471,17 @@ function ShearTestScene:createBuildingFromType(buildingType)
 	local roofHeight = groundFloor + height
 	local design = buildingType.design
 	
+	local wi = math.random(1, #self.buildingImages)
 	local walls =
 	{
-		texture = self.buildingImages[1],
+		texture = self.buildingImages[wi],
 		triangles = {}
 	}
 	
+	local ri = math.random(1, #self.roofImages)	
 	local roof = 
 	{
-		texture = self.roofImages[1],
+		texture = self.roofImages[ri],
 		triangles = {}
 	}
 	
