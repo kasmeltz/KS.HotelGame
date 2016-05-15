@@ -50,10 +50,9 @@ function ShearTestScene:init()
 	
 	local light = 
 	{
-		position = { 0, 0, 10 },
-		intensities = { 1, 1, 1 },
-		ambient = 0.8,
-		attenuation = 0.1
+		direction = { 0.1, -0.2, -1 },
+		ambient = { 0.1, 0.1, 0.1 },
+		directional = { 0.1, 0.1, 0.1 }
 	}
 	self.light = light
 
@@ -62,14 +61,14 @@ function ShearTestScene:init()
 	
 	local buildingObjects = {}	
 	
-	--for i = 1, 20 do
-		--local t = love.math.random(1,#self.buildingTypes)
-		local t = 1
+	for i = 1, 500 do
+		local t = love.math.random(1,#self.buildingTypes)
+		--local t = 1
 		local bo = 	self:createBuildingFromType(self.buildingTypes[t])
-		bo.position = { 0, -9, 0 }
-		--bo.position = { love.math.random(0,100) - 50, love.math.random(0,100) - 50, 0 }
+		--bo.position = { 0, -9, 0 }
+		bo.position = { love.math.random(0,400) - 200, love.math.random(0,400) - 200, 0 }
 		buildingObjects[#buildingObjects + 1] = bo
-	--end
+	end
 		
 	self.buildingObjects = buildingObjects
 		
@@ -94,21 +93,18 @@ function ShearTestScene:init()
 	self.sceneBoundingArea = 3
 	self.sceneBoundingCameraFactor = 0.5
 
-	self.cameraZoomTop = 5
-	self.cameraZoomBottom = 1
-	
+
 	self.drawDebug = true	
 	
 	collectgarbage()
 
-	self:update(0.001)	
+	self:update(0.001)		
 	
 	self.wallShader = love.graphics.newShader(
 [[
-	vec3 lightPosition;
-	extern vec3 lightIntensities;
-	extern number lightAmbientCoefficient;
-	extern number lightAttenuation;
+	extern vec3 lightDirection;
+	extern vec3 lightAmbient;
+	extern vec3 lightDirectional;
 
 	extern vec3 normal;
 	extern vec2 v1;
@@ -117,17 +113,12 @@ function ShearTestScene:init()
 	extern vec2 v4;
 	
 	vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords )
-	{			
-		//vec3 normal = normalize(transpose(inverse(mat3(model))) * fragNormal);
-		//vec3 surfacePos = vec3(model * vec4(fragVert, 1));
-		
+	{	
+		vec3 normalLightDir = normalize(lightDirection);
 		vec4 surfaceColor = vec4(0,0,0,255);
-
-		//vec3 surfaceToLight = normalize(light.position - surfacePos);
-		//vec3 surfaceToCamera = normalize(cameraPosition - surfacePos);
     
 		if (v1.y == v3.y && v2.y == v4.y && v4.x == v3.x && v1.x == v2.x) {
-			surfaceColor = Texel(texture, texture_coords);		
+			surfaceColor = Texel(texture, texture_coords);
 		} else {
 			// vertical
 			if (v1.y == v3.y) {				
@@ -149,24 +140,14 @@ function ShearTestScene:init()
 		}
 	
 		//ambient
-		vec3 ambient = lightAmbientCoefficient * surfaceColor.rgb * lightIntensities;
+		vec3 ambient = lightAmbient * surfaceColor.rgb;
 
-		//diffuse
-		//float diffuseCoefficient = max(0.0, dot(normal, surfaceToLight));
-		//vec3 diffuse = diffuseCoefficient * surfaceColor.rgb * light.intensities;
-		
-		//specular
-		//float specularCoefficient = 0.0;
-		//if(diffuseCoefficient > 0.0)
-		//specularCoefficient = pow(max(0.0, dot(surfaceToCamera, reflect(-surfaceToLight, normal))), materialShininess);
-		//vec3 specular = specularCoefficient * materialSpecularColor * light.intensities;
-		
-		//attenuation
-		//float distanceToLight = length(light.position - surfacePos);
-		//float attenuation = 1.0 / (1.0 + light.attenuation * pow(distanceToLight, 2));
-
+		// directional
+		number NdotL = max(dot(normal, normalLightDir), 0.0);
+		vec3 diffuse = lightDirectional * NdotL * surfaceColor.rgb;
+	
 		//linear color (color before gamma correction)
-		vec3 linearColor = ambient; //+ attenuation*(diffuse + specular);
+		vec3 linearColor = ambient + (diffuse);
 		
 		//final color (after gamma correction)
 		vec3 gamma = vec3(1.0/2.2);
@@ -778,10 +759,9 @@ function ShearTestScene:renderTriangles()
 	
 	local light = self.light
 	
-	--wallShader:send('lightPosition',light.position)
-	wallShader:send('lightIntensities', light.intensities)
-	wallShader:send('lightAmbientCoefficient', light.ambient)
-	--wallShader:send('lightAttenuation', light.attenuation)
+	wallShader:send('lightDirection',light.direction)
+	wallShader:send('lightAmbient', light.ambient)
+	wallShader:send('lightDirectional', light.directional)
 	
 	-- render triangles
 	love.graphics.setLineWidth(2)
@@ -806,24 +786,11 @@ function ShearTestScene:renderTriangles()
 			local v3 = mesh.triangles[sidx].vertices2D[3]
 			local v4 = mesh.triangles[sidx + 1].vertices2D[2]
 				
+			wallShader:send('normal', triangle.normal)
 			wallShader:send('v1', v1)
 			wallShader:send('v2', v2)
 			wallShader:send('v3', v3)
 			wallShader:send('v4', v4)
-	
-			--[[
-			if (v4[2] >= 0 and v4[2] <= 900) then
-				print('======================')
-				print('triangle.meshIndex', triangle.meshIndex)		
-				print('triangle.order', triangle.order)			
-				print('sidx', sidx)
-				print('v1', v1[1], v1[2])
-				print('v2', v2[1], v2[2])
-				print('v3', v3[1], v3[2])
-				print('v4', v4[1], v4[2])
-				print('======================')
-			end
-			]]
 			
 			love.graphics.draw(drawingMesh, 0, 0)
 		end
@@ -903,6 +870,17 @@ function ShearTestScene:drawRoad()
 
 	local zx = ssx / 64
 	local zy = ssy / 64
+	
+	--[[
+	local roadShader = self.roadShader
+	love.graphics.setShader(roadShader)
+	
+	local light = self.light
+
+	roadShader:send('lightDirection',light.direction)
+	roadShader:send('lightAmbient', light.ambient)
+	roadShader:send('lightDiffuse', light.diffuse)
+	]]
 
 	local cy = ty	
 	for y = -oy, 900, ssy do
@@ -920,6 +898,8 @@ function ShearTestScene:drawRoad()
 		end
 		cy = cy + 1
 	end
+	
+	love.graphics.setShader()
 end
 
 function ShearTestScene:renderHero()
@@ -928,11 +908,9 @@ function ShearTestScene:renderHero()
 end
 
 function ShearTestScene:draw()
-	self.drawDebug = false
-
 	Profiler:start('Render Road')	
 	
-	self:drawRoad()		
+	--self:drawRoad()		
 	
 	Profiler:stop('Render Road')
 	
@@ -956,7 +934,30 @@ function ShearTestScene:draw()
 	Profiler:stop('Render Bounding Boxes')	
 
 	if self.drawDebug then 	
-		local sy = 15
+		local sy = 30
+		
+		love.graphics.print('light direction: ' .. 
+			self.light.direction[1] .. ', ' .. 
+			self.light.direction[2] .. ', ' .. 
+			self.light.direction[3], 0, sy)
+				
+		sy = sy + 15	
+		
+		love.graphics.print('light ambient: ' .. 
+			self.light.ambient[1] .. ', ' .. 
+			self.light.ambient[2] .. ', ' .. 
+			self.light.ambient[3], 0, sy)
+				
+		sy = sy + 15	
+		
+		love.graphics.print('light directional: ' .. 
+			self.light.directional[1] .. ', ' .. 
+			self.light.directional[2] .. ', ' .. 
+			self.light.directional[3], 0, sy)
+					
+		sy = sy + 15
+		sy = sy + 15
+		
 		love.graphics.print(
 			'hx: '.. 
 			self.hero.position[1] .. 
@@ -971,8 +972,7 @@ function ShearTestScene:draw()
 				
 		sy = sy + 15	
 		sy = sy + 15
-		
-	
+			
 		love.graphics.print('sceneBoundingBox: ['.. 
 			self.sceneBoundingBox[1] .. ', ' ..
 			self.sceneBoundingBox[2] .. ', ' ..
@@ -989,12 +989,6 @@ function ShearTestScene:draw()
 		sy = sy + 15
 		sy = sy + 15	
 		
-		love.graphics.print('cameraZoomTop: '.. self.cameraZoomTop, 0, sy)
-		sy = sy + 15	
-		love.graphics.print('cameraZoomBottom: ' .. self.cameraZoomBottom, 0, sy)
-		sy = sy + 15
-		sy = sy + 15		
-
 		love.graphics.print('memory: ' .. collectgarbage('count')*1024, 0, sy)
 		sy = sy + 15
 		sy = sy + 15		
@@ -1010,46 +1004,51 @@ end
 
 function ShearTestScene:keyreleased(key)
 	if key == '1' then
-		self.sceneBoundingArea = self.sceneBoundingArea - 0.5
-	end	
-
-	if key == '2' then
-		self.sceneBoundingArea = self.sceneBoundingArea + 0.5
+		self.light.ambient[1] = self.light.ambient[1] - 0.01
+		self.light.ambient[2] = self.light.ambient[2] - 0.01
+		self.light.ambient[3] = self.light.ambient[3] - 0.01
 	end	
 	
+	if key == '2' then
+		self.light.ambient[1] = self.light.ambient[1] + 0.01
+		self.light.ambient[2] = self.light.ambient[2] + 0.01
+		self.light.ambient[3] = self.light.ambient[3] + 0.01
+	end	
+
 	if key == '3' then
-		self.sceneBoundingCameraFactor = self.sceneBoundingCameraFactor - 0.1
+		self.light.directional[1] = self.light.directional[1] - 0.01
+		self.light.directional[2] = self.light.directional[2] - 0.01
+		self.light.directional[3] = self.light.directional[3] - 0.01
 	end	
 
 	if key == '4' then
-		self.sceneBoundingCameraFactor = self.sceneBoundingCameraFactor + 0.1
-	end		
+		self.light.directional[1] = self.light.directional[1] + 0.01
+		self.light.directional[2] = self.light.directional[2] + 0.01
+		self.light.directional[3] = self.light.directional[3] + 0.01
+	end	
 
 	if key == '5' then
-		self.cameraZoomTop = self.cameraZoomTop + 0.1
-	end		
-
+		self.light.direction[1] = self.light.direction[1] - 0.05
+	end	
+	
 	if key == '6' then
-		self.cameraZoomTop = self.cameraZoomTop - 0.1
-	end		
-
-	if key == '7' then
-		self.cameraZoomBottom = self.cameraZoomBottom + 0.1
-	end		
-
-	if key == '8' then
-		self.cameraZoomBottom = self.cameraZoomBottom - 0.1
-	end		
-		
+		self.light.direction[1] = self.light.direction[1] + 0.05
+	end	
+	
 	if key == 'o' then
 		self.camera[3] = self.camera[3] - 1
 	end		
+	
 	if key == 'p' then
 		self.camera[3] = self.camera[3] + 1
 	end		
 	
 	if key == 'f1' then
 		SceneManager:show('shaderDebug')
+	end
+	
+	if key == 'f9' then
+		self.drawDebug = not self.drawDebug
 	end
 end
 
