@@ -76,22 +76,27 @@ function DayNightCycle:update(dt)
 		interpolateTo = self.snapShots[lastIdx + 1]
 	end	
 	
-	local distanceFrom = math.abs(seconds - interpolateFrom.seconds)
-	local distanceTo = math.abs(seconds - interpolateTo.seconds)
-	
-	local light = self.light
-	
+	local light = self.light	
 	for k, t in pairs(interpolateFrom) do
 		if type(t) =='table' then
 			for idx in ipairs(t) do
 				local y0 = interpolateFrom[k][idx]
 				local y1 = interpolateTo[k][idx]
-				local x0 = interpolateTo.seconds
-				local x1 = interpolateFrom.seconds			
-				local dx = math.max(x0 - x1, 0.00001)				
+				local x0 = interpolateFrom.seconds
+				local x1 = interpolateTo.seconds			
+				local dx = x1 - x0
+				if dx == 0 then dx = 0.000001 end
 				local x = seconds
 				local v = y0 * (1 - (x - x0) / dx) + y1 * (x-x0) / dx	
-				light[k][idx] = v								
+				light[k][idx] = v
+								
+								--[[
+				print('==================================')
+				print(y0, y1)
+				print(x0, x1, dx, x)
+				print(v)
+				print('==================================')
+				]]
 			end
 		end
 	end		

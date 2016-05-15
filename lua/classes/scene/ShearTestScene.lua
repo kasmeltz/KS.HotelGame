@@ -50,28 +50,16 @@ function ShearTestScene:init(gameWorld)
 	
 	local camera = {0, 0, 5}
 	self.camera = camera
-	
-	local light = 
-	{
-		direction = { 0, 0, -1 },
-		ambient = { 0.045, 0.045, 0.045 },
-		directional = { -0.005, -0.005, -0.005 },
-		position = { 1200, 450, 120 },
-		positional = { 0.3, 0.3, 0.3 }		
-	}
-	self.light = light	
-	self.dayNightCycle = DayNightCycle:new(self.gameWorld)
-	self.lightMode = 'mine'
-	self.currentDayNightIndex = 0
-	
+		
 	-- midnight
+	self.dayNightCycle = DayNightCycle:new(self.gameWorld)
 	self.dayNightCycle:addSnapShot(
-		{
-			direction = { 0, 0, -1 },
-			ambient = { 0.02, 0.02, 0.02 },
-			directional = { -0.04, -0.04, -0.04 },
+		{			
 			position = { 600, 300, 90 },
-			positional = { 1, 1, 1 },
+			positional = { 1.2, 1.2, 1.2 },
+			direction = { 0, 0, -1 },
+			directional = { -0.045, -0.045, -0.045 },
+			ambient = { 0.025, 0.025, 0.025 },
 			name = 'midnight'
 		},
 		0, 0, 0)
@@ -79,16 +67,28 @@ function ShearTestScene:init(gameWorld)
 	-- 5 a.m.	
 	self.dayNightCycle:addSnapShot(
 		{
-			direction = { 0, 0, -1 },
-			ambient = { 0.045, 0.045, 0.045 },
-			directional = { -0.005, -0.005, -0.005 },
 			position = { 1200, 450, 120 },
-			positional = { 0.3, 0.3, 0.3 },
+			positional = { 0.3, 0.3, 0.3 },		
+			direction = { 1, 0, -0.25 },
+			directional = { .025, .025, .025 },
+			ambient = { 0.03, 0.03, 0.03 },			
 			name = '5 a.m.'
 		},
-		0, 0, 0)
+		5, 0, 0)
 		
-
+	local light = 
+	{
+		position = { 600, 300, 90 },			
+		positional = { 1, 1, 1 },
+		direction = { 0, 0, -1 },		
+		directional = { -0.045, -0.045, -0.045 },
+		ambient = { 0.025, 0.025, 0.025 },
+	}
+	
+	self.light = light		
+	self.lightMode = 'mine'
+	self.currentDayNightIndex = 1	
+	
 	local groundFloor = -5
 	self.groundFloor = groundFloor
 	
@@ -1062,17 +1062,17 @@ function ShearTestScene:draw()
 				
 		sy = sy + 15	
 		
+		love.graphics.print('light positional: ' .. 
+			light.positional[1] .. ', ' .. 
+			light.positional[2] .. ', ' .. 
+			light.positional[3], 0, sy)	
+
+		sy = sy + 15					
+		
 		love.graphics.print('light direction: ' .. 
 			light.direction[1] .. ', ' .. 
 			light.direction[2] .. ', ' .. 
 			light.direction[3], 0, sy)
-				
-		sy = sy + 15	
-		
-		love.graphics.print('light ambient: ' .. 
-			light.ambient[1] .. ', ' .. 
-			light.ambient[2] .. ', ' .. 
-			light.ambient[3], 0, sy)
 				
 		sy = sy + 15	
 		
@@ -1082,12 +1082,12 @@ function ShearTestScene:draw()
 			light.directional[3], 0, sy)
 			
 		sy = sy + 15	
-		
-		love.graphics.print('light positional: ' .. 
-			light.positional[1] .. ', ' .. 
-			light.positional[2] .. ', ' .. 
-			light.positional[3], 0, sy)	
-
+					
+		love.graphics.print('light ambient: ' .. 
+			light.ambient[1] .. ', ' .. 
+			light.ambient[2] .. ', ' .. 
+			light.ambient[3], 0, sy)
+				
 		sy = sy + 15			
 		
 		local gt = self.gameWorld.gameTime		
@@ -1143,7 +1143,7 @@ function ShearTestScene:draw()
 	end
 end
 
-function ShearTestScene:keyreleased(key)
+function ShearTestScene:keyreleased(key, scancode)
 	if key == '1' then
 		self.light.ambient[1] = self.light.ambient[1] - 0.005
 		self.light.ambient[2] = self.light.ambient[2] - 0.005
@@ -1184,7 +1184,7 @@ function ShearTestScene:keyreleased(key)
 		self.light.direction[1] = self.light.direction[1] - 0.01
 	end	
 	
-	if key == 'n' then
+	if key == 'n' or scancode =='n' then
 		self.light.direction[1] = self.light.direction[1] + 0.01
 	end	
 	
