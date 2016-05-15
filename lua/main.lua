@@ -65,12 +65,12 @@ function love.load()
 	SceneManager:addScene(StoryScene:new(gameWorld), 'story')
 	SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')
 	
-	SceneManager:addScene(ShearTestScene:new(), 'shearTest')
+	SceneManager:addScene(ShearTestScene:new(gameWorld), 'shearTest')
 	SceneManager:show('shearTest')
-	SceneManager:addScene(ShaderDebugScene:new(), 'shaderDebug')
+	SceneManager:addScene(ShaderDebugScene:new(gameWorld), 'shaderDebug')
 	--SceneManager:show('shaderDebug')
 	
-	--SceneManager:addScene(RenderingPipelineTest:new(), 'renderingPipelineTest')	
+	--SceneManager:addScene(RenderingPipelineTest:new(gameWorld), 'renderingPipelineTest')	
 	--SceneManager:show('renderingPipelineTest')
 	
 	--SceneManager:show('bank')

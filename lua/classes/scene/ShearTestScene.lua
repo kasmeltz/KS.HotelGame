@@ -4,6 +4,7 @@ local FontManager = require 'classes/scene/FontManager'
 FontManager = FontManager:getInstance()
 local Profiler = require 'classes/Profiler'
 Profiler = Profiler:getInstance()
+local DayNightCycle = require 'classes/simulation/DayNightCycle'
 
 local Scene = require 'classes/scene/Scene'
 local ShearTestScene = Scene:extend('ShearTestScene')
@@ -14,8 +15,8 @@ function ShearTestScene:loadBuildingTypes()
 	return condition()
 end
 
-function ShearTestScene:init()
-	ShearTestScene.super.init(self)
+function ShearTestScene:init(gameWorld)
+	ShearTestScene.super.init(self, gameWorld)
 	
 	self.buildingTypes = self:loadBuildingTypes()
 	
@@ -56,7 +57,9 @@ function ShearTestScene:init()
 		position = { 900, 300, 100 },
 		positional = { 1, 1, 1 },		
 	}
-	self.light = light
+	self.light = light	
+	self.dayNightCycle = DayNightCycle:new(self.gameWorld)
+	self.lightMode = 'mine'
 
 	local groundFloor = -5
 	self.groundFloor = groundFloor
@@ -760,6 +763,8 @@ function ShearTestScene:handleInput(dt)
 end
 
 function ShearTestScene:update(dt)	
+	self.dayNightCycle:update(dt)
+	
 	local camera = self.camera
 	local hero = self.hero
 	
@@ -812,7 +817,9 @@ function ShearTestScene:renderTriangles()
 	love.graphics.setShader(wallShader)
 	
 	local light = self.light
-
+	if self.lightMode ~= 'mine' then		
+		light = self.dayNightCycle.light
+	end
 	wallShader:send('lightDirection',light.direction)
 	wallShader:send('lightAmbient', light.ambient)
 	wallShader:send('lightDirectional', light.directional)
@@ -941,6 +948,10 @@ function ShearTestScene:drawRoad()
 	love.graphics.setShader(roadShader)
 	
 	local light = self.light
+	local light = self.light
+	if self.lightMode ~= 'mine' then		
+		light = self.dayNightCycle.light
+	end	
 		
 	roadShader:send('lightDirection',light.direction)
 	roadShader:send('lightAmbient', light.ambient)
@@ -1001,9 +1012,16 @@ function ShearTestScene:draw()
 
 	if self.drawDebug then 	
 		love.graphics.setColor(0, 0, 0, 128)
-		love.graphics.rectangle('fill', 0,0, 400, 900)
+		love.graphics.rectangle('fill', 0,0, 300, 150)
 		love.graphics.setColor(255, 255, 0, 255)
 		local sy = 30
+		
+		love.graphics.print('light position: ' .. 
+			self.light.position[1] .. ', ' .. 
+			self.light.position[2] .. ', ' .. 
+			self.light.position[3], 0, sy)
+				
+		sy = sy + 15	
 		
 		love.graphics.print('light direction: ' .. 
 			self.light.direction[1] .. ', ' .. 
@@ -1029,8 +1047,15 @@ function ShearTestScene:draw()
 		love.graphics.print('light positional: ' .. 
 			self.light.positional[1] .. ', ' .. 
 			self.light.positional[2] .. ', ' .. 
-			self.light.positional[3], 0, sy)			
+			self.light.positional[3], 0, sy)	
+
+		sy = sy + 15			
+		
+		local gt = self.gameWorld.gameTime
+		
+		love.graphics.print('speed: ' ..  gt.speedTexts[gt.currentSpeed], 0, sy)	
 					
+		--[[
 		sy = sy + 15
 		sy = sy + 15
 		
@@ -1064,69 +1089,123 @@ function ShearTestScene:draw()
 			love.graphics.print(item.average, 0, sy)
 			sy = sy + 15
 		end	
-	
+	]]
 	end
 end
 
 function ShearTestScene:keyreleased(key)
 	if key == '1' then
-		self.light.ambient[1] = self.light.ambient[1] - 0.01
-		self.light.ambient[2] = self.light.ambient[2] - 0.01
-		self.light.ambient[3] = self.light.ambient[3] - 0.01
+		self.light.ambient[1] = self.light.ambient[1] - 0.005
+		self.light.ambient[2] = self.light.ambient[2] - 0.005
+		self.light.ambient[3] = self.light.ambient[3] - 0.005
 	end	
 	
 	if key == '2' then
-		self.light.ambient[1] = self.light.ambient[1] + 0.01
-		self.light.ambient[2] = self.light.ambient[2] + 0.01
-		self.light.ambient[3] = self.light.ambient[3] + 0.01
+		self.light.ambient[1] = self.light.ambient[1] + 0.005
+		self.light.ambient[2] = self.light.ambient[2] + 0.005
+		self.light.ambient[3] = self.light.ambient[3] + 0.005
 	end	
 
 	if key == '3' then
-		self.light.directional[1] = self.light.directional[1] - 0.01
-		self.light.directional[2] = self.light.directional[2] - 0.01
-		self.light.directional[3] = self.light.directional[3] - 0.01
+		self.light.directional[1] = self.light.directional[1] - 0.005
+		self.light.directional[2] = self.light.directional[2] - 0.005
+		self.light.directional[3] = self.light.directional[3] - 0.005
 	end	
 
 	if key == '4' then
-		self.light.directional[1] = self.light.directional[1] + 0.01
-		self.light.directional[2] = self.light.directional[2] + 0.01
-		self.light.directional[3] = self.light.directional[3] + 0.01
+		self.light.directional[1] = self.light.directional[1] + 0.005
+		self.light.directional[2] = self.light.directional[2] + 0.005
+		self.light.directional[3] = self.light.directional[3] + 0.005
 	end	
 	
 	if key == '5' then
-		self.light.positional[1] = self.light.positional[1] - 0.01
-		self.light.positional[2] = self.light.positional[2] - 0.01
-		self.light.positional[3] = self.light.positional[3] - 0.01
+		self.light.positional[1] = self.light.positional[1] - 0.005
+		self.light.positional[2] = self.light.positional[2] - 0.005
+		self.light.positional[3] = self.light.positional[3] - 0.005
 	end	
 
 	if key == '6' then
-		self.light.positional[1] = self.light.positional[1] + 0.01
-		self.light.positional[2] = self.light.positional[2] + 0.01
-		self.light.positional[3] = self.light.positional[3] + 0.01
+		self.light.positional[1] = self.light.positional[1] + 0.005
+		self.light.positional[2] = self.light.positional[2] + 0.005
+		self.light.positional[3] = self.light.positional[3] + 0.005
 	end	
 
-	if key == '7' then
-		self.light.direction[1] = self.light.direction[1] - 0.05
+	if key == 'k' then
+		self.light.direction[1] = self.light.direction[1] - 0.01
 	end	
 	
-	if key == '8' then
-		self.light.direction[1] = self.light.direction[1] + 0.05
+	if key == 'n' then
+		self.light.direction[1] = self.light.direction[1] + 0.01
 	end	
 	
 	if key == 'o' then
-		self.camera[3] = self.camera[3] - 1
-	end		
+		self.light.direction[2] = self.light.direction[2] - 0.01
+	end	
+	
+	if key == 'l' then
+		self.light.direction[2] = self.light.direction[2] + 0.01
+	end	
+	
+	if key == 'i' then
+		self.light.direction[3] = self.light.direction[3] - 0.01
+	end	
 	
 	if key == 'p' then
-		self.camera[3] = self.camera[3] + 1
+		self.light.direction[3] = self.light.direction[3] + 0.01
+	end	
+	
+	if key == 'kp4' then
+		self.light.position[1] = self.light.position[1] - 10
+	end	
+	
+	if key == 'kp6' then
+		self.light.position[1] = self.light.position[1] + 10
+	end	
+	
+	if key == 'kp8' then
+		self.light.position[2] = self.light.position[2] - 10
+	end	
+
+	if key == 'kp2' then
+		self.light.position[2] = self.light.position[2] + 10
 	end		
+
+	if key == 'kp7' then
+		self.light.position[3] = self.light.position[3] - 10
+	end	
+
+	if key == 'kp9' then
+		self.light.position[3] = self.light.position[3] + 10
+	end
 	
 	if key == 'f1' then
-		SceneManager:show('shaderDebug')
+		self.lightMode = 'mine'
+	end
+
+	if key == 'f2' then
+		self.lightMode = 'daynight'
 	end
 	
 	if key == 'f9' then
 		self.drawDebug = not self.drawDebug
+	end
+	
+	if key == '8' then
+		local gt = self.gameWorld.gameTime
+		local sp = gt.currentSpeed
+		sp = sp - 1
+		if sp > 0 then		
+			gt:setSpeed(sp)
+		end
+	end
+	
+	if key == '9' then
+		local gt = self.gameWorld.gameTime
+		local sp = gt.currentSpeed
+		sp = sp + 1
+		if sp <= #gt.speeds then		
+			gt:setSpeed(sp)
+		end
 	end
 end
 
