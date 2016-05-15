@@ -50,11 +50,11 @@ function ShearTestScene:init()
 	
 	local light = 
 	{
-		direction = { 0.1, -0.2, -1 },
-		ambient = { 0.02, 0.02, 0.02 },
-		directional = { 0.25, 0.25, 0.25 },
-		position = { 900, 300, 0 },
-		positional = { 0.5, 0.5, 0.5 },
+		direction = { 0.1, -0.2, -0.5 },
+		ambient = { 0.01, 0.01, 0.01 },
+		directional = { 0.01, 0.01, 0.01 },
+		position = { 900, 300, 100 },
+		positional = { 1, 1, 1 },		
 	}
 	self.light = light
 
@@ -110,39 +110,12 @@ function ShearTestScene:init()
 	extern vec3 lightAmbient;
 	extern vec3 lightDirectional;
 
-	extern vec3 normal;
-	extern vec2 v1;
-	extern vec2 v2;
-	extern vec2 v3;
-	extern vec2 v4;
-	
 	vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords )
 	{	
+		vec3 normal = vec3(0, 0, -1);
 		vec3 normalLightDir = normalize(lightDirection);
-		vec4 surfaceColor = vec4(0,0,0,255);
-    
-		if (v1.y == v3.y && v2.y == v4.y && v4.x == v3.x && v1.x == v2.x) {
-			surfaceColor = Texel(texture, texture_coords);
-		} else {
-			// vertical
-			if (v1.y == v3.y) {				
-				number ty = (screen_coords.y - v1.y) / (v2.y - v1.y);
+		vec4 surfaceColor = Texel(texture, texture_coords);
 
-				number lx1 = v1.x * ( 1 - ((screen_coords.y - v1.y) / (v2.y - v1.y)) ) + v2.x * ( (screen_coords.y - v1.y) / (v2.y - v1.y) );
-				number lx2 = v3.x * ( 1 - ((screen_coords.y - v3.y) / (v4.y - v3.y)) ) + v4.x * ( (screen_coords.y - v3.y) / (v4.y - v3.y) );
-				number tx = (screen_coords.x - lx2) / (lx1 - lx2);								
-				surfaceColor = Texel(texture, vec2(1 - tx, 1 - ty));
-			} 
-			// horizontal
-			else {			
-				number tx = (screen_coords.x - v1.x) / (v2.x - v1.x);							
-				number ly1 = v1.y * ( 1 - ((screen_coords.x - v1.x) / (v2.x - v1.x)) ) + v2.y * ( (screen_coords.x - v1.x) / (v2.x - v1.x) );
-				number ly2 = v3.y * ( 1 - ((screen_coords.x - v3.x) / (v4.x - v3.x)) ) + v4.y * ( (screen_coords.x - v3.x) / (v4.x - v3.x) );
-				number ty = (screen_coords.y - ly2) / (ly1 - ly2);				
-				surfaceColor = Texel(texture, vec2(1 - ty, 1 - tx));
-			}				
-		}
-	
 		//ambient
 		vec3 ambient = lightAmbient * surfaceColor.rgb;
 
@@ -152,12 +125,10 @@ function ShearTestScene:init()
 		
 		// positional
 		vec3 positionalColor = vec3(0,0,0);
-		if (normal.z == -1) {		
-			vec3 surfaceToLight = lightPosition - vec3(screen_coords, -1);	
-			number brightness = (1 - length(surfaceToLight) * 0.001) * NdotL;
-			brightness = clamp(brightness, 0, 1);
-			positionalColor = brightness * surfaceColor.rgb * lightPositional;
-		}
+		vec3 surfaceToLight = lightPosition - vec3(screen_coords, -5);	
+		number brightness = (1 - length(surfaceToLight) * 0.001) * NdotL;
+		brightness = clamp(brightness, 0, 1);
+		positionalColor = brightness * surfaceColor.rgb * lightPositional;
 		
 		//linear color (color before gamma correction)
 		vec3 linearColor = ambient + diffuse + positionalColor;
@@ -167,6 +138,7 @@ function ShearTestScene:init()
 		return vec4(pow(linearColor, gamma), surfaceColor.a);
 	}
 ]]
+	)
 	
 	self.wallShader = love.graphics.newShader(
 [[
@@ -181,6 +153,7 @@ function ShearTestScene:init()
 	extern vec2 v2;
 	extern vec2 v3;
 	extern vec2 v4;
+	extern number vz;
 	
 	vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords )
 	{	
@@ -218,15 +191,13 @@ function ShearTestScene:init()
 		
 		// positional
 		vec3 positionalColor = vec3(0,0,0);
-		if (normal.z == -1) {		
-			vec3 surfaceToLight = lightPosition - vec3(screen_coords, -1);	
-			number brightness = (1 - length(surfaceToLight) * 0.001) * NdotL;
-			brightness = clamp(brightness, 0, 1);
-			positionalColor = brightness * surfaceColor.rgb * lightPositional;
-		}
+		vec3 surfaceToLight = lightPosition - vec3(screen_coords, vz);	
+		number brightness =  (300 / pow(length(surfaceToLight), 1)) * NdotL;
+		positionalColor = brightness * surfaceColor.rgb * lightPositional;
 		
 		//linear color (color before gamma correction)
 		vec3 linearColor = ambient + diffuse + positionalColor;
+		linearColor = clamp(linearColor, 0, 1);
 		
 		//final color (after gamma correction)
 		vec3 gamma = vec3(1.0/2.2);
@@ -498,13 +469,13 @@ function ShearTestScene:addObjectToScene(object)
 				movedVertex[3] = vertex[3] + position[3]
 				
 				-- check if mesh should appear in scene
-				if 	movedVertex[1] >= sbx1 and
+				if movedVertex[1] >= sbx1 and
 					movedVertex[1] <= sbx2 and
 					movedVertex[2] >= sby1 and
 					movedVertex[2] <= sby2 then
 						triangle.visible = true
 				end
-			end				
+			end
 		end
 		mesh.position = position
 		meshesToRender[#meshesToRender + 1] = mesh
@@ -837,7 +808,8 @@ function ShearTestScene:renderTriangles()
 	love.graphics.setShader(wallShader)
 	
 	local light = self.light
-	
+	--light.position.z = self.camera.z
+
 	wallShader:send('lightDirection',light.direction)
 	wallShader:send('lightAmbient', light.ambient)
 	wallShader:send('lightDirectional', light.directional)
@@ -862,18 +834,28 @@ function ShearTestScene:renderTriangles()
 				sidx = sidx - 1
 			end
 			
-			local v1 = mesh.triangles[sidx].vertices2D[1]
-			local v2 = mesh.triangles[sidx].vertices2D[2]
-			local v3 = mesh.triangles[sidx].vertices2D[3]
-			local v4 = mesh.triangles[sidx + 1].vertices2D[2]
-				
-			wallShader:send('normal', triangle.normal)
-			wallShader:send('v1', v1)
-			wallShader:send('v2', v2)
-			wallShader:send('v3', v3)
-			wallShader:send('v4', v4)
+			local t1 = mesh.triangles[sidx]
+			local t2 = mesh.triangles[sidx + 1]
 			
-			love.graphics.draw(drawingMesh, 0, 0)
+			local v1 = t1.vertices2D[1]
+			local v2 = t1.vertices2D[2]
+			local v3 = t1.vertices2D[3]
+			local v4 = t2.vertices2D[2]
+			
+			if v1 and v2 and v3 and v4 then				
+				local vz = (t1.movedVertices[1][3] + 
+							t1.movedVertices[2][3] + 
+							t1.movedVertices[3][3] + 
+							t2.movedVertices[2][3]) / 4
+							
+				wallShader:send('normal', triangle.normal)
+				wallShader:send('v1', v1)
+				wallShader:send('v2', v2)
+				wallShader:send('v3', v3)
+				wallShader:send('v4', v4)
+				wallShader:send('vz', vz)
+				love.graphics.draw(drawingMesh, 0, 0)
+			end
 		end
 	end
 	love.graphics.setShader()
@@ -952,6 +934,18 @@ function ShearTestScene:drawRoad()
 	local zx = ssx / 64
 	local zy = ssy / 64
 
+	local roadShader = self.roadShader
+	love.graphics.setShader(roadShader)
+	
+	local light = self.light
+	--light.position.z = self.camera.z
+		
+	roadShader:send('lightDirection',light.direction)
+	roadShader:send('lightAmbient', light.ambient)
+	roadShader:send('lightDirectional', light.directional)
+	roadShader:send('lightPosition', light.position)
+	roadShader:send('lightPositional', light.positional)
+	
 	local cy = ty	
 	for y = -oy, 900, ssy do
 		local cx = tx

@@ -179,4 +179,7 @@ Saving and loading of tiles can be done in a thread
 Or you could have more tiles loaded and only blit them to canvases when you need them
 
 
+Set light settings at times of day and then interpolate between them using gametime hour minutes and seconds
+
+
 
