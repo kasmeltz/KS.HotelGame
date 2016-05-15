@@ -51,8 +51,9 @@ function ShearTestScene:init()
 	local light = 
 	{
 		direction = { 0.1, -0.2, -1 },
-		ambient = { 0.1, 0.1, 0.1 },
-		directional = { 0.1, 0.1, 0.1 }
+		ambient = { 0.02, 0.02, 0.02 },
+		directional = { 0.25, 0.25, 0.25 },
+		position = { 900, 300, 0 },
 	}
 	self.light = light
 
@@ -102,6 +103,7 @@ function ShearTestScene:init()
 	
 	self.wallShader = love.graphics.newShader(
 [[
+	extern vec3 lightPosition;
 	extern vec3 lightDirection;
 	extern vec3 lightAmbient;
 	extern vec3 lightDirectional;
@@ -145,13 +147,25 @@ function ShearTestScene:init()
 		// directional
 		number NdotL = max(dot(normal, normalLightDir), 0.0);
 		vec3 diffuse = lightDirectional * NdotL * surfaceColor.rgb;
-	
+		
+		/*
+		// positional
+		vec3 surfaceToLight = lightPosition - vec3(screen_coords, -1);
+		vec3 positionalNormal = vec3(normal.z, 0, normal.x);
+		//calculate the cosine of the angle of incidence
+		number brightness = dot(positionalNormal, surfaceToLight) / (length(surfaceToLight) * length(positionalNormal));
+		brightness = clamp(brightness, 0, 1);
+		vec3 positionalColor = brightness * surfaceColor.rgb;
+		*/
+		
 		//linear color (color before gamma correction)
-		vec3 linearColor = ambient + (diffuse);
+		vec3 linearColor = ambient + diffuse;// + positionalColor;
 		
 		//final color (after gamma correction)
 		vec3 gamma = vec3(1.0/2.2);
 		return vec4(pow(linearColor, gamma), surfaceColor.a);
+		
+		lightPosition;
 	}
 ]]
 	)
@@ -762,6 +776,8 @@ function ShearTestScene:renderTriangles()
 	wallShader:send('lightDirection',light.direction)
 	wallShader:send('lightAmbient', light.ambient)
 	wallShader:send('lightDirectional', light.directional)
+	wallShader:send('lightPosition', light.position)
+--	wallShader:send('lightPositional', light.positional)
 	
 	-- render triangles
 	love.graphics.setLineWidth(2)
@@ -870,17 +886,6 @@ function ShearTestScene:drawRoad()
 
 	local zx = ssx / 64
 	local zy = ssy / 64
-	
-	--[[
-	local roadShader = self.roadShader
-	love.graphics.setShader(roadShader)
-	
-	local light = self.light
-
-	roadShader:send('lightDirection',light.direction)
-	roadShader:send('lightAmbient', light.ambient)
-	roadShader:send('lightDiffuse', light.diffuse)
-	]]
 
 	local cy = ty	
 	for y = -oy, 900, ssy do
