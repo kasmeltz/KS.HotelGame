@@ -50,9 +50,9 @@ function ShearTestScene:init()
 	
 	local light = 
 	{
-		direction = { 0.1, -0.2, -0.5 },
-		ambient = { 0.01, 0.01, 0.01 },
-		directional = { 0.01, 0.01, 0.01 },
+		direction = { 0, 0, -1 },
+		ambient = { 0.0, 0.0, 0.0 },
+		directional = { 0.0, 0.0, 0.0 },
 		position = { 900, 300, 100 },
 		positional = { 1, 1, 1 },		
 	}
@@ -126,12 +126,14 @@ function ShearTestScene:init()
 		// positional
 		vec3 positionalColor = vec3(0,0,0);
 		vec3 surfaceToLight = lightPosition - vec3(screen_coords, -5);	
-		number brightness = (1 - length(surfaceToLight) * 0.001) * NdotL;
+		surfaceToLight /=  (love_ScreenSize.x / 4);
+		number brightness =  (0.15 / pow(length(surfaceToLight), 2)) * NdotL;
 		brightness = clamp(brightness, 0, 1);
 		positionalColor = brightness * surfaceColor.rgb * lightPositional;
 		
 		//linear color (color before gamma correction)
 		vec3 linearColor = ambient + diffuse + positionalColor;
+		linearColor = clamp(linearColor, 0, 1);
 		
 		//final color (after gamma correction)
 		vec3 gamma = vec3(1.0/2.2);
@@ -192,7 +194,9 @@ function ShearTestScene:init()
 		// positional
 		vec3 positionalColor = vec3(0,0,0);
 		vec3 surfaceToLight = lightPosition - vec3(screen_coords, vz);	
-		number brightness =  (300 / pow(length(surfaceToLight), 1)) * NdotL;
+		surfaceToLight /=  (love_ScreenSize.x / 4);
+		number brightness =  (0.15 / pow(length(surfaceToLight), 2)) * NdotL;
+		brightness = clamp(brightness, 0, 1);
 		positionalColor = brightness * surfaceColor.rgb * lightPositional;
 		
 		//linear color (color before gamma correction)
@@ -808,7 +812,6 @@ function ShearTestScene:renderTriangles()
 	love.graphics.setShader(wallShader)
 	
 	local light = self.light
-	--light.position.z = self.camera.z
 
 	wallShader:send('lightDirection',light.direction)
 	wallShader:send('lightAmbient', light.ambient)
@@ -938,7 +941,6 @@ function ShearTestScene:drawRoad()
 	love.graphics.setShader(roadShader)
 	
 	local light = self.light
-	--light.position.z = self.camera.z
 		
 	roadShader:send('lightDirection',light.direction)
 	roadShader:send('lightAmbient', light.ambient)
@@ -974,7 +976,7 @@ end
 function ShearTestScene:draw()
 	Profiler:start('Render Road')	
 	
-	--self:drawRoad()		
+	self:drawRoad()		
 	
 	Profiler:stop('Render Road')
 	
@@ -998,6 +1000,9 @@ function ShearTestScene:draw()
 	Profiler:stop('Render Bounding Boxes')	
 
 	if self.drawDebug then 	
+		love.graphics.setColor(0, 0, 0, 128)
+		love.graphics.rectangle('fill', 0,0, 400, 900)
+		love.graphics.setColor(255, 255, 0, 255)
 		local sy = 30
 		
 		love.graphics.print('light direction: ' .. 
@@ -1044,18 +1049,6 @@ function ShearTestScene:draw()
 		sy = sy + 15	
 		sy = sy + 15
 			
-		love.graphics.print('sceneBoundingBox: ['.. 
-			self.sceneBoundingBox[1] .. ', ' ..
-			self.sceneBoundingBox[2] .. ', ' ..
-			self.sceneBoundingBox[3] .. ', ' ..
-			self.sceneBoundingBox[4] .. ']'
-				, 0, sy)
-				
-		sy = sy + 15	
-		love.graphics.print('sceneBoundingArea: '.. self.sceneBoundingArea, 0, sy)
-		sy = sy + 15	
-		love.graphics.print('sceneBoundingCameraFactor: ' .. self.sceneBoundingCameraFactor, 0, sy)
-		sy = sy + 15	
 		love.graphics.print('camera Z: '.. self.camera[3], 0, sy)	
 		sy = sy + 15
 		sy = sy + 15	
@@ -1066,7 +1059,9 @@ function ShearTestScene:draw()
 			
 		table.sort(Profiler.list, function(a, b) return a.average > b.average end)	
 		for name, item in ipairs(Profiler.list) do	
-			love.graphics.print(item. name .. ': ' .. item.average, 0, sy)
+			love.graphics.print(item.name, 0, sy)
+			sy = sy + 15
+			love.graphics.print(item.average, 0, sy)
 			sy = sy + 15
 		end	
 	
