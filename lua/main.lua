@@ -22,11 +22,13 @@ local GameTime = require 'classes/simulation/GameTime'
 local GameWorld = require 'classes/simulation/GameWorld'
 local HotelScene = require 'classes/scene/HotelScene'
 local BankScene = require 'classes/scene/BankScene'
-local ShearTestScene = require 'classes/scene/ShearTestScene'
-local RenderingPipelineTest = require 'classes/scene/RenderingPipelineTest'
 local StoryScene = require 'classes/scene/StoryScene'
 local DialogueScene = require 'classes/scene/DialogueScene'
 local Character = require 'classes/simulation/Character'
+
+local ShearTestScene = require 'classes/scene/ShearTestScene'
+local RenderingPipelineTest = require 'classes/scene/RenderingPipelineTest'
+local ShaderDebugScene = require 'classes/scene/ShaderDebugScene'
 	
 local gameWorld
 function love.load()
@@ -65,6 +67,8 @@ function love.load()
 	
 	SceneManager:addScene(ShearTestScene:new(), 'shearTest')
 	SceneManager:show('shearTest')
+	SceneManager:addScene(ShaderDebugScene:new(), 'shaderDebug')
+	--SceneManager:show('shaderDebug')
 	
 	--SceneManager:addScene(RenderingPipelineTest:new(), 'renderingPipelineTest')	
 	--SceneManager:show('renderingPipelineTest')

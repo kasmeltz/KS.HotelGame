@@ -1,3 +1,5 @@
+local SceneManager = require 'classes/scene/SceneManager'
+SceneManager = SceneManager:getInstance()
 local FontManager = require 'classes/scene/FontManager'
 FontManager = FontManager:getInstance()
 local Profiler = require 'classes/Profiler'
@@ -25,7 +27,7 @@ function ShearTestScene:init()
 	self.roofImages = roofImages
 	
 	local buildingImages = {}
-	buildingImages[1] = love.graphics.newImage('data/images/building3.png')
+	buildingImages[1] = love.graphics.newImage('data/images/building3.jpg')
 	buildingImages[2] = love.graphics.newImage('data/images/building4.jpg')
 	buildingImages[3] = love.graphics.newImage('data/images/building5.png')
 	buildingImages[4] = love.graphics.newImage('data/images/building6.jpg')
@@ -45,6 +47,15 @@ function ShearTestScene:init()
 	
 	local camera = {0, 0, 5}
 	self.camera = camera
+	
+	local light = 
+	{
+		position = { 0, 0, 10 },
+		intensities = { 1, 1, 1 },
+		ambient = 0.8,
+		attenuation = 0.1
+	}
+	self.light = light
 
 	local groundFloor = -5
 	self.groundFloor = groundFloor
@@ -94,6 +105,12 @@ function ShearTestScene:init()
 	
 	self.wallShader = love.graphics.newShader(
 [[
+	vec3 lightPosition;
+	extern vec3 lightIntensities;
+	extern number lightAmbientCoefficient;
+	extern number lightAttenuation;
+
+	extern vec3 normal;
 	extern vec2 v1;
 	extern vec2 v2;
 	extern vec2 v3;
@@ -101,21 +118,59 @@ function ShearTestScene:init()
 	
 	vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords )
 	{			
-		v1 + v2 + v3 + v4;
+		//vec3 normal = normalize(transpose(inverse(mat3(model))) * fragNormal);
+		//vec3 surfacePos = vec3(model * vec4(fragVert, 1));
 		
-		//if (screen_coords == v1) {
-		//			return(1,1,1,1);
-		//}
-		//return (0,0,0,0);
-		
-		//number y = screen_coords.y / v4.y;
+		vec4 surfaceColor = vec4(0,0,0,255);
+
+		//vec3 surfaceToLight = normalize(light.position - surfacePos);
+		//vec3 surfaceToCamera = normalize(cameraPosition - surfacePos);
+    
+		if (v1.y == v3.y && v2.y == v4.y && v4.x == v3.x && v1.x == v2.x) {
+			surfaceColor = Texel(texture, texture_coords);		
+		} else {
+			// vertical
+			if (v1.y == v3.y) {				
+				number ty = (screen_coords.y - v1.y) / (v2.y - v1.y);
+
+				number lx1 = v1.x * ( 1 - ((screen_coords.y - v1.y) / (v2.y - v1.y)) ) + v2.x * ( (screen_coords.y - v1.y) / (v2.y - v1.y) );
+				number lx2 = v3.x * ( 1 - ((screen_coords.y - v3.y) / (v4.y - v3.y)) ) + v4.x * ( (screen_coords.y - v3.y) / (v4.y - v3.y) );
+				number tx = (screen_coords.x - lx2) / (lx1 - lx2);								
+				surfaceColor = Texel(texture, vec2(1 - tx, 1 - ty));
+			} 
+			// horizontal
+			else {			
+				number tx = (screen_coords.x - v1.x) / (v2.x - v1.x);							
+				number ly1 = v1.y * ( 1 - ((screen_coords.x - v1.x) / (v2.x - v1.x)) ) + v2.y * ( (screen_coords.x - v1.x) / (v2.x - v1.x) );
+				number ly2 = v3.y * ( 1 - ((screen_coords.x - v3.x) / (v4.x - v3.x)) ) + v4.y * ( (screen_coords.x - v3.x) / (v4.x - v3.x) );
+				number ty = (screen_coords.y - ly2) / (ly1 - ly2);				
+				surfaceColor = Texel(texture, vec2(1 - ty, 1 - tx));
+			}				
+		}
 	
-		/*vec4 color = */
+		//ambient
+		vec3 ambient = lightAmbientCoefficient * surfaceColor.rgb * lightIntensities;
+
+		//diffuse
+		//float diffuseCoefficient = max(0.0, dot(normal, surfaceToLight));
+		//vec3 diffuse = diffuseCoefficient * surfaceColor.rgb * light.intensities;
 		
-		//vec4 texcolor = Texel(texture, texture_coords);
-		//return texcolor * color;
+		//specular
+		//float specularCoefficient = 0.0;
+		//if(diffuseCoefficient > 0.0)
+		//specularCoefficient = pow(max(0.0, dot(surfaceToCamera, reflect(-surfaceToLight, normal))), materialShininess);
+		//vec3 specular = specularCoefficient * materialSpecularColor * light.intensities;
 		
-		return vec4(screen_coords.y / v4.y, 0, 0, 1);
+		//attenuation
+		//float distanceToLight = length(light.position - surfacePos);
+		//float attenuation = 1.0 / (1.0 + light.attenuation * pow(distanceToLight, 2));
+
+		//linear color (color before gamma correction)
+		vec3 linearColor = ambient; //+ attenuation*(diffuse + specular);
+		
+		//final color (after gamma correction)
+		vec3 gamma = vec3(1.0/2.2);
+		return vec4(pow(linearColor, gamma), surfaceColor.a);
 	}
 ]]
 	)
@@ -246,9 +301,11 @@ end
 function ShearTestScene:addWallSections(walls, sx, ex, sy, ey, sz, ez, ss, nx, ny)
 	--for z = sz - ss, ez, -ss do
 		--local t1, t2 = self:createWallSection(sx, ex, sy, ey, z + ss, z, nx, ny)
-		local t1, t2 = self:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
+		local t1, t2 = self:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)		
 		table.insert(walls.triangles, t1)
+		t1.meshIndex = #walls.triangles
 		table.insert(walls.triangles, t2)
+		t2.meshIndex = #walls.triangles
 	--end
 end
 
@@ -313,7 +370,9 @@ function ShearTestScene:createBuildingFromType(buildingType)
 				-- one roof zection must be on top of every wall
 				local t1, t2 = self:createRoofSection(cx, cx - ss, cy, cy + ss, roofHeight)
 				table.insert(roof.triangles, t1)
+				t1.meshIndex = #roof.triangles
 				table.insert(roof.triangles, t2)						
+				t2.meshIndex = #roof.triangles
 				-- insert bounding boxes to match the structure
 				local box = { cx - ss, cy, cx, cy + ss, groundFloor }
 				table.insert(building.boundingBoxes, box)
@@ -717,6 +776,13 @@ function ShearTestScene:renderTriangles()
 	local wallShader = self.wallShader
 	love.graphics.setShader(wallShader)
 	
+	local light = self.light
+	
+	--wallShader:send('lightPosition',light.position)
+	wallShader:send('lightIntensities', light.intensities)
+	wallShader:send('lightAmbientCoefficient', light.ambient)
+	--wallShader:send('lightAttenuation', light.attenuation)
+	
 	-- render triangles
 	love.graphics.setLineWidth(2)
 	local drawingMesh = self.drawingMesh
@@ -729,26 +795,36 @@ function ShearTestScene:renderTriangles()
 			drawingMesh:setTexture(triangle.texture)			
 			
 			local mesh = triangle.mesh
-			--[[
-			local evenIdx = math.floor(idx /2) * 2
 
-			local v1 = mesh.triangles[idx].vertices2D[1]
-			local v2 = mesh.triangles[idx].vertices2D[2]
-			local v3 = mesh.triangles[idx].vertices2D[3]
-			local v4 = mesh.triangles[idx].vertices2D[2]
+			local sidx = triangle.meshIndex
+			if triangle.order == 2 then
+				sidx = sidx - 1
+			end
 			
+			local v1 = mesh.triangles[sidx].vertices2D[1]
+			local v2 = mesh.triangles[sidx].vertices2D[2]
+			local v3 = mesh.triangles[sidx].vertices2D[3]
+			local v4 = mesh.triangles[sidx + 1].vertices2D[2]
+				
 			wallShader:send('v1', v1)
 			wallShader:send('v2', v2)
 			wallShader:send('v3', v3)
 			wallShader:send('v4', v4)
+	
+			--[[
+			if (v4[2] >= 0 and v4[2] <= 900) then
+				print('======================')
+				print('triangle.meshIndex', triangle.meshIndex)		
+				print('triangle.order', triangle.order)			
+				print('sidx', sidx)
+				print('v1', v1[1], v1[2])
+				print('v2', v2[1], v2[2])
+				print('v3', v3[1], v3[2])
+				print('v4', v4[1], v4[2])
+				print('======================')
+			end
+			]]
 			
-			print('======================')
-			print(v1[1], v1[2])
-			print(v2[1], v2[2])
-			print(v3[1], v3[2])
-			print(v4[1], v4[2])
-			print('======================')
-				]]		
 			love.graphics.draw(drawingMesh, 0, 0)
 		end
 	end
@@ -852,7 +928,7 @@ function ShearTestScene:renderHero()
 end
 
 function ShearTestScene:draw()
-	--self.drawDebug = false
+	self.drawDebug = false
 
 	Profiler:start('Render Road')	
 	
@@ -971,7 +1047,10 @@ function ShearTestScene:keyreleased(key)
 	if key == 'p' then
 		self.camera[3] = self.camera[3] + 1
 	end		
-
+	
+	if key == 'f1' then
+		SceneManager:show('shaderDebug')
+	end
 end
 
 return ShearTestScene
