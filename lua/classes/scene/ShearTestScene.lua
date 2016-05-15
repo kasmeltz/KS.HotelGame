@@ -1,3 +1,5 @@
+local notZero = 0.0000001
+
 local SceneManager = require 'classes/scene/SceneManager'
 SceneManager = SceneManager:getInstance()
 local FontManager = require 'classes/scene/FontManager'
@@ -52,14 +54,40 @@ function ShearTestScene:init(gameWorld)
 	local light = 
 	{
 		direction = { 0, 0, -1 },
-		ambient = { 0.0, 0.0, 0.0 },
-		directional = { 0.0, 0.0, 0.0 },
-		position = { 900, 300, 100 },
-		positional = { 1, 1, 1 },		
+		ambient = { 0.045, 0.045, 0.045 },
+		directional = { -0.005, -0.005, -0.005 },
+		position = { 1200, 450, 120 },
+		positional = { 0.3, 0.3, 0.3 }		
 	}
 	self.light = light	
 	self.dayNightCycle = DayNightCycle:new(self.gameWorld)
 	self.lightMode = 'mine'
+	self.currentDayNightIndex = 0
+	
+	-- midnight
+	self.dayNightCycle:addSnapShot(
+		{
+			direction = { 0, 0, -1 },
+			ambient = { 0.02, 0.02, 0.02 },
+			directional = { -0.04, -0.04, -0.04 },
+			position = { 600, 300, 90 },
+			positional = { 1, 1, 1 },
+			name = 'midnight'
+		},
+		0, 0, 0)
+	
+	-- 5 a.m.	
+	self.dayNightCycle:addSnapShot(
+		{
+			direction = { 0, 0, -1 },
+			ambient = { 0.045, 0.045, 0.045 },
+			directional = { -0.005, -0.005, -0.005 },
+			position = { 1200, 450, 120 },
+			positional = { 0.3, 0.3, 0.3 },
+			name = '5 a.m.'
+		},
+		0, 0, 0)
+		
 
 	local groundFloor = -5
 	self.groundFloor = groundFloor
@@ -130,7 +158,7 @@ function ShearTestScene:init(gameWorld)
 		vec3 positionalColor = vec3(0,0,0);
 		vec3 surfaceToLight = lightPosition - vec3(screen_coords, -5);	
 		surfaceToLight /=  (love_ScreenSize.x / 4);
-		number brightness =  (0.15 / pow(length(surfaceToLight), 2)) * NdotL;
+		number brightness =  (0.1 / pow(length(surfaceToLight), 2)) * NdotL;
 		brightness = clamp(brightness, 0, 1);
 		positionalColor = brightness * surfaceColor.rgb * lightPositional;
 		
@@ -198,7 +226,7 @@ function ShearTestScene:init(gameWorld)
 		vec3 positionalColor = vec3(0,0,0);
 		vec3 surfaceToLight = lightPosition - vec3(screen_coords, vz);	
 		surfaceToLight /=  (love_ScreenSize.x / 4);
-		number brightness =  (0.15 / pow(length(surfaceToLight), 2)) * NdotL;
+		number brightness =  (0.1 / pow(length(surfaceToLight), 2)) * NdotL;
 		brightness = clamp(brightness, 0, 1);
 		positionalColor = brightness * surfaceColor.rgb * lightPositional;
 		
@@ -592,9 +620,11 @@ function ShearTestScene:translate3Dto2D()
 	-- created 2D points for meshes and test triangle visibility
 	for _, triangle in ipairs(orderedTriangles) do
 		triangle.visible = false
-		for i, vertex in ipairs(triangle.movedVertices) do
-			local tx = (vertex[1] / vertex[3] * sw) + hsw
-			local ty = (-vertex[2] / vertex[3] * sh) + hsh	
+		for i, vertex in ipairs(triangle.movedVertices) do			
+			local z = vertex[3]
+			if z == 0 then z = notZero end
+			local tx = (vertex[1] / z * sw) + hsw
+			local ty = (-vertex[2] / z * sh) + hsh	
 			triangle.vertices2D[i][1] = tx
 			triangle.vertices2D[i][2] = ty
 		end
@@ -628,6 +658,7 @@ function ShearTestScene:translate3Dto2D()
 		local x = actor.movedPosition[1]
 		local y = actor.movedPosition[2]
 		local z = actor.movedPosition[3]
+		if z == 0 then z = notZero end
 		actor.position2D[1] = (x / z * sw) + hsw
 		actor.position2D[2] = (-y / z * sh) + hsh
 	end
@@ -644,10 +675,12 @@ function ShearTestScene:createBoundingBoxes2D()
 	for _, object in ipairs(self.scene.objects) do
 		for idx, box in ipairs(object.movedBoxes) do	
 			local box2D = object.boundingBoxes2D[idx]
-			local x1 = (box[1] / box[5] * sw) + hsw
-			local y1 = (-box[2] / box[5] * sh) + hsh	
-			local x2 = (box[3] / box[5] * sw) + hsw
-			local y2 = (-box[4] / box[5] * sh) + hsh			
+			local z = box[5]
+			if z == 0 then z = notZero end
+			local x1 = (box[1] / z * sw) + hsw
+			local y1 = (-box[2] / z * sh) + hsh	
+			local x2 = (box[3] / z * sw) + hsw
+			local y2 = (-box[4] / z * sh) + hsh			
 			box2D[1] = x1
 			box2D[2] = y1
 			box2D[3] = x2
@@ -925,7 +958,8 @@ function ShearTestScene:drawRoad()
 		
 	local x = camera[1]
 	local y = camera[2]
-	local z = self.groundFloor - camera[3] 
+	local z = self.groundFloor - camera[3]
+	if z == 0 then z = notZero end
 		
 	local ssx = (-sw / z)
 	local ssy = (-sh / z)
@@ -1011,49 +1045,65 @@ function ShearTestScene:draw()
 	Profiler:stop('Render Bounding Boxes')	
 
 	if self.drawDebug then 	
+		local light = self.light
+		if self.lightMode ~= 'mine' then		
+			light = self.dayNightCycle.light
+		end
+	
 		love.graphics.setColor(0, 0, 0, 128)
 		love.graphics.rectangle('fill', 0,0, 300, 150)
 		love.graphics.setColor(255, 255, 0, 255)
 		local sy = 30
 		
 		love.graphics.print('light position: ' .. 
-			self.light.position[1] .. ', ' .. 
-			self.light.position[2] .. ', ' .. 
-			self.light.position[3], 0, sy)
+			light.position[1] .. ', ' .. 
+			light.position[2] .. ', ' .. 
+			light.position[3], 0, sy)
 				
 		sy = sy + 15	
 		
 		love.graphics.print('light direction: ' .. 
-			self.light.direction[1] .. ', ' .. 
-			self.light.direction[2] .. ', ' .. 
-			self.light.direction[3], 0, sy)
+			light.direction[1] .. ', ' .. 
+			light.direction[2] .. ', ' .. 
+			light.direction[3], 0, sy)
 				
 		sy = sy + 15	
 		
 		love.graphics.print('light ambient: ' .. 
-			self.light.ambient[1] .. ', ' .. 
-			self.light.ambient[2] .. ', ' .. 
-			self.light.ambient[3], 0, sy)
+			light.ambient[1] .. ', ' .. 
+			light.ambient[2] .. ', ' .. 
+			light.ambient[3], 0, sy)
 				
 		sy = sy + 15	
 		
 		love.graphics.print('light directional: ' .. 
-			self.light.directional[1] .. ', ' .. 
-			self.light.directional[2] .. ', ' .. 
-			self.light.directional[3], 0, sy)
+			light.directional[1] .. ', ' .. 
+			light.directional[2] .. ', ' .. 
+			light.directional[3], 0, sy)
 			
 		sy = sy + 15	
 		
 		love.graphics.print('light positional: ' .. 
-			self.light.positional[1] .. ', ' .. 
-			self.light.positional[2] .. ', ' .. 
-			self.light.positional[3], 0, sy)	
+			light.positional[1] .. ', ' .. 
+			light.positional[2] .. ', ' .. 
+			light.positional[3], 0, sy)	
 
 		sy = sy + 15			
 		
-		local gt = self.gameWorld.gameTime
+		local gt = self.gameWorld.gameTime		
+		love.graphics.print('dayNightIndex: ' ..  self.currentDayNightIndex, 0, sy)		
+				
+		sy = sy + 15
 		
-		love.graphics.print('speed: ' ..  gt.speedTexts[gt.currentSpeed], 0, sy)	
+		local snapShot = self.dayNightCycle.snapShots[self.currentDayNightIndex]
+		if snapShot then
+			love.graphics.print(snapShot.name, 0, sy)		
+		end
+		
+		sy = sy + 15
+
+		local gt = self.gameWorld.gameTime		
+		love.graphics.print('speed: ' ..  gt.speedTexts[gt.currentSpeed], 0, sy)
 					
 		--[[
 		sy = sy + 15
@@ -1184,6 +1234,42 @@ function ShearTestScene:keyreleased(key)
 
 	if key == 'f2' then
 		self.lightMode = 'daynight'
+	end
+	
+	if key == 'f3' then
+		local dayNightCycle = self.dayNightCycle
+		local currentDayNightIndex = self.currentDayNightIndex
+		currentDayNightIndex = currentDayNightIndex - 1
+		if currentDayNightIndex >= 1 then
+			self.currentDayNightIndex = currentDayNightIndex
+			local sl = self.light
+			local dl = self.dayNightCycle.snapShots[currentDayNightIndex]		
+			for k, t in pairs(dl) do
+				if type(t) =='table' then
+					for idx, v in ipairs(t) do
+						sl[k][idx] = v
+					end
+				end
+			end		
+		end
+	end
+	
+	if key == 'f4' then
+		local dayNightCycle = self.dayNightCycle
+		local currentDayNightIndex = self.currentDayNightIndex
+		currentDayNightIndex = currentDayNightIndex + 1
+		if currentDayNightIndex <= #dayNightCycle.snapShots then
+			self.currentDayNightIndex = currentDayNightIndex
+			local sl = self.light
+			local dl = self.dayNightCycle.snapShots[currentDayNightIndex]		
+			for k, t in pairs(dl) do
+				if type(t) =='table' then
+					for idx, v in ipairs(t) do
+						sl[k][idx] = v
+					end
+				end
+			end		
+		end
 	end
 	
 	if key == 'f9' then
