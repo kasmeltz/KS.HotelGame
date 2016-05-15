@@ -60,27 +60,111 @@ function ShearTestScene:init(gameWorld)
 			direction = { 0, 0, -1 },
 			directional = { -0.045, -0.045, -0.045 },
 			ambient = { 0.025, 0.025, 0.025 },
-			name = 'midnight'
+			name = 'midnight 1'
 		},
 		0, 0, 0)
 	
-	-- 5 a.m.	
+	-- 3 a.m.	
+	self.dayNightCycle:addSnapShot(
+		{
+			position = { 0, 450, 120 },
+			positional = { 0, 0, 0 },		
+			direction = { 0, 0, 0 },
+			directional = { 0, 0, 0 },
+			ambient = { 0.01, 0.01, 0.01 },			
+			name = '3 a.m.'
+		},
+		3, 0, 0)
+
+	-- 3:0:01 a.m.	
 	self.dayNightCycle:addSnapShot(
 		{
 			position = { 1200, 450, 120 },
-			positional = { 0.3, 0.3, 0.3 },		
-			direction = { 1, 0, -0.25 },
-			directional = { .025, .025, .025 },
-			ambient = { 0.03, 0.03, 0.03 },			
+			positional = { 0, 0, 0 },		
+			direction = { 0, 0, 0 },
+			directional = { 0, 0, 0 },
+			ambient = { 0.01, 0.01, 0.01 },			
+			name = '3:00:01 a.m.'
+		},
+		3, 0, 1)
+		
+	-- 4 a.m.	
+	self.dayNightCycle:addSnapShot(
+		{
+			position = { 1200, 450, 120 },
+			positional = { 0.32, 0.32, 0.3 },		
+			direction = { 1, 0, -0.15 },
+			directional = { .022, .022, .02 },
+			ambient = { 0.012, 0.012, 0.01 },			
 			name = '5 a.m.'
 		},
-		5, 0, 0)
+		4, 0, 0)		
+		
+	-- 12 p.m.	
+	self.dayNightCycle:addSnapShot(
+		{
+			position = { 600, 300, 100 },
+			positional = { 0.9, 0.85, 0.75 },
+			direction = { 0, 0.5, -1 },
+			directional = { 0.35, 0.3, 0.2 },
+			ambient = { 0.45, 0.45, 0.4 },
+			name = 'noon'
+		},
+		12, 0, 0)	
+		
+	-- 9 p.m.	
+	self.dayNightCycle:addSnapShot(
+		{
+			position = { 0, 450, 120 },
+			positional = { 0.45, 0.4, 0.4 },	
+			direction = { -1, 0, -0.15 },
+			directional = { .25, .24, .2 },
+			ambient = { 0.15, 0.1, 0.1 },
+			name = '9 p.m.'
+		},
+		21, 0, 0)	
+
+	-- 10 p.m.	
+	self.dayNightCycle:addSnapShot(
+		{
+			position = { 0, 450, 120 },
+			positional = { 0, 0, 0 },		
+			direction = { 0, 0, 0 },
+			directional = { 0, 0, 0 },
+			ambient = { 0.01, 0.01, 0.01 },			
+			name = '10 p.m.'
+		},
+		22, 0, 0)			
+
+	-- 10:00:01 p.m.
+	self.dayNightCycle:addSnapShot(
+		{
+			position = { 1200, 450, 120 },
+			positional = { 0, 0, 0 },		
+			direction = { 0, 0, 0 },
+			directional = { 0, 0, 0 },
+			ambient = { 0.01, 0.01, 0.01 },			
+			name = '10:00:01 p.m.'
+		},
+		22, 0, 1)
+		
+	-- midnight again
+	self.dayNightCycle:addSnapShot(
+		{			
+			position = { 600, 300, 90 },
+			positional = { 1.2, 1.2, 1.2 },
+			direction = { 0, 0, -1 },
+			directional = { -0.045, -0.045, -0.045 },
+			ambient = { 0.025, 0.025, 0.025 },
+			name = 'midnight 2'
+		},
+		23, 59, 59)		
 		
 	local light = 
 	{
-		position = { 600, 300, 90 },			
-		positional = { 1, 1, 1 },
-		direction = { 0, 0, -1 },		
+		position = { 600, 300, 90 },
+		positional = { 1.2, 1.2, 1.2 },
+		direction = { 0, 0, -1 },
 		directional = { -0.045, -0.045, -0.045 },
 		ambient = { 0.025, 0.025, 0.025 },
 	}
@@ -1051,10 +1135,10 @@ function ShearTestScene:draw()
 		end
 	
 		love.graphics.setColor(0, 0, 0, 128)
-		love.graphics.rectangle('fill', 0,0, 300, 150)
+		love.graphics.rectangle('fill', 0,0, 600, 200)
 		love.graphics.setColor(255, 255, 0, 255)
 		local sy = 30
-		
+				
 		love.graphics.print('light position: ' .. 
 			light.position[1] .. ', ' .. 
 			light.position[2] .. ', ' .. 
@@ -1089,6 +1173,7 @@ function ShearTestScene:draw()
 			light.ambient[3], 0, sy)
 				
 		sy = sy + 15			
+		sy = sy + 15
 		
 		local gt = self.gameWorld.gameTime		
 		love.graphics.print('dayNightIndex: ' ..  self.currentDayNightIndex, 0, sy)		
@@ -1102,9 +1187,15 @@ function ShearTestScene:draw()
 		
 		sy = sy + 15
 
+		love.graphics.print('mode : ' .. self.lightMode, 0, sy)
+				
+		sy = sy + 15	
+		
 		local gt = self.gameWorld.gameTime		
 		love.graphics.print('speed: ' ..  gt.speedTexts[gt.currentSpeed], 0, sy)
-					
+		
+		sy = sy + 15		
+				
 		--[[
 		sy = sy + 15
 		sy = sy + 15

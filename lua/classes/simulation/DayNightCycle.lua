@@ -39,14 +39,6 @@ function DayNightCycle:addSnapShot(light, hour, minute, second)
 	light.seconds = seconds
 	table.insert(self.snapShots, light)
 	table.sort(self.snapShots, function(a, b) return a.seconds < b.seconds end)
-	
-	print('================')
-	print('Sorted lights')
-	for _, light in ipairs(self.snapShots) do
-	
-		print(light.seconds)
-	end
-	print('================')
 end
 
 function DayNightCycle:update(dt)
@@ -89,14 +81,6 @@ function DayNightCycle:update(dt)
 				local x = seconds
 				local v = y0 * (1 - (x - x0) / dx) + y1 * (x-x0) / dx	
 				light[k][idx] = v
-								
-								--[[
-				print('==================================')
-				print(y0, y1)
-				print(x0, x1, dx, x)
-				print(v)
-				print('==================================')
-				]]
 			end
 		end
 	end		
