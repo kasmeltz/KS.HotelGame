@@ -54,6 +54,7 @@ function ShearTestScene:init()
 		ambient = { 0.02, 0.02, 0.02 },
 		directional = { 0.25, 0.25, 0.25 },
 		position = { 900, 300, 0 },
+		positional = { 0.5, 0.5, 0.5 },
 	}
 	self.light = light
 
@@ -104,6 +105,7 @@ function ShearTestScene:init()
 	self.wallShader = love.graphics.newShader(
 [[
 	extern vec3 lightPosition;
+	extern vec3 lightPositional;
 	extern vec3 lightDirection;
 	extern vec3 lightAmbient;
 	extern vec3 lightDirectional;
@@ -148,24 +150,21 @@ function ShearTestScene:init()
 		number NdotL = max(dot(normal, normalLightDir), 0.0);
 		vec3 diffuse = lightDirectional * NdotL * surfaceColor.rgb;
 		
-		/*
 		// positional
-		vec3 surfaceToLight = lightPosition - vec3(screen_coords, -1);
-		vec3 positionalNormal = vec3(normal.z, 0, normal.x);
-		//calculate the cosine of the angle of incidence
-		number brightness = dot(positionalNormal, surfaceToLight) / (length(surfaceToLight) * length(positionalNormal));
-		brightness = clamp(brightness, 0, 1);
-		vec3 positionalColor = brightness * surfaceColor.rgb;
-		*/
+		vec3 positionalColor = vec3(0,0,0);
+		if (normal.z == -1) {		
+			vec3 surfaceToLight = lightPosition - vec3(screen_coords, -1);	
+			number brightness = (1 - length(surfaceToLight) * 0.001) * NdotL;
+			brightness = clamp(brightness, 0, 1);
+			positionalColor = brightness * surfaceColor.rgb * lightPositional;
+		}
 		
 		//linear color (color before gamma correction)
-		vec3 linearColor = ambient + diffuse;// + positionalColor;
+		vec3 linearColor = ambient + diffuse + positionalColor;
 		
 		//final color (after gamma correction)
 		vec3 gamma = vec3(1.0/2.2);
 		return vec4(pow(linearColor, gamma), surfaceColor.a);
-		
-		lightPosition;
 	}
 ]]
 	)
@@ -777,7 +776,7 @@ function ShearTestScene:renderTriangles()
 	wallShader:send('lightAmbient', light.ambient)
 	wallShader:send('lightDirectional', light.directional)
 	wallShader:send('lightPosition', light.position)
---	wallShader:send('lightPositional', light.positional)
+	wallShader:send('lightPositional', light.positional)
 	
 	-- render triangles
 	love.graphics.setLineWidth(2)
@@ -959,6 +958,13 @@ function ShearTestScene:draw()
 			self.light.directional[1] .. ', ' .. 
 			self.light.directional[2] .. ', ' .. 
 			self.light.directional[3], 0, sy)
+			
+		sy = sy + 15	
+		
+		love.graphics.print('light positional: ' .. 
+			self.light.positional[1] .. ', ' .. 
+			self.light.positional[2] .. ', ' .. 
+			self.light.positional[3], 0, sy)			
 					
 		sy = sy + 15
 		sy = sy + 15
@@ -1031,12 +1037,24 @@ function ShearTestScene:keyreleased(key)
 		self.light.directional[2] = self.light.directional[2] + 0.01
 		self.light.directional[3] = self.light.directional[3] + 0.01
 	end	
-
+	
 	if key == '5' then
+		self.light.positional[1] = self.light.positional[1] - 0.01
+		self.light.positional[2] = self.light.positional[2] - 0.01
+		self.light.positional[3] = self.light.positional[3] - 0.01
+	end	
+
+	if key == '6' then
+		self.light.positional[1] = self.light.positional[1] + 0.01
+		self.light.positional[2] = self.light.positional[2] + 0.01
+		self.light.positional[3] = self.light.positional[3] + 0.01
+	end	
+
+	if key == '7' then
 		self.light.direction[1] = self.light.direction[1] - 0.05
 	end	
 	
-	if key == '6' then
+	if key == '8' then
 		self.light.direction[1] = self.light.direction[1] + 0.05
 	end	
 	
@@ -1058,3 +1076,4 @@ function ShearTestScene:keyreleased(key)
 end
 
 return ShearTestScene
+
