@@ -102,6 +102,72 @@ function ShearTestScene:init()
 
 	self:update(0.001)		
 	
+	self.roadShader = love.graphics.newShader(
+[[
+	extern vec3 lightPosition;
+	extern vec3 lightPositional;
+	extern vec3 lightDirection;
+	extern vec3 lightAmbient;
+	extern vec3 lightDirectional;
+
+	extern vec3 normal;
+	extern vec2 v1;
+	extern vec2 v2;
+	extern vec2 v3;
+	extern vec2 v4;
+	
+	vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords )
+	{	
+		vec3 normalLightDir = normalize(lightDirection);
+		vec4 surfaceColor = vec4(0,0,0,255);
+    
+		if (v1.y == v3.y && v2.y == v4.y && v4.x == v3.x && v1.x == v2.x) {
+			surfaceColor = Texel(texture, texture_coords);
+		} else {
+			// vertical
+			if (v1.y == v3.y) {				
+				number ty = (screen_coords.y - v1.y) / (v2.y - v1.y);
+
+				number lx1 = v1.x * ( 1 - ((screen_coords.y - v1.y) / (v2.y - v1.y)) ) + v2.x * ( (screen_coords.y - v1.y) / (v2.y - v1.y) );
+				number lx2 = v3.x * ( 1 - ((screen_coords.y - v3.y) / (v4.y - v3.y)) ) + v4.x * ( (screen_coords.y - v3.y) / (v4.y - v3.y) );
+				number tx = (screen_coords.x - lx2) / (lx1 - lx2);								
+				surfaceColor = Texel(texture, vec2(1 - tx, 1 - ty));
+			} 
+			// horizontal
+			else {			
+				number tx = (screen_coords.x - v1.x) / (v2.x - v1.x);							
+				number ly1 = v1.y * ( 1 - ((screen_coords.x - v1.x) / (v2.x - v1.x)) ) + v2.y * ( (screen_coords.x - v1.x) / (v2.x - v1.x) );
+				number ly2 = v3.y * ( 1 - ((screen_coords.x - v3.x) / (v4.x - v3.x)) ) + v4.y * ( (screen_coords.x - v3.x) / (v4.x - v3.x) );
+				number ty = (screen_coords.y - ly2) / (ly1 - ly2);				
+				surfaceColor = Texel(texture, vec2(1 - ty, 1 - tx));
+			}				
+		}
+	
+		//ambient
+		vec3 ambient = lightAmbient * surfaceColor.rgb;
+
+		// directional
+		number NdotL = max(dot(normal, normalLightDir), 0.0);
+		vec3 diffuse = lightDirectional * NdotL * surfaceColor.rgb;
+		
+		// positional
+		vec3 positionalColor = vec3(0,0,0);
+		if (normal.z == -1) {		
+			vec3 surfaceToLight = lightPosition - vec3(screen_coords, -1);	
+			number brightness = (1 - length(surfaceToLight) * 0.001) * NdotL;
+			brightness = clamp(brightness, 0, 1);
+			positionalColor = brightness * surfaceColor.rgb * lightPositional;
+		}
+		
+		//linear color (color before gamma correction)
+		vec3 linearColor = ambient + diffuse + positionalColor;
+		
+		//final color (after gamma correction)
+		vec3 gamma = vec3(1.0/2.2);
+		return vec4(pow(linearColor, gamma), surfaceColor.a);
+	}
+]]
+	
 	self.wallShader = love.graphics.newShader(
 [[
 	extern vec3 lightPosition;
