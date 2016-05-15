@@ -224,7 +224,7 @@ function ShearTestScene:init(gameWorld)
 	extern vec3 lightAmbient;
 	extern vec3 lightDirectional;
 
-	vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords )
+	vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords )
 	{	
 		vec3 normal = vec3(0, 0, -1);
 		vec3 normalLightDir = normalize(lightDirection);
@@ -248,10 +248,11 @@ function ShearTestScene:init(gameWorld)
 		//linear color (color before gamma correction)
 		vec3 linearColor = ambient + diffuse + positionalColor;
 		linearColor = clamp(linearColor, 0, 1);
+		linearColor *= color;		
 		
 		//final color (after gamma correction)
 		vec3 gamma = vec3(1.0/2.2);
-		return vec4(pow(linearColor, gamma), surfaceColor.a);
+		return vec4(pow(linearColor, gamma), surfaceColor.a);	
 	}
 ]]
 	)
@@ -271,7 +272,7 @@ function ShearTestScene:init(gameWorld)
 	extern vec2 v4;
 	extern number vz;
 	
-	vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords )
+	vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords )
 	{	
 		vec3 normalLightDir = normalize(lightDirection);
 		vec4 surfaceColor = vec4(0,0,0,255);
@@ -282,7 +283,6 @@ function ShearTestScene:init(gameWorld)
 			// vertical
 			if (v1.y == v3.y) {				
 				number ty = (screen_coords.y - v1.y) / (v2.y - v1.y);
-
 				number lx1 = v1.x * ( 1 - ((screen_coords.y - v1.y) / (v2.y - v1.y)) ) + v2.x * ( (screen_coords.y - v1.y) / (v2.y - v1.y) );
 				number lx2 = v3.x * ( 1 - ((screen_coords.y - v3.y) / (v4.y - v3.y)) ) + v4.x * ( (screen_coords.y - v3.y) / (v4.y - v3.y) );
 				number tx = (screen_coords.x - lx2) / (lx1 - lx2);								
@@ -316,10 +316,11 @@ function ShearTestScene:init(gameWorld)
 		//linear color (color before gamma correction)
 		vec3 linearColor = ambient + diffuse + positionalColor;
 		linearColor = clamp(linearColor, 0, 1);
+		linearColor *= color;
 		
 		//final color (after gamma correction)
 		vec3 gamma = vec3(1.0/2.2);
-		return vec4(pow(linearColor, gamma), surfaceColor.a);
+		return vec4(pow(linearColor, gamma), surfaceColor.a);		
 	}
 ]]
 	)
@@ -448,14 +449,11 @@ function ShearTestScene:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)
 end
 
 function ShearTestScene:addWallSections(walls, sx, ex, sy, ey, sz, ez, ss, nx, ny)
-	--for z = sz - ss, ez, -ss do
-		--local t1, t2 = self:createWallSection(sx, ex, sy, ey, z + ss, z, nx, ny)
 		local t1, t2 = self:createWallSection(sx, ex, sy, ey, sz, ez, nx, ny)		
 		table.insert(walls.triangles, t1)
 		t1.meshIndex = #walls.triangles
 		table.insert(walls.triangles, t2)
 		t2.meshIndex = #walls.triangles
-	--end
 end
 
 function ShearTestScene:createBuildingFromType(buildingType)
@@ -950,17 +948,23 @@ function ShearTestScene:renderTriangles()
 	for idx, triangle in ipairs(orderedTriangles) do
 		local mesh = triangle.mesh
 		if triangle.visible then
-			for i, vertex in ipairs(triangle.vertices2D) do
-				drawingMesh:setVertex(i, vertex[1], vertex[2], triangle.uv[i][1], triangle.uv[i][2], 255, 255, 255, 255)
-			end		
-			drawingMesh:setTexture(triangle.texture)			
-			
-			local mesh = triangle.mesh
-
 			local sidx = triangle.meshIndex
 			if triangle.order == 2 then
 				sidx = sidx - 1
 			end
+
+			for i, vertex in ipairs(triangle.vertices2D) do
+				local bright = 255
+				if triangle.order == 1 then
+					if i == 1 or i == 3 then bright = 48 end
+				else	
+					if i == 3 then bright = 48 end
+				end
+				drawingMesh:setVertex(i, vertex[1], vertex[2], triangle.uv[i][1], triangle.uv[i][2], bright, bright, bright, bright)
+			end		
+			drawingMesh:setTexture(triangle.texture)			
+			
+			local mesh = triangle.mesh
 			
 			local t1 = mesh.triangles[sidx]
 			local t2 = mesh.triangles[sidx + 1]

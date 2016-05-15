@@ -178,8 +178,12 @@ Saving and loading of tiles can be done in a thread
 
 Or you could have more tiles loaded and only blit them to canvases when you need them
 
-
 Set light settings at times of day and then interpolate between them using gametime hour minutes and seconds
 
+Buildings can use different textures at night to show lights in the windows?
+Need better shaped buildlings
+More multi level things - need to design buildings at different heights
+Buildlings should be procedural... never mind design... need to create rules for various ways to design a building
+Add moderm buildings (semi circular?)
 
 
