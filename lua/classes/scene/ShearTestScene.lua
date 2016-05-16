@@ -209,11 +209,15 @@ function ShearTestScene:init(gameWorld)
 	self.sceneBoundingArea = 3
 	self.sceneBoundingCameraFactor = 0.5
 
+	-- higher second value makes light with smaller radius
 	self.pointLights = 
 	{		
 		{600, 200, -5}, 
-		{50, 0.8, 0}, 
-		{1, 1, 1}
+		{50, 1.4, 0}, 
+		{1, 1, 1},
+		{200, 600, -5}, 
+		{50, 1.4, 0}, 
+		{1, 0, 1}
 	}
 
 	self.drawDebug = true	
@@ -336,14 +340,14 @@ function ShearTestScene:init(gameWorld)
 		{			
 			vec3 frontVector = normalize(pointLights[i] - v1);
 			number frontTest = max(dot(normal, frontVector), 0.0);
-			if (frontTest < 0.01) {
+			if (frontTest < 0.001) {
 				continue;
 			}					
 			vec3 fromTo = pointLights[i] - vec3(screen_coords, vz);
 			vec3 pointLightDir = normalize(fromTo);			
 			number distance = length(fromTo);			
 			number NdotL = max(dot(normal, pointLightDir), 0.0);								
-			vec3 intensity = (pointLights[i+1].x / pow(distance, pointLights[i+2].y)) * pointLights[i+2] * NdotL;		
+			vec3 intensity = (pointLights[i+1].x / pow(distance, pointLights[i+1].y)) * pointLights[i+2] * NdotL;		
 			intensity = clamp(intensity, 0, 1);
 			linearColor += intensity * surfaceColor.rgb;
 		}
@@ -976,9 +980,6 @@ function ShearTestScene:renderTriangles()
 	
 	wallShader:send('lightCount', #self.pointLights / 3)
 	wallShader:send('pointLights', unpack(self.pointLights))
-	--wallShader:send('lightCount', 1)
-	--wallShader:send('pointLights', {600, 200, -5}, {50, 0.8, 0}, {1, 1, 1})
-
 	
 	-- render triangles
 	love.graphics.setLineWidth(2)
