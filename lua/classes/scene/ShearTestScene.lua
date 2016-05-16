@@ -209,16 +209,20 @@ function ShearTestScene:init(gameWorld)
 	self.sceneBoundingArea = 3
 	self.sceneBoundingCameraFactor = 0.5
 
-	-- higher second value makes light with smaller radius
 	self.pointLights = 
 	{		
-		{600, 200, -5}, 
-		{50, 1.4, 0}, 
-		{1, 1, 1},
-		{200, 600, -5}, 
-		{50, 1.4, 0}, 
-		{1, 0, 1}
-	}
+		-- 1 - position (world)
+		-- 2 - attenuation
+		-- 3 - intensities
+		-- 4 - screen coordinates
+		{
+			{ 0, 0, -5 },
+			{200, 1.4, 0},
+			{ 1, 1, 1 },
+			{ 0, 0, }
+		}
+	}	
+	self.pointLightsData = {}
 
 	self.drawDebug = true	
 	
@@ -338,9 +342,39 @@ function ShearTestScene:init(gameWorld)
 		// intensity is i + 2					
 		for (int i = 0; i < lightCount * 3; i += 3)
 		{			
+			/*
+			vec3 n,halfV,viewV,lightDir;
+			float NdotL,NdotHV;
+			vec4 color = ambientGlobal;
+			float att, dist;
+     
+			n = normalize(normal);
+     
+			lightDir = vec3(gl_LightSource[0].position-ecPos);
+     
+			dist = length(lightDir);
+      
+			NdotL = max(dot(n,normalize(lightDir)),0.0);
+ 
+			if (NdotL > 0.0) {
+			 
+				att = 1.0 / (gl_LightSource[0].constantAttenuation +
+						gl_LightSource[0].linearAttenuation * dist +
+						gl_LightSource[0].quadraticAttenuation * dist * dist);
+				color += att * (diffuse * NdotL + ambient);
+			 
+				 
+				halfV = normalize(halfVector);
+				NdotHV = max(dot(n,halfV),0.0);
+				color += att * gl_FrontMaterial.specular * gl_LightSource[0].specular * pow(NdotHV,gl_FrontMaterial.shininess);
+			}
+		 
+			gl_FragColor = color;
+			*/
+	
 			vec3 frontVector = normalize(pointLights[i] - v1);
 			number frontTest = max(dot(normal, frontVector), 0.0);
-			if (frontTest < 0.001) {
+			if (frontTest <= 0.0) {
 				continue;
 			}					
 			vec3 fromTo = pointLights[i] - vec3(screen_coords, vz);
@@ -783,6 +817,22 @@ function ShearTestScene:translate3Dto2D()
 	end
 	
 	Profiler:stop('Calculate 2D Points for Actors')
+	
+	-- update point lights
+	for _, pointLight in ipairs(self.pointLights) do
+		local position = pointLight[1]
+		local screenCoords = pointLight[4]
+		local wx = position[1] - camera[1]
+		local wy = position[2] - camera[2]
+		local wz = position[3] - camera[3]
+		screenCoords[1] = (wx / wz * sw) + hsw
+		screenCoords[2] = (wy / wz * sh) + hsh	
+		screenCoords[3] = wz
+		table.insert(self.pointLightsData, screenCoords)
+		table.insert(self.pointLightsData, pointLight[2])
+		table.insert(self.pointLightsData, pointLight[3])
+	end
+	
 end
 
 function ShearTestScene:createBoundingBoxes2D()
@@ -837,6 +887,11 @@ function ShearTestScene:clearScene()
 	sceneBoundingBox[2] = camera[2] -area
 	sceneBoundingBox[3] = camera[1] +area
 	sceneBoundingBox[4] = camera[2] +area
+	
+	local pointLightsData = self.pointLightsData
+	for i = 1, #pointLightsData do
+		pointLightsData[i] = nil
+	end
 end
 
 function ShearTestScene:sqr(x) 
@@ -978,8 +1033,8 @@ function ShearTestScene:renderTriangles()
 	wallShader:send('lightPosition', light.position)
 	wallShader:send('lightPositional', light.positional)
 	
-	wallShader:send('lightCount', #self.pointLights / 3)
-	wallShader:send('pointLights', unpack(self.pointLights))
+	wallShader:send('lightCount', #self.pointLights)
+	wallShader:send('pointLights', unpack(self.pointLightsData))
 	
 	-- render triangles
 	love.graphics.setLineWidth(2)
@@ -1035,9 +1090,9 @@ function ShearTestScene:renderTriangles()
 				
 	-- draw point lights
 	love.graphics.setColor(255,255,255,255)
-	for i = 1, #self.pointLights, 3 do
-		local plp = self.pointLights[i]
-		love.graphics.circle('fill', plp[1], plp[2], 5)
+	for _, pointLight in ipairs(self.pointLights) do
+		local screenCoords = pointLight[4]
+		love.graphics.circle('fill', screenCoords[1], screenCoords[2], 5)
 	end
 	
 	if self.drawDebug then
@@ -1194,7 +1249,11 @@ function ShearTestScene:draw()
 		love.graphics.rectangle('fill', 0,0, 600, 200)
 		love.graphics.setColor(255, 255, 0, 255)
 		local sy = 30
-				
+
+		love.graphics.print('memory: ' .. collectgarbage('count')*1024, 0, sy)
+		sy = sy + 15
+		sy = sy + 15		
+		
 		love.graphics.print('light position: ' .. 
 			light.position[1] .. ', ' .. 
 			light.position[2] .. ', ' .. 
@@ -1275,9 +1334,7 @@ function ShearTestScene:draw()
 		sy = sy + 15
 		sy = sy + 15	
 		
-		love.graphics.print('memory: ' .. collectgarbage('count')*1024, 0, sy)
-		sy = sy + 15
-		sy = sy + 15		
+		
 			
 		table.sort(Profiler.list, function(a, b) return a.average > b.average end)	
 		for name, item in ipairs(Profiler.list) do	
