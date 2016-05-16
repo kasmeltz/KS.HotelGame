@@ -161,11 +161,11 @@ function ShearTestScene:init(gameWorld)
 		
 	local light = 
 	{
-		position = { 600, 300, 90 },
-		positional = { 1.2, 1.2, 1.2 },
-		direction = { 0, 0, -1 },
-		directional = { -0.045, -0.045, -0.045 },
-		ambient = { 0.025, 0.025, 0.025 },
+		position = { 0, 450, 120 },
+		positional = { 0, 0, 0 },		
+		direction = { -1, 0, 0 },
+		directional = { 0, 0, 0 },
+		ambient = { 0.01, 0.01, 0.01 },	
 	}
 	
 	self.light = light		
@@ -177,14 +177,14 @@ function ShearTestScene:init(gameWorld)
 	
 	local buildingObjects = {}	
 	
-	for i = 1, 500 do
-		local t = love.math.random(1,#self.buildingTypes)
-		--local t = 1
+	--for i = 1, 500 do
+		--local t = love.math.random(1,#self.buildingTypes)
+		local t = 1
 		local bo = 	self:createBuildingFromType(self.buildingTypes[t])
-		--bo.position = { 0, -9, 0 }
-		bo.position = { love.math.random(0,400) - 200, love.math.random(0,400) - 200, 0 }
+		bo.position = { 0, -7, 0 }
+		--bo.position = { love.math.random(0,400) - 200, love.math.random(0,400) - 200, 0 }
 		buildingObjects[#buildingObjects + 1] = bo
-	end
+	--end
 		
 	self.buildingObjects = buildingObjects
 		
@@ -212,12 +212,10 @@ function ShearTestScene:init(gameWorld)
 	self.pointLights = 
 	{		
 		-- 1 - position (world)
-		-- 2 - attenuation
-		-- 3 - intensities
-		-- 4 - screen coordinates
+		-- 2 - intensities
+		-- 3 - screen coordinates
 		{
 			{ 0, 0, -5 },
-			{200, 1.4, 0},
 			{ 1, 1, 1 },
 			{ 0, 0, }
 		}
@@ -342,48 +340,19 @@ function ShearTestScene:init(gameWorld)
 		// intensity is i + 2					
 		for (int i = 0; i < lightCount * 3; i += 3)
 		{			
-			/*
-			vec3 n,halfV,viewV,lightDir;
-			float NdotL,NdotHV;
-			vec4 color = ambientGlobal;
-			float att, dist;
-     
-			n = normalize(normal);
-     
-			lightDir = vec3(gl_LightSource[0].position-ecPos);
-     
-			dist = length(lightDir);
-      
-			NdotL = max(dot(n,normalize(lightDir)),0.0);
- 
-			if (NdotL > 0.0) {
-			 
-				att = 1.0 / (gl_LightSource[0].constantAttenuation +
-						gl_LightSource[0].linearAttenuation * dist +
-						gl_LightSource[0].quadraticAttenuation * dist * dist);
-				color += att * (diffuse * NdotL + ambient);
-			 
-				 
-				halfV = normalize(halfVector);
-				NdotHV = max(dot(n,halfV),0.0);
-				color += att * gl_FrontMaterial.specular * gl_LightSource[0].specular * pow(NdotHV,gl_FrontMaterial.shininess);
-			}
-		 
-			gl_FragColor = color;
-			*/
-	
-			vec3 frontVector = normalize(pointLights[i] - v1);
+			vec3 frontVector = normalize(pointLights[i] - vec3(v1, vz));
 			number frontTest = max(dot(normal, frontVector), 0.0);
 			if (frontTest <= 0.0) {
 				continue;
 			}					
-			vec3 fromTo = pointLights[i] - vec3(screen_coords, vz);
-			vec3 pointLightDir = normalize(fromTo);			
-			number distance = length(fromTo);			
-			number NdotL = max(dot(normal, pointLightDir), 0.0);								
-			vec3 intensity = (pointLights[i+1].x / pow(distance, pointLights[i+1].y)) * pointLights[i+2] * NdotL;		
-			intensity = clamp(intensity, 0, 1);
-			linearColor += intensity * surfaceColor.rgb;
+			
+			vec3 fromTo = pointLights[i] - vec3(screen_coords, vz);	
+			fromTo /= (love_ScreenSize.x / 4);			
+			number NdotL = max(dot(normal, normalize(fromTo)), 0.0);								
+			number brightness =  (0.1 / pow(length(fromTo), 2)) * NdotL;
+			brightness = clamp(brightness, 0, 1);
+			vec3 pointColor = brightness * surfaceColor.rgb * pointLights[i+1];
+			linearColor += pointColor * surfaceColor.rgb;
 		}
 		
 		linearColor = clamp(linearColor, 0, 1);
@@ -821,7 +790,7 @@ function ShearTestScene:translate3Dto2D()
 	-- update point lights
 	for _, pointLight in ipairs(self.pointLights) do
 		local position = pointLight[1]
-		local screenCoords = pointLight[4]
+		local screenCoords = pointLight[3]
 		local wx = position[1] - camera[1]
 		local wy = position[2] - camera[2]
 		local wz = position[3] - camera[3]
@@ -830,7 +799,6 @@ function ShearTestScene:translate3Dto2D()
 		screenCoords[3] = wz
 		table.insert(self.pointLightsData, screenCoords)
 		table.insert(self.pointLightsData, pointLight[2])
-		table.insert(self.pointLightsData, pointLight[3])
 	end
 	
 end
@@ -967,6 +935,29 @@ function ShearTestScene:handleInput(dt)
 	if love.keyboard.isDown('e') then
 		camera[3] = camera[3] + dt * 10
 	end	
+	
+	local light = self.pointLights[1]		
+	local lightPosition = light[1]
+	local lightIntensities = light[2]
+	
+	if love.keyboard.isDown('left') then
+		lightPosition[1] = lightPosition[1] + dt * 5
+	end
+	if love.keyboard.isDown('right') then
+		lightPosition[1] = lightPosition[1] - dt * 5
+	end	
+	if love.keyboard.isDown('up') then
+		lightPosition[2] = lightPosition[2] + dt * 5
+	end
+	if love.keyboard.isDown('down') then
+		lightPosition[2] = lightPosition[2] - dt * 5
+	end
+	if love.keyboard.isDown('/') then
+		lightPosition[3] = lightPosition[3] + dt * 10
+	end
+	if love.keyboard.isDown('.') then
+		lightPosition[3] = lightPosition[3] - dt * 10
+	end	
 end
 
 function ShearTestScene:update(dt)	
@@ -1091,7 +1082,7 @@ function ShearTestScene:renderTriangles()
 	-- draw point lights
 	love.graphics.setColor(255,255,255,255)
 	for _, pointLight in ipairs(self.pointLights) do
-		local screenCoords = pointLight[4]
+		local screenCoords = pointLight[3]
 		love.graphics.circle('fill', screenCoords[1], screenCoords[2], 5)
 	end
 	
@@ -1253,7 +1244,26 @@ function ShearTestScene:draw()
 		love.graphics.print('memory: ' .. collectgarbage('count')*1024, 0, sy)
 		sy = sy + 15
 		sy = sy + 15		
+	
+		local light = self.pointLights[1]		
+		local lightPosition = light[1]
+		local lightIntensities = light[2]
 		
+		love.graphics.print('light position: ' .. 
+			lightPosition[1] .. ', ' .. 
+			lightPosition[2] .. ', ' .. 
+			lightPosition[3], 0, sy)
+				
+		sy = sy + 15	
+
+		love.graphics.print('light intensity: ' .. 
+			lightIntensities[1] .. ', ' .. 
+			lightIntensities[2] .. ', ' .. 
+			lightIntensities[3], 0, sy)
+				
+		sy = sy + 15	
+		
+		--[[	
 		love.graphics.print('light position: ' .. 
 			light.position[1] .. ', ' .. 
 			light.position[2] .. ', ' .. 
@@ -1306,11 +1316,7 @@ function ShearTestScene:draw()
 				
 		sy = sy + 15	
 		
-		local gt = self.gameWorld.gameTime		
-		love.graphics.print('speed: ' ..  gt.speedTexts[gt.currentSpeed], 0, sy)
-		
-		sy = sy + 15		
-				
+			]]
 		--[[
 		sy = sy + 15
 		sy = sy + 15
@@ -1348,6 +1354,23 @@ function ShearTestScene:draw()
 end
 
 function ShearTestScene:keyreleased(key, scancode)
+	local light = self.pointLights[1]		
+	local lightPosition = light[1]
+	local lightIntensities = light[2]	
+		
+	if key == 'z' then
+		lightIntensities[1] = lightIntensities[1] - 0.25
+		lightIntensities[2] = lightIntensities[2] - 0.25
+		lightIntensities[3] = lightIntensities[3] - 0.25
+	end	
+	
+	if key == 'x' then
+		lightIntensities[1] = lightIntensities[1] + 0.25
+		lightIntensities[2] = lightIntensities[2] + 0.25
+		lightIntensities[3] = lightIntensities[3] + 0.25
+	end	
+	
+	--[[
 	if key == '1' then
 		self.light.ambient[1] = self.light.ambient[1] - 0.005
 		self.light.ambient[2] = self.light.ambient[2] - 0.005
@@ -1383,6 +1406,7 @@ function ShearTestScene:keyreleased(key, scancode)
 		self.light.positional[2] = self.light.positional[2] + 0.005
 		self.light.positional[3] = self.light.positional[3] + 0.005
 	end	
+	]]
 
 	if key == 'k' then
 		self.light.direction[1] = self.light.direction[1] - 0.01

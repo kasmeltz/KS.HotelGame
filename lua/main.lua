@@ -107,6 +107,7 @@ function love.draw()
 	local gameTime = gameWorld.gameTime
 	local date = gameTime:getDateString('%A %B, %d %Y %I:%M:%S %p')
 	love.graphics.print(date, 900, 0)
+	love.graphics.print('speed: ' ..  gameTime.speedTexts[gameTime.currentSpeed], 900, 15)
 end
 
 function love.keyreleased(key, scancode)
