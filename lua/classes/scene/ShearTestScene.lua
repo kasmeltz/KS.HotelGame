@@ -955,10 +955,12 @@ function ShearTestScene:renderTriangles()
 
 			for i, vertex in ipairs(triangle.vertices2D) do
 				local bright = 255
-				if triangle.order == 1 then
-					if i == 1 or i == 3 then bright = 48 end
-				else	
-					if i == 3 then bright = 48 end
+				if triangle.normal[3] == 0 then
+					if triangle.order == 1 then
+						if i == 1 or i == 3 then bright = 96 end
+					else	
+						if i == 3 then bright = 96 end
+					end
 				end
 				drawingMesh:setVertex(i, vertex[1], vertex[2], triangle.uv[i][1], triangle.uv[i][2], bright, bright, bright, bright)
 			end		
