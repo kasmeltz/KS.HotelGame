@@ -335,10 +335,8 @@ function ShearTestScene:init(gameWorld)
 
 		// point lights
 		// position is i
-		// linear distance factor is i + 1.x
-		// exp distance factor is intensity is i + 1.y				
-		// intensity is i + 2					
-		for (int i = 0; i < lightCount * 3; i += 3)
+		// intensity is i + 1
+		for (int i = 0; i < lightCount * 2; i += 2)
 		{			
 			vec3 frontVector = normalize(pointLights[i] - vec3(v1, vz));
 			number frontTest = max(dot(normal, frontVector), 0.0);
