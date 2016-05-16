@@ -68,7 +68,7 @@ function ShearTestScene:init(gameWorld)
 		{
 			position = { 0, 450, 120 },
 			positional = { 0, 0, 0 },		
-			direction = { 0, 0, 0 },
+			direction = { -1, 0, 0 },
 			directional = { 0, 0, 0 },
 			ambient = { 0.01, 0.01, 0.01 },			
 			name = '3 a.m.'
@@ -209,6 +209,12 @@ function ShearTestScene:init(gameWorld)
 	self.sceneBoundingArea = 3
 	self.sceneBoundingCameraFactor = 0.5
 
+	self.pointLights = 
+	{		
+		{600, 200, -5}, 
+		{50, 0.8, 0}, 
+		{1, 1, 1}
+	}
 
 	self.drawDebug = true	
 	
@@ -272,6 +278,10 @@ function ShearTestScene:init(gameWorld)
 	extern vec2 v4;
 	extern number vz;
 	
+	// max n / 3 point lights
+	extern number lightCount;
+	extern vec3 pointLights[18];
+	
 	vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords )
 	{	
 		vec3 normalLightDir = normalize(lightDirection);
@@ -306,18 +316,40 @@ function ShearTestScene:init(gameWorld)
 		vec3 diffuse = lightDirectional * NdotL * surfaceColor.rgb;
 		
 		// positional
-		vec3 positionalColor = vec3(0,0,0);
 		vec3 surfaceToLight = lightPosition - vec3(screen_coords, vz);	
-		surfaceToLight /=  (love_ScreenSize.x / 4);
+		surfaceToLight /= (love_ScreenSize.x / 4);
 		number brightness =  (0.1 / pow(length(surfaceToLight), 2)) * NdotL;
 		brightness = clamp(brightness, 0, 1);
-		positionalColor = brightness * surfaceColor.rgb * lightPositional;
+		vec3 positionalColor = brightness * surfaceColor.rgb * lightPositional;
 		
-		//linear color (color before gamma correction)
+		//linear color 
 		vec3 linearColor = ambient + diffuse + positionalColor;
 		linearColor = clamp(linearColor, 0, 1);
 		linearColor *= color;
+
+		// point lights
+		// position is i
+		// linear distance factor is i + 1.x
+		// exp distance factor is intensity is i + 1.y				
+		// intensity is i + 2					
+		for (int i = 0; i < lightCount * 3; i += 3)
+		{			
+			vec3 frontVector = normalize(pointLights[i] - v1);
+			number frontTest = max(dot(normal, frontVector), 0.0);
+			if (frontTest < 0.01) {
+				continue;
+			}					
+			vec3 fromTo = pointLights[i] - vec3(screen_coords, vz);
+			vec3 pointLightDir = normalize(fromTo);			
+			number distance = length(fromTo);			
+			number NdotL = max(dot(normal, pointLightDir), 0.0);								
+			vec3 intensity = (pointLights[i+1].x / pow(distance, pointLights[i+2].y)) * pointLights[i+2] * NdotL;		
+			intensity = clamp(intensity, 0, 1);
+			linearColor += intensity * surfaceColor.rgb;
+		}
 		
+		linearColor = clamp(linearColor, 0, 1);
+					
 		//final color (after gamma correction)
 		vec3 gamma = vec3(1.0/2.2);
 		return vec4(pow(linearColor, gamma), surfaceColor.a);		
@@ -707,7 +739,7 @@ function ShearTestScene:translate3Dto2D()
 			local z = vertex[3]
 			if z == 0 then z = notZero end
 			local tx = (vertex[1] / z * sw) + hsw
-			local ty = (-vertex[2] / z * sh) + hsh	
+			local ty = (vertex[2] / z * sh) + hsh	
 			triangle.vertices2D[i][1] = tx
 			triangle.vertices2D[i][2] = ty
 		end
@@ -743,7 +775,7 @@ function ShearTestScene:translate3Dto2D()
 		local z = actor.movedPosition[3]
 		if z == 0 then z = notZero end
 		actor.position2D[1] = (x / z * sw) + hsw
-		actor.position2D[2] = (-y / z * sh) + hsh
+		actor.position2D[2] = (y / z * sh) + hsh
 	end
 	
 	Profiler:stop('Calculate 2D Points for Actors')
@@ -761,9 +793,9 @@ function ShearTestScene:createBoundingBoxes2D()
 			local z = box[5]
 			if z == 0 then z = notZero end
 			local x1 = (box[1] / z * sw) + hsw
-			local y1 = (-box[2] / z * sh) + hsh	
+			local y1 = (box[2] / z * sh) + hsh	
 			local x2 = (box[3] / z * sw) + hsw
-			local y2 = (-box[4] / z * sh) + hsh			
+			local y2 = (box[4] / z * sh) + hsh			
 			box2D[1] = x1
 			box2D[2] = y1
 			box2D[3] = x2
@@ -865,10 +897,10 @@ function ShearTestScene:handleInput(dt)
 		hero.position[1] = hero.position[1] - dt * 5
 	end
 	if love.keyboard.isDown('w') then
-		hero.position[2] = hero.position[2] - dt * 5
+		hero.position[2] = hero.position[2] + dt * 5
 	end
 	if love.keyboard.isDown('s') then
-		hero.position[2] = hero.position[2] + dt * 5
+		hero.position[2] = hero.position[2] - dt * 5
 	end
 	if love.keyboard.isDown('q') then
 		camera[3] = camera[3] - dt * 10
@@ -942,6 +974,12 @@ function ShearTestScene:renderTriangles()
 	wallShader:send('lightPosition', light.position)
 	wallShader:send('lightPositional', light.positional)
 	
+	wallShader:send('lightCount', #self.pointLights / 3)
+	wallShader:send('pointLights', unpack(self.pointLights))
+	--wallShader:send('lightCount', 1)
+	--wallShader:send('pointLights', {600, 200, -5}, {50, 0.8, 0}, {1, 1, 1})
+
+	
 	-- render triangles
 	love.graphics.setLineWidth(2)
 	local drawingMesh = self.drawingMesh
@@ -993,7 +1031,14 @@ function ShearTestScene:renderTriangles()
 		end
 	end
 	love.graphics.setShader()
-			
+				
+	-- draw point lights
+	love.graphics.setColor(255,255,255,255)
+	for i = 1, #self.pointLights, 3 do
+		local plp = self.pointLights[i]
+		love.graphics.circle('fill', plp[1], plp[2], 5)
+	end
+	
 	if self.drawDebug then
 		love.graphics.setFont(FontManager:getFont('Courier16'))
 		for idx, triangle in ipairs(orderedTriangles) do
@@ -1056,7 +1101,7 @@ function ShearTestScene:drawRoad()
 	local ssy = (-sh / z)
 	
 	local sx = (x / z * sw) - (hsw)
-	local sy = (-y / z * sh) - (hsh)
+	local sy = (y / z * sh) - (hsh)
 	
 	local tx = math.floor(sx / ssx)
 	local ty = math.floor(sy / ssy)	
@@ -1106,7 +1151,10 @@ end
 
 function ShearTestScene:renderHero()
 	local hero = self.hero		
+	love.graphics.setColor(255,0,255)
 	love.graphics.circle('fill', hero.position2D[1], hero.position2D[2], 10)
+	love.graphics.setColor(255,255,255)
+	love.graphics.circle('line', hero.position2D[1], hero.position2D[2], 10)
 end
 
 function ShearTestScene:draw()
