@@ -79,9 +79,9 @@ function ShearTestScene:init(gameWorld)
 	self.dayNightCycle:addSnapShot(
 		{
 			position = { 1200, 450, 120 },
-			positional = { 0, 0, 0 },		
-			direction = { 0, 0, 0 },
-			directional = { 0, 0, 0 },
+			positional = { 0.001, 0.001, 0.001 },		
+			direction = { 0.001, 0.001, 0.001 },
+			directional = { 0.001, 0.001, 0.001 },
 			ambient = { 0.01, 0.01, 0.01 },			
 			name = '3:00:01 a.m.'
 		},
@@ -127,9 +127,9 @@ function ShearTestScene:init(gameWorld)
 	self.dayNightCycle:addSnapShot(
 		{
 			position = { 0, 450, 120 },
-			positional = { 0, 0, 0 },		
-			direction = { 0, 0, 0 },
-			directional = { 0, 0, 0 },
+			positional = { 0.001, 0.001, 0.001 },		
+			direction = { 0.001, 0.001, 0.001 },
+			directional = { 0.001, 0.001, 0.001 },
 			ambient = { 0.01, 0.01, 0.01 },			
 			name = '10 p.m.'
 		},
@@ -177,16 +177,19 @@ function ShearTestScene:init(gameWorld)
 	
 	local buildingObjects = {}	
 	
-	--for i = 1, 500 do
-		--local t = love.math.random(1,#self.buildingTypes)
-		local t = 1
+	for i = 1, 500 do
+		local t = love.math.random(1,#self.buildingTypes)
+		--local t = 1
 		local bo = 	self:createBuildingFromType(self.buildingTypes[t])
-		bo.position = { 0, -7, 0 }
-		--bo.position = { love.math.random(0,400) - 200, love.math.random(0,400) - 200, 0 }
+		--bo.position = { 0, -7, 0 }
+		bo.position = { love.math.random(0,400) - 200, love.math.random(0,400) - 200, 0 }
 		buildingObjects[#buildingObjects + 1] = bo
-	--end
+	end
 		
 	self.buildingObjects = buildingObjects
+	
+	self.road = self:createRoad()
+	self.road.position = { 0, 0, 0 }
 		
 	self.actordToRender = {}
 	self.meshesToRender = {}
@@ -209,16 +212,30 @@ function ShearTestScene:init(gameWorld)
 	self.sceneBoundingArea = 3
 	self.sceneBoundingCameraFactor = 0.5
 
+	-- 1 - position (world)
+	-- 2 - intensities
+	-- 3 - screen coordinates
+	-- 4 - camera relative position (world)	
 	self.pointLights = 
 	{		
-		-- 1 - position (world)
-		-- 2 - intensities
-		-- 3 - screen coordinates
 		{
 			{ 0, 0, -5 },
-			{ 1, 1, 1 },
-			{ 0, 0, }
-		}
+			{ 10, 10, 10 },
+			{ 0, 0, },
+			{ 0, 0, 0 }
+		},
+		{
+			{ 5, 0, -5 },
+			{ 5, 10, 10 },
+			{ 0, 0, },
+			{ 0, 0, 0 }
+		},
+		{
+			{ -5, 0, -5 },
+			{ 10, 5, 10 },
+			{ 0, 0, },
+			{ 0, 0, 0 }
+		}		
 	}	
 	self.pointLightsData = {}
 
@@ -227,48 +244,7 @@ function ShearTestScene:init(gameWorld)
 	collectgarbage()
 
 	self:update(0.001)		
-	
-	self.roadShader = love.graphics.newShader(
-[[
-	extern vec3 lightPosition;
-	extern vec3 lightPositional;
-	extern vec3 lightDirection;
-	extern vec3 lightAmbient;
-	extern vec3 lightDirectional;
-
-	vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords )
-	{	
-		vec3 normal = vec3(0, 0, -1);
-		vec3 normalLightDir = normalize(lightDirection);
-		vec4 surfaceColor = Texel(texture, texture_coords);
-
-		//ambient
-		vec3 ambient = lightAmbient * surfaceColor.rgb;
-
-		// directional
-		number NdotL = max(dot(normal, normalLightDir), 0.0);
-		vec3 diffuse = lightDirectional * NdotL * surfaceColor.rgb;
 		
-		// positional
-		vec3 positionalColor = vec3(0,0,0);
-		vec3 surfaceToLight = lightPosition - vec3(screen_coords, -5);	
-		surfaceToLight /=  (love_ScreenSize.x / 4);
-		number brightness =  (0.1 / pow(length(surfaceToLight), 2)) * NdotL;
-		brightness = clamp(brightness, 0, 1);
-		positionalColor = brightness * surfaceColor.rgb * lightPositional;
-		
-		//linear color (color before gamma correction)
-		vec3 linearColor = ambient + diffuse + positionalColor;
-		linearColor = clamp(linearColor, 0, 1);
-		linearColor *= color;		
-		
-		//final color (after gamma correction)
-		vec3 gamma = vec3(1.0/2.2);
-		return vec4(pow(linearColor, gamma), surfaceColor.a);	
-	}
-]]
-	)
-	
 	self.wallShader = love.graphics.newShader(
 [[
 	extern vec3 lightPosition;
@@ -282,7 +258,7 @@ function ShearTestScene:init(gameWorld)
 	extern vec2 v2;
 	extern vec2 v3;
 	extern vec2 v4;
-	extern number vz;
+	extern vec3 vz;
 	
 	// max n / 3 point lights
 	extern number lightCount;
@@ -315,46 +291,48 @@ function ShearTestScene:init(gameWorld)
 		}
 	
 		//ambient
-		vec3 ambient = lightAmbient * surfaceColor.rgb;
+		vec3 ambient = gammaCorrectColor(lightAmbient) * surfaceColor.rgb;
 
 		// directional
 		number NdotL = max(dot(normal, normalLightDir), 0.0);
-		vec3 diffuse = lightDirectional * NdotL * surfaceColor.rgb;
+		vec3 diffuse = gammaCorrectColor(lightDirectional) * NdotL * surfaceColor.rgb;
 		
 		// positional
-		vec3 surfaceToLight = lightPosition - vec3(screen_coords, vz);	
+		vec3 surfaceToLight = lightPosition - vec3(screen_coords, 1);	
 		surfaceToLight /= (love_ScreenSize.x / 4);
 		number brightness =  (0.1 / pow(length(surfaceToLight), 2)) * NdotL;
 		brightness = clamp(brightness, 0, 1);
-		vec3 positionalColor = brightness * surfaceColor.rgb * lightPositional;
+		vec3 positionalColor = brightness * surfaceColor.rgb * gammaCorrectColor(lightPositional);
 		
 		//linear color 
 		vec3 linearColor = ambient + diffuse + positionalColor;
 		linearColor = clamp(linearColor, 0, 1);
 		linearColor *= color;
-
-		// point lights
+				
+		// point lights		
 		// position is i
-		// intensity is i + 1
-		for (int i = 0; i < lightCount * 2; i += 2)
+		// screen coords i + 1
+		// intensity is i + 2		
+		for (int i = 0; i < lightCount * 3; i += 3)
 		{			
-			vec3 frontVector = normalize(pointLights[i] - vec3(v1, vz));
-			number frontTest = max(dot(normal, frontVector), 0.0);
-			if (frontTest <= 0.0) {
-				continue;
-			}					
-			
-			vec3 fromTo = pointLights[i] - vec3(screen_coords, vz);	
-			fromTo /= (love_ScreenSize.x / 4);			
-			number NdotL = max(dot(normal, normalize(fromTo)), 0.0);								
-			number brightness =  (0.1 / pow(length(fromTo), 2)) * NdotL;
-			brightness = clamp(brightness, 0, 1);
-			vec3 pointColor = brightness * surfaceColor.rgb * pointLights[i+1];
-			linearColor += pointColor * surfaceColor.rgb;
+			//if (v1.y == v3.y && v2.y == v4.y && v4.x == v3.x && v1.x == v2.x) {}
+			//else {
+				vec3 fromVertex = pointLights[i] - vz;
+				number frontTest = max(dot(-normal, normalize(fromVertex)), 0.0);
+				if (frontTest <= 0.0) {
+									continue;
+				}											
+				number pointDistance = length(fromVertex);
+				vec3 fromPixel = pointLights[i + 1] - screen_coords;
+				number NdotL = max(dot(normal, normalize(fromPixel)), 0.0);	
+				number brightness =  (0.1 / pow(pointDistance, 2)) * NdotL;
+				brightness = clamp(brightness, 0, 1);
+				vec3 pointColor = brightness * surfaceColor.rgb * gammaCorrectColor(pointLights[i + 2]);
+				linearColor += pointColor;
+			//}
 		}
+		linearColor = clamp(linearColor, 0, 1);				
 		
-		linearColor = clamp(linearColor, 0, 1);
-					
 		//final color (after gamma correction)
 		vec3 gamma = vec3(1.0/2.2);
 		return vec4(pow(linearColor, gamma), surfaceColor.a);		
@@ -375,6 +353,7 @@ function ShearTestScene:findMiddle(mesh)
 			mz = mz + vertex[3]
 		end
 		triangle.middle = { mx / 3, my / 3, mz / 3 }
+		triangle.movedMiddle = { mx / 3, my / 3, mz / 3 }
 	end
 end
 
@@ -586,31 +565,122 @@ function ShearTestScene:createBuildingFromType(buildingType)
 	return building
 end
 
-function ShearTestScene:addObjectToScene(object)
+function ShearTestScene:createRoadSection(sx, ex, sy, ey, z)
+	local t1 = 
+	{
+		order = 1,
+		vertices = 
+		{
+			{ex, ey, z},
+			{ex, sy, z},
+			{sx, ey, z},
+		}, 
+		movedVertices =
+		{
+			{0, 0, 0},
+			{0, 0, 0},
+			{0, 0, 0},
+		},
+		normal = { 0, 0, 1 },
+		uv = 
+		{
+			{1, 1},
+			{1, 0}, 
+			{0, 1},
+		},		
+		vertices2D = {{0,0}, {0,0}, {0,0}}
+	}
+	
+	local t2 = 
+	{
+		order = 2,
+		vertices = 
+		{
+			{ex, sy, z},
+			{sx, sy, z},
+			{sx, ey, z},
+		}, 		
+		movedVertices = 
+		{
+			{0, 0, 0},
+			{0, 0, 0},
+			{0, 0, 0},
+		},
+		normal = { 0, 0, 1 },
+		uv = 
+		{
+			{1, 0},
+			{0, 0}, 
+			{0, 1},
+		},		
+		vertices2D = {{0,0}, {0,0}, {0,0}}
+	}
+	
+	return t1, t2
+end
+
+function ShearTestScene:createRoad()
+	local road = {}
+	road.meshes = {}
+	road.boundingBoxes = {}
+	road.movedBoxes = {}
+	road.boundingBoxes2D = {}
+	
+	local groundFloor = self.groundFloor
+
+	local mesh = 
+	{
+		texture = self.roadImages[1],
+		triangles = {}
+	}
+	
+	for dy = -5, 5 do
+		for dx = -5, 5 do
+			local t1, t2 = self:createRoofSection(dx, dx + 1, dy, dy + 1, groundFloor)
+			table.insert(mesh.triangles, t1)
+			t1.meshIndex = #mesh.triangles
+			table.insert(mesh.triangles, t2)						
+			t2.meshIndex = #mesh.triangles
+		end
+	end	
+	
+	table.insert(road.meshes, mesh)		
+
+	for _, mesh in ipairs(road.meshes) do
+		self:findMiddle(mesh)
+	end
+	
+	return road
+end
+
+
+function ShearTestScene:addObjectToScene(object, trace)
 	local meshesToRender = self.meshesToRender
 	local position = object.position
-	
+
 	local sceneBoundingBox = self.sceneBoundingBox 	
 	local sbx1 = sceneBoundingBox[1]
 	local sby1 = sceneBoundingBox[2]
 	local sbx2 = sceneBoundingBox[3]
 	local sby2 = sceneBoundingBox[4]
-
-	-- check if object should even be in scene
-	local abox = object.aggregateBoundingBox
-	local ax1 = abox[1] + position[1]
-	local ay1 = abox[2] + position[2]
-	local ax2 = abox[3] + position[1]
-	local ay2 = abox[4] + position[2]
 	
-	-- check if object should appear in scene
-	if 	ax1 >= sbx2 or
-		ay1 >= sby2 or
-		ax2 <= sbx1 or
-		ay2 <= sby1 then			
-			return
-	end
+	if object.aggregateBoundingBox then
+		-- check if object should even be in scene
+		local abox = object.aggregateBoundingBox
+		local ax1 = abox[1] + position[1]
+		local ay1 = abox[2] + position[2]
+		local ax2 = abox[3] + position[1]
+		local ay2 = abox[4] + position[2]
 		
+		-- check if object should appear in scene
+		if 	ax1 >= sbx2 or
+			ay1 >= sby2 or
+			ax2 <= sbx1 or
+			ay2 <= sby1 then			
+				return
+		end
+	end
+	
 	-- update mesh position
 	for _, mesh in ipairs(object.meshes) do		
 		mesh.object = object
@@ -631,6 +701,9 @@ function ShearTestScene:addObjectToScene(object)
 						triangle.visible = true
 				end
 			end
+			triangle.movedMiddle[1] = triangle.middle[1] + position[1]
+			triangle.movedMiddle[2] = triangle.middle[2] + position[2]
+			triangle.movedMiddle[3] = triangle.middle[3] + position[3]
 		end
 		mesh.position = position
 		meshesToRender[#meshesToRender + 1] = mesh
@@ -675,6 +748,9 @@ function ShearTestScene:translate3Dto2D()
 						movedVertex[2] = movedVertex[2] - camera[2]
 						movedVertex[3] = movedVertex[3] - camera[3]
 					end
+					triangle.movedMiddle[1] = triangle.movedMiddle[1] - camera[1]
+					triangle.movedMiddle[2] = triangle.movedMiddle[2] - camera[2]
+					triangle.movedMiddle[3] = -3 - camera[3]
 				end
 			end
 		end		
@@ -789,12 +865,17 @@ function ShearTestScene:translate3Dto2D()
 	for _, pointLight in ipairs(self.pointLights) do
 		local position = pointLight[1]
 		local screenCoords = pointLight[3]
+		local movedPosition = pointLight[4]
 		local wx = position[1] - camera[1]
 		local wy = position[2] - camera[2]
 		local wz = position[3] - camera[3]
 		screenCoords[1] = (wx / wz * sw) + hsw
 		screenCoords[2] = (wy / wz * sh) + hsh	
 		screenCoords[3] = wz
+		movedPosition[1] = wx
+		movedPosition[2] = wy
+		movedPosition[3] = wz
+		table.insert(self.pointLightsData, movedPosition)
 		table.insert(self.pointLightsData, screenCoords)
 		table.insert(self.pointLightsData, pointLight[2])
 	end
@@ -980,6 +1061,7 @@ function ShearTestScene:update(dt)
 	for _, bldg in ipairs(buildingObjects) do
 		self:addObjectToScene(bldg)
 	end		
+	self:addObjectToScene(self.road, true)
 	self:addActorToScene(hero)
 	
 	Profiler:stop('Add Objects To Scene')
@@ -997,7 +1079,11 @@ function ShearTestScene:update(dt)
 	end
 	
 	camera[1] = hero.position[1]
-	camera[2] = hero.position[2]			
+	camera[2] = hero.position[2]	
+
+	--local pointLight = self.pointLights[1]
+	--pointLight[1][1] = hero.position[1]
+	--pointLight[1][2] = hero.position[2]
 	
 	Profiler:start('Translate 3D to 2D')	
 	
@@ -1020,8 +1106,7 @@ function ShearTestScene:renderTriangles()
 	wallShader:send('lightAmbient', light.ambient)
 	wallShader:send('lightDirectional', light.directional)
 	wallShader:send('lightPosition', light.position)
-	wallShader:send('lightPositional', light.positional)
-	
+	wallShader:send('lightPositional', light.positional)	
 	wallShader:send('lightCount', #self.pointLights)
 	wallShader:send('pointLights', unpack(self.pointLightsData))
 	
@@ -1034,55 +1119,41 @@ function ShearTestScene:renderTriangles()
 			local sidx = triangle.meshIndex
 			if triangle.order == 2 then
 				sidx = sidx - 1
-			end
-
-			for i, vertex in ipairs(triangle.vertices2D) do
-				local bright = 255
-				if triangle.normal[3] == 0 then
-					if triangle.order == 1 then
-						if i == 1 or i == 3 then bright = 96 end
-					else	
-						if i == 3 then bright = 96 end
-					end
-				end
-				drawingMesh:setVertex(i, vertex[1], vertex[2], triangle.uv[i][1], triangle.uv[i][2], bright, bright, bright, bright)
-			end		
-			drawingMesh:setTexture(triangle.texture)			
-			
-			local mesh = triangle.mesh
-			
+			end			
+			local mesh = triangle.mesh			
 			local t1 = mesh.triangles[sidx]
-			local t2 = mesh.triangles[sidx + 1]
-			
+			local t2 = mesh.triangles[sidx + 1]			
 			local v1 = t1.vertices2D[1]
 			local v2 = t1.vertices2D[2]
 			local v3 = t1.vertices2D[3]
 			local v4 = t2.vertices2D[2]
 			
-			if v1 and v2 and v3 and v4 then				
-				local vz = (t1.movedVertices[1][3] + 
-							t1.movedVertices[2][3] + 
-							t1.movedVertices[3][3] + 
-							t2.movedVertices[2][3]) / 4
-							
+			if v1 and v2 and v3 and v4 then		
+				for i, vertex in ipairs(triangle.vertices2D) do
+					local bright = 255
+					if triangle.normal[3] == 0 then
+						if triangle.order == 1 then
+							if i == 1 or i == 3 then bright = 96 end
+						else	
+							if i == 3 then bright = 96 end
+						end
+					end
+					drawingMesh:setVertex(i, vertex[1], vertex[2], triangle.uv[i][1], triangle.uv[i][2], bright, bright, bright, bright)
+				end					
+												
 				wallShader:send('normal', triangle.normal)
 				wallShader:send('v1', v1)
 				wallShader:send('v2', v2)
 				wallShader:send('v3', v3)
 				wallShader:send('v4', v4)
-				wallShader:send('vz', vz)
+				wallShader:send('vz', triangle.movedMiddle)
+						
+				drawingMesh:setTexture(triangle.texture)			
 				love.graphics.draw(drawingMesh, 0, 0)
 			end
 		end
 	end
-	love.graphics.setShader()
-				
-	-- draw point lights
-	love.graphics.setColor(255,255,255,255)
-	for _, pointLight in ipairs(self.pointLights) do
-		local screenCoords = pointLight[3]
-		love.graphics.circle('fill', screenCoords[1], screenCoords[2], 5)
-	end
+	love.graphics.setShader()	
 	
 	if self.drawDebug then
 		love.graphics.setFont(FontManager:getFont('Courier16'))
@@ -1130,71 +1201,17 @@ function ShearTestScene:drawBoundingBoxes()
 	end
 end
 
-function ShearTestScene:drawRoad()
-	local camera = self.camera
-	local sw = self.screenWidth
-	local sh = self.screenHeight
-	local hsw = sw / 2
-	local hsh = sh / 2	
-		
-	local x = camera[1]
-	local y = camera[2]
-	local z = self.groundFloor - camera[3]
-	if z == 0 then z = notZero end
-		
-	local ssx = (-sw / z)
-	local ssy = (-sh / z)
-	
-	local sx = (x / z * sw) - (hsw)
-	local sy = (y / z * sh) - (hsh)
-	
-	local tx = math.floor(sx / ssx)
-	local ty = math.floor(sy / ssy)	
-	local ox = sx % ssx
-	local oy = sy % ssy
-	
-	local roadImg = self.roadImages[1]
-	local sidewalkImg = self.sideWalkImages[1]
-
-	local zx = ssx / 64
-	local zy = ssy / 64
-
-	local roadShader = self.roadShader
-	love.graphics.setShader(roadShader)
-	
-	local light = self.light
-	local light = self.light
-	if self.lightMode ~= 'mine' then		
-		light = self.dayNightCycle.light
-	end	
-		
-	roadShader:send('lightDirection',light.direction)
-	roadShader:send('lightAmbient', light.ambient)
-	roadShader:send('lightDirectional', light.directional)
-	roadShader:send('lightPosition', light.position)
-	roadShader:send('lightPositional', light.positional)
-	
-	local cy = ty	
-	for y = -oy, 900, ssy do
-		local cx = tx
-		for x = -ox, 1200, ssx do					
-			if cx == 10 then
-				love.graphics.draw(roadImg, x, y, 0, zx, zy)
-			else
-				love.graphics.draw(sidewalkImg, x, y, 0, zx, zy)
-			end
-			if self.drawDebug then
-				love.graphics.rectangle('line', x, y, ssx, ssy)
-			end
-			cx = cx + 1
+function ShearTestScene:renderHero()		
+	-- draw point lights
+	if self.drawDebug then
+		love.graphics.setColor(255,255,255,255)
+		for _, pointLight in ipairs(self.pointLights) do
+			local screenCoords = pointLight[3]
+			love.graphics.circle('fill', screenCoords[1], screenCoords[2], 5)
 		end
-		cy = cy + 1
 	end
 	
-	love.graphics.setShader()
-end
-
-function ShearTestScene:renderHero()
+	-- draw hero
 	local hero = self.hero		
 	love.graphics.setColor(255,0,255)
 	love.graphics.circle('fill', hero.position2D[1], hero.position2D[2], 10)
@@ -1203,29 +1220,19 @@ function ShearTestScene:renderHero()
 end
 
 function ShearTestScene:draw()
-	Profiler:start('Render Road')	
-	
-	self:drawRoad()		
-	
-	Profiler:stop('Render Road')
-	
-	Profiler:start('Render Hero')	
-	
-	self:renderHero()
-	
-	Profiler:stop('Render Hero')	
-
 	Profiler:start('Render Triangles')
 	self:renderTriangles()	
 	Profiler:stop('Render Triangles')
 		
-	Profiler:start('Render Bounding Boxes')	
-	
+	Profiler:start('Render Hero')		
+	self:renderHero()	
+	Profiler:stop('Render Hero')	
+
+	Profiler:start('Render Bounding Boxes')		
 	if self.drawDebug then
 		self:createBoundingBoxes2D()	
 		self:drawBoundingBoxes()
-	end
-	
+	end	
 	Profiler:stop('Render Bounding Boxes')	
 
 	if self.drawDebug then 	
@@ -1522,4 +1529,3 @@ function ShearTestScene:keyreleased(key, scancode)
 end
 
 return ShearTestScene
-

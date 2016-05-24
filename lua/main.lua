@@ -29,6 +29,7 @@ local Character = require 'classes/simulation/Character'
 local ShearTestScene = require 'classes/scene/ShearTestScene'
 local RenderingPipelineTest = require 'classes/scene/RenderingPipelineTest'
 local ShaderDebugScene = require 'classes/scene/ShaderDebugScene'
+local SchmupScene = require 'classes/scene/SchmupScene'
 	
 local gameWorld
 function love.load()
@@ -60,14 +61,18 @@ function love.load()
 	hero.name = 'Kevin'
 	gameWorld.hero = hero
 				
-	SceneManager:addScene(BankScene:new(gameWorld), 'bank')
-	SceneManager:addScene(HotelScene:new(gameWorld), 'hotel')
-	SceneManager:addScene(StoryScene:new(gameWorld), 'story')
-	SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')
+	--SceneManager:addScene(BankScene:new(gameWorld), 'bank')
+	--SceneManager:addScene(HotelScene:new(gameWorld), 'hotel')
+	--SceneManager:addScene(StoryScene:new(gameWorld), 'story')
+	--SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')
 	
-	SceneManager:addScene(ShearTestScene:new(gameWorld), 'shearTest')
-	SceneManager:show('shearTest')
-	SceneManager:addScene(ShaderDebugScene:new(gameWorld), 'shaderDebug')
+	--SceneManager:addScene(ShearTestScene:new(gameWorld), 'shearTest')
+	--SceneManager:show('shearTest')
+	--SceneManager:addScene(ShaderDebugScene:new(gameWorld), 'shaderDebug')
+
+	SceneManager:addScene(SchmupScene:new(gameWorld), 'schmup')
+	SceneManager:show('schmup')
+	
 	--SceneManager:show('shaderDebug')
 	
 	--SceneManager:addScene(RenderingPipelineTest:new(gameWorld), 'renderingPipelineTest')	
@@ -94,6 +99,8 @@ function love.update(dt)
 end
 
 function love.draw()
+	love.graphics.clear()
+	
 	local vs = SceneManager.visibleScenes	
 	for i = 1, #vs do
 		local vScene = vs[i]
@@ -115,6 +122,17 @@ function love.keyreleased(key, scancode)
 	for i = #vs, 1, -1 do
 		local vScene = vs[i]		
 		vScene:keyreleased(key, scancode)
+		if vScene.isBlocking then
+			break
+		end
+	end		
+end
+
+function love.mousereleased(x, y, button, istouch)
+	local vs = SceneManager.visibleScenes
+	for i = #vs, 1, -1 do
+		local vScene = vs[i]		
+		vScene:mousereleased(x, y, button, istouch)
 		if vScene.isBlocking then
 			break
 		end
