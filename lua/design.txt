@@ -1,18 +1,17 @@
 https://github.com/kasmeltz/KS.HotelGame.git
 
+Space Shmup / RPG / Simulation
+
 Hotel Owner	
 
 Gameplay Elements
 
 Exploration 
-	Explore cities and neighbourhoods to find a good place to put your hotel
-	City is procesdurarely generated - different every game
-	City will have good areas and bad areas - income levels
-	Find land for sale
-	Start in a seedy part of town
+	Explore Star systems and Galaxies
+	Universe is procesdurarely generated - different every game
 	
 Character dialogues 
-	Talk to customers and prospective and current employees	
+	Talk to people on planets or ships
 	Every face is different
 		Use separate parts	
 			Head 
@@ -36,47 +35,43 @@ Character dialogues
 				Color			
 	
 Real time action
-	Exploring cities and possibly other gameplay
+	SHMUP!
+		Procedurally generated enemies
+		Weapon combinations			
+	RPG elements affect how powerful your ship is
+	Enemies have varying levels of power in different parts of Universe
 	
 Story
-	Over arching story is that you are creating a hotel empire but story evolves through characters	
+	Over arching story is that you are the captain of space ship and... things happen
+	Choose your path! Law breaker or hero, smuggler or ace pilot war hero, etc.
 	Multi level marketing?
 	Other coincidental stories
 	Insider trading?
 	
 Strategy
-	Managing hotel operations 
-	Dealing with employees
-	Marketing
-		Online social media	
-		Hotel search engines
-		Online travel agencies
+	Managing space ship upgrades / cargo / fuel
+	Dealing with crew
 	
 Character building
 	Your character has skills that develop over time based on your actions
-	
+		
 Crafting
-	For cooking
+	To be determined
 
 Building 
-	Add extra floors 
-	Build restaurant
-	Build new hotels
+	Your ship has parts that can be added /removed / upgraded
 	
 Resources 
-	Money
-		Bank loan 
-		Earn money from clients
-	Some other types of resources?
-		As you make people happy
-	
-Economy 
-	Income 
-	Expenses
-	Loan interest 
-	New hotel services
-	Restaurant income
-	
+	Credits
+		Start with credits
+		Loan from loan sharks (Jabba the hut)
+		Earn money from missions of all types
+	Some other types of resources
+		Fuel
+		Technology
+		Black market credits
+		Etc.
+		
 Trading
 	Can invest in stock market - is a side / mini gameplay		
 		Company names will be randomized 
@@ -84,106 +79,17 @@ Trading
 			Tech
 			Industrial
 			Commercial
-			Financial			
-			
+			Financial					
 		Each stock will have randomized propensities
 		Specific story events can affect stocks individually or globally
 	
 Research 
-	New hotel technologies? :-)
+	New space ship technologies / crew upgrades
 	
-Upgrading
-	Upgrade furniture 
-	Upgrade services infrastructure
+Illegal Activities
+	Smuggling
+	Prostitution
+	Gambling
 	
-Illegal Activities?
-	Can choose to sell illegal items? Prostituion? Drugs?
-	
-
-
 Story board
-
-The time and date is January 2nd, current year, 7:55 A.M.(the game always starts in the current year)
-
-Game starts with the 2d version of the player outside the bank. 
-
-The story overlay pops up to tell them that they have always dreamed of starting a hotel, that today is an exciting day, and that they have an appointment at 8:00 A.M. with a bank to secure a loan that will allow them to start their business!
-
-The player can enter the bank or can start to wander around the city if they want.
-
-When the player enters the bank they have the option to leave the bank or talk with the secretary.
-
-If the player is male then the secretary is female and vice versa.
-
-When the player talks with the secretary if it is before 8:00 A.M. the secretary basically tells them that the banker isn't ready yet.
-
-The player can try and hit on the secrtary. 
-
-How the player talks with the secratry affects certain stats and how the conversation goes with the banker.
-
-After 8:00 A.M. but before 8:15 A.M. there is some random chance that the banker will be ready for the player every time they talk with the secretary.
-
-After 8:15 A.M. but before 8:30 A.M. the banker is always ready for the player and the player starts the conversation with the banker.
-
-After 8:30 A.M. the secretary notifies the player that their appointment has been cancelled because they were too late. The player can not get money from the bank and must try and start a hotel some other way.
-
-There is always the option to sell drugs or to play the stock market.
-
-Drugs and stock market are the same principal except one is legal and the other illegal.
-
-If the player sells drugs they can get arrested.
-
-If the player starts the conversation with the banker then the player will be given a loan with a value and terms that vary depending on how they answered the questions.
-
-The results of the banker conversation will also affect starting skills and stats.
-
-
-You start with a low budget motel. Maybe hourly. Depends on how much of a loan you get. You can stay as a seedy motel ownder or decide to try and go for a big chain like Sheraton. Game choices!
-
-
-Rendering strategy
-
-At start of draw frame send any required data to worker threads
-Do anything we need to do on the main thread directly
-Wait for data to come back from worker threads
-Render scene
-
-
-Split up world into tiles 
-Load n number of tiles at a time surrounding current tile
-
-Either
-
-1 1 1
-1 X 1
-1 1 1
-
-9 tiles loaded
-
-OR
-
-2 2 2 2 2
-2 1 1 1 2
-2 1 X 1 2
-2 1 1 1 2
-2 2 2 2 2
-
-25 tiles loaded
-
-When a tile is loaded, render base tiles to a canvas and use that canvas to draw the tile!
-Everything over top of base tiles will need to be rendered every frame
-Tile size and number of tiles we can load at once will depend on amount of memory that can be used
-
-Saving and loading of tiles can be done in a thread
-
-Or you could have more tiles loaded and only blit them to canvases when you need them
-
-Set light settings at times of day and then interpolate between them using gametime hour minutes and seconds
-
-Buildings can use different textures at night to show lights in the windows?
-Need better shaped buildlings
-More multi level things - need to design buildings at different heights
-Buildlings should be procedural... never mind design... need to create rules for various ways to design a building
-Add moderm buildings (semi circular?)
-
 

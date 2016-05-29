@@ -18,6 +18,12 @@ FontManager = FontManager:getInstance()
 local StoryFactory = require 'classes/factories/StoryFactory'
 StoryFactory = StoryFactory:getInstance()
 
+--[[
+for _, file in ipairs(love.filesystem.getDirectoryItems('classes/scene')) do
+	local scene = require ('classes/scene/' .. file:gsub('.lua', ''))
+end
+]]
+
 local GameTime = require 'classes/simulation/GameTime'
 local GameWorld = require 'classes/simulation/GameWorld'
 local HotelScene = require 'classes/scene/HotelScene'
@@ -25,11 +31,12 @@ local BankScene = require 'classes/scene/BankScene'
 local StoryScene = require 'classes/scene/StoryScene'
 local DialogueScene = require 'classes/scene/DialogueScene'
 local Character = require 'classes/simulation/Character'
-
 local ShearTestScene = require 'classes/scene/ShearTestScene'
 local RenderingPipelineTest = require 'classes/scene/RenderingPipelineTest'
 local ShaderDebugScene = require 'classes/scene/ShaderDebugScene'
 local SchmupScene = require 'classes/scene/SchmupScene'
+local ColorMatchScene = require 'classes/scene/ColorMatchScene'
+local SpaceSimulatorScene = require 'classes/scene/SpaceSimulatorScene'
 	
 local gameWorld
 function love.load()
@@ -64,20 +71,20 @@ function love.load()
 	--SceneManager:addScene(BankScene:new(gameWorld), 'bank')
 	--SceneManager:addScene(HotelScene:new(gameWorld), 'hotel')
 	--SceneManager:addScene(StoryScene:new(gameWorld), 'story')
-	--SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')
-	
+	--SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')	
 	--SceneManager:addScene(ShearTestScene:new(gameWorld), 'shearTest')
-	--SceneManager:show('shearTest')
 	--SceneManager:addScene(ShaderDebugScene:new(gameWorld), 'shaderDebug')
-
-	SceneManager:addScene(SchmupScene:new(gameWorld), 'schmup')
-	SceneManager:show('schmup')
-	
-	--SceneManager:show('shaderDebug')
-	
+	--SceneManager:addScene(SchmupScene:new(gameWorld), 'schmup')
 	--SceneManager:addScene(RenderingPipelineTest:new(gameWorld), 'renderingPipelineTest')	
+	--SceneManager:addScene(ColorMatchScene:new(gameWorld), 'colorMatch')	
+	--SceneManager:show('colorMatch')
+	--SceneManager:addScene(SchmupScene:new(gameWorld), 'schmup')
+	--SceneManager:show('schmup')
+	SceneManager:addScene(SpaceSimulatorScene:new(gameWorld), 'ss')
+	SceneManager:show('ss')	
+	--SceneManager:show('shearTest')
+	--SceneManager:show('shaderDebug')		
 	--SceneManager:show('renderingPipelineTest')
-	
 	--SceneManager:show('bank')
 	--SceneManager:show('story', StoryFactory:createStory('begin', gameWorld))
 end
@@ -110,18 +117,22 @@ function love.draw()
 	love.graphics.setFont(FontManager:getFont('Courier12'))	
 	love.graphics.setColor(255,255,255)
 	love.graphics.print('FPS: ' .. love.timer.getFPS(), 0, 0)
-	
+
+--[[	
 	local gameTime = gameWorld.gameTime
 	local date = gameTime:getDateString('%A %B, %d %Y %I:%M:%S %p')
 	love.graphics.print(date, 900, 0)
 	love.graphics.print('speed: ' ..  gameTime.speedTexts[gameTime.currentSpeed], 900, 15)
+	]]
 end
 
 function love.keyreleased(key, scancode)
 	local vs = SceneManager.visibleScenes
 	for i = #vs, 1, -1 do
-		local vScene = vs[i]		
-		vScene:keyreleased(key, scancode)
+		local vScene = vs[i]	
+		if vScene.keyreleased then		
+			vScene:keyreleased(key, scancode)
+		end
 		if vScene.isBlocking then
 			break
 		end
@@ -131,8 +142,36 @@ end
 function love.mousereleased(x, y, button, istouch)
 	local vs = SceneManager.visibleScenes
 	for i = #vs, 1, -1 do
-		local vScene = vs[i]		
-		vScene:mousereleased(x, y, button, istouch)
+		local vScene = vs[i]	
+		if vScene.mousereleased then				
+			vScene:mousereleased(x, y, button, istouch)
+		end
+		if vScene.isBlocking then
+			break
+		end
+	end		
+end
+
+function love.mousepressed(x, y, button, istouch)
+	local vs = SceneManager.visibleScenes
+	for i = #vs, 1, -1 do
+		local vScene = vs[i]
+		if vScene.mousepressed then			
+			vScene:mousepressed(x, y, button, istouch)
+		end
+		if vScene.isBlocking then
+			break
+		end
+	end		
+end
+
+function love.mousemoved(x, y, button, istouch)
+	local vs = SceneManager.visibleScenes
+	for i = #vs, 1, -1 do
+		local vScene = vs[i]	
+		if vScene.mousemoved then					
+			vScene:mousemoved(x, y, button, istouch)
+		end
 		if vScene.isBlocking then
 			break
 		end
