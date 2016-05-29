@@ -40,6 +40,10 @@ function Matrix:matrixMultiply(other)
 	local aNumRows, aNumCols = #a, #a[1]
 	local bNumRows, bNumCols = #b, #b[1]
 	
+	if aNumRows ~= bNumCols or aNumCols ~= bNumRows then
+		error('Matrix multiplication requires that #columns a = #rows b and #rows a = #columns b')
+	end
+	
 	local result = Matrix:new(aNumRows, bNumCols)
 	local m = result.matrix
 	
@@ -86,6 +90,11 @@ function Matrix:matrixAdd(other)
 	local b = other.matrix
 	
 	local aNumRows, aNumCols = #a, #a[1]
+	local bNumRows, bNumCols = #b, #b[1]
+	
+	if aNumRows ~= bNumRows or aNumCols ~= bNumCols then
+		error('Matrix addition requires that #columns a = #columns b and #rows a = #rows b')
+	end
 	
 	local result = Matrix:new(aNumRows, aNumCols)
 	local m = result.matrix
@@ -104,6 +113,54 @@ function Matrix.__add(m1, m2)
 		return m1:matrixAdd(m2)
 	else
 		return m1:scalarAdd(m2)
+	end	
+end
+
+function Matrix:scalarSubtract(v)
+	local a = self.matrix
+	
+	local aNumRows, aNumCols = #a, #a[1]
+	
+	local result = Matrix:new(aNumRows, aNumCols)
+	local m = result.matrix
+	
+	for r = 1, aNumRows do
+		for c = 1, aNumCols do
+			m[r][c] = a[r][c] - v
+		end
+	end
+	
+	return result
+end
+
+function Matrix:matrixSubtract(other)
+	local a = self.matrix
+	local b = other.matrix
+	
+	local aNumRows, aNumCols = #a, #a[1]	
+	local bNumRows, bNumCols = #b, #b[1]
+	
+	if aNumRows ~= bNumRows or aNumCols ~= bNumCols then
+		error('Matrix subtraction requires that #columns a = #columns b and #rows a = #rows b')
+	end
+	
+	local result = Matrix:new(aNumRows, aNumCols)
+	local m = result.matrix
+	
+	for r = 1, aNumRows do
+		for c = 1, aNumCols do
+			m[r][c] = a[r][c] - b[r][c]
+		end
+	end
+	
+	return result
+end
+
+function Matrix.__sub(m1, m2)
+	if type(m2) == 'table' then
+		return m1:matrixSubtract(m2)
+	else
+		return m1:scalarSubtract(m2)
 	end	
 end
 
