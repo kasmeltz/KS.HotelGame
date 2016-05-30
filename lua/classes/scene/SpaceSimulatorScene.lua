@@ -45,11 +45,14 @@ function SpaceSimulatorScene:update(dt)
 	FFIVector3.setValues(v1, 1, 2, 3)	
 	local v2 = FFIVector3.newVector(v1)
 	FFIVector3.setValues(v2, 4, 5, 6)	
-	
-	local v3 = FFIVector3.normalize(v1)
-	FFIVector3.display(v3)
-	FFIVector3.normalizeInline(v2, v2)
+
+	local tm = FFIMatrix4x4.translation(2, 4, 6)
+	FFIMatrix4x4.display(tm)
+	local v3 = FFIMatrix4x4.transformCoordinate(v1, tm)
+	FFIMatrix4x4.transformCoordinateInline(v2, v1, tm)	
 	FFIVector3.display(v2)
+
+
 end
 
 return SpaceSimulatorScene

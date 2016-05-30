@@ -3,6 +3,7 @@
 
 extern "C"
 {
+	// MATRIX 4x4
 	DECLDIR void matrix4x4Identity(float *m1)
 	{
 		m1[0] = m1[5] = m1[10] = m1[15] = 1;
@@ -250,6 +251,35 @@ extern "C"
 		m1[15] = m1_15 / det;
 	}
 
+	DECLDIR void matrix4x4TransformCoordinate(float *v1, float *v2, float *m)
+	{
+		float v2_x = v2[0];
+		float v2_y = v2[1];
+		float v2_z = v2[2];
+
+		float x = (v2_x * m[0]) + (v2_y * m[4]) + (v2_z * m[8]) + m[12];
+		float y = (v2_x * m[1]) + (v2_y * m[5]) + (v2_z * m[9]) + m[13];
+		float z = (v2_x * m[2]) + (v2_y * m[6]) + (v2_z * m[10]) + m[14];
+		float w = 1 / ((v2_x * m[3]) + (v2_y * m[7]) + (v2_z * m[11]) + m[15]);
+
+		v1[0] = x / w;
+		v1[1] = y / w;
+		v1[2] = z / w;
+	}
+
+	DECLDIR void matrix4x4Translation(float *m, float x, float y, float z)
+	{
+		m[0] = 1;
+		m[5] = 1;
+		m[10] = 1;
+		m[15] = 1;
+
+		m[12] = x;
+		m[13] = y;
+		m[14] = z;
+	}
+
+	// VECTOR3
 	DECLDIR void vector3ScalarAdd(float *v1, float *v2, float v)
 	{
 		v1[0] = v2[0] + v;

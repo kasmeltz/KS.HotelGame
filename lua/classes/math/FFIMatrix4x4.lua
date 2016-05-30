@@ -2,6 +2,8 @@ local class = require 'libs/30log/30log'
 local FFIMatrix4x4 = class('FFIMatrix')
 local instance = FFIMatrix4x4()
 
+local FFIVector3 = require 'classes/math/FFIVector3'
+
 local ffi = require 'ffi'
 ffi.cdef[[
 	void matrix4x4Identity(float *m1);
@@ -13,6 +15,8 @@ ffi.cdef[[
 	void matrix4x4ScalarSubtract(float *m1, float *m2, float v);
 	void matrix4x4Subtract(float *m3, float *m1, float *m2);
 	void matrix4x4Inverse(float *m1, float *m2);
+	void matrix4x4TransformCoordinate(float *v1, float *v2, float *m);
+	void matrix4x4Translation(float *m, float x, float y, float z);
 ]]
 
 local math3d = ffi.load 'math3d'
@@ -155,6 +159,26 @@ end
 
 function FFIMatrix4x4.inverseInline(r, m1)
 	math3d.matrix4x4Inverse(r, m1)
+end
+
+function FFIMatrix4x4.transformCoordinate(v, m)
+	local r = FFIVector3.newVector()
+	math3d.matrix4x4TransformCoordinate(r, v, m)
+	return r
+end
+
+function FFIMatrix4x4.transformCoordinateInline(r, v, m)
+	math3d.matrix4x4TransformCoordinate(r, v, m)
+end
+
+function FFIMatrix4x4.translation(x, y, z)
+	local r = FFIMatrix4x4.newMatrix()
+	math3d.matrix4x4Translation(r, x, y, z)
+	return r
+end
+
+function FFIMatrix4x4.translationInline(r, x, y, z)
+	math3d.matrix4x4Translation(r, x, y, z)
 end
 
 function FFIMatrix4x4.display(m, sep)

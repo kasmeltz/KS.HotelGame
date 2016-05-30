@@ -14,6 +14,8 @@ extern "C"
 	DECLDIR void matrix4x4ScalarSubtract(float *m1, float *m2, float v);
 	DECLDIR void matrix4x4Subtract(float *m3, float *m1, float *m2);	
 	DECLDIR void matrix4x4Inverse(float *m1, float *m2);
+	DECLDIR void matrix4x4TransformCoordinate(float *v1, float *v2, float *m);
+	DECLDIR void matrix4x4Translation(float *m, float x, float y, float z);
 
 	DECLDIR void vector3ScalarAdd(float *v1, float *v2, float v);
 	DECLDIR void vector3Add(float *v3, float *v1, float *v2);
