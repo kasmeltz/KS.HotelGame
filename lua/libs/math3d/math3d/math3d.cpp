@@ -263,9 +263,9 @@ extern "C"
 		float z = (v2_x * m[2]) + (v2_y * m[6]) + (v2_z * m[10]) + m[14];
 		float w = 1 / ((v2_x * m[3]) + (v2_y * m[7]) + (v2_z * m[11]) + m[15]);
 
-		v1[0] = x / w;
-		v1[1] = y / w;
-		v1[2] = z / w;
+		v1[0] = x * w;
+		v1[1] = y * w;
+		v1[2] = z * w;
 	}
 
 	DECLDIR void matrix4x4Translation(float *m, float x, float y, float z)
@@ -377,7 +377,11 @@ extern "C"
 		float v1_x = v1[0];
 		float v1_y = v1[1];
 		float v1_z = v1[2];
-
+		
+		//var x = point.X * bmp.PixelWidth + bmp.PixelWidth / 2.0f;
+		//var y = -point.Y * bmp.PixelHeight + bmp.PixelHeight / 2.0f;
+		//v1[0] = v1_x * width + width / 2;
+		//v1[1] = -v1_y * height + height / 2;
 		v1[0] = ((1.0f + v1_x) * 0.5f * width) + x;
 		v1[1] = ((1.0f - v1_y) * 0.5f * height) + y;
 		v1[2] = (v1_z * (maxZ - minZ)) + minZ;

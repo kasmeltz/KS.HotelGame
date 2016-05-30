@@ -1,4 +1,4 @@
-﻿Build started 30/05/2016 1:50:13 PM.
+﻿Build started 30/05/2016 3:59:48 PM.
 Environment at start of build:
 ALLUSERSPROFILE = C:\ProgramData
 APPDATA = C:\Users\User\AppData\Roaming
@@ -54,8 +54,8 @@ windows_tracing_flags = 3
 windows_tracing_logfile = C:\BVTBin\Tests\installpackage\csilogfile.log
 XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
 
-13:50:13.846     1>Project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" on node 2 (Rebuild target(s)).
-13:50:13.846     1>Initial Properties:
+15:59:48.688     1>Project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" on node 2 (Rebuild target(s)).
+15:59:48.688     1>Initial Properties:
                    _AfterCompileWinFXInternalDependsOn = 
                            PrepareResourcesForSatelliteAssemblies;
                            MergeLocalizationDirectives;
@@ -1133,8 +1133,8 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                    XamlTemporaryAssemblyName = math3d
                    YieldDuringToolExecution = true
 
-13:50:13.846     1>Building with tools version "14.0".
-13:50:13.846     1>Target "_CheckForInvalidConfigurationAndPlatform: (TargetId:2)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (entry point):
+15:59:48.688     1>Building with tools version "14.0".
+15:59:48.688     1>Target "_CheckForInvalidConfigurationAndPlatform: (TargetId:2)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (entry point):
                    Set Property: _InvalidConfigurationMessageText=The OutputPath property is not set for project 'math3d.vcxproj'.  Please check to make sure that you have specified a valid combination of Configuration and Platform for this project.  Configuration='Release'  Platform='x64'.
                    Set Property: _InvalidConfigurationMessageText=The OutputPath property is not set for project 'math3d.vcxproj'.  Please check to make sure that you have specified a valid combination of Configuration and Platform for this project.  Configuration='Release'  Platform='x64'.  This error may also appear if some other project is trying to follow a project-to-project reference to this project, this project has been unloaded or is not included in the solution, and the referencing project does not build using the same or an equivalent Configuration or Platform.
                    Task "Error" skipped, due to false condition; ( '$(_InvalidConfigurationError)' == 'true' ) was evaluated as ( '' == 'true' ).
@@ -1153,33 +1153,33 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                    Task "Error" skipped, due to false condition; ('$(OutDir)' != '' and !HasTrailingSlash('$(OutDir)')) was evaluated as ('D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\' != '' and !HasTrailingSlash('D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\')).
                    Task "Error" skipped, due to false condition; ('$(BaseIntermediateOutputPath)' != '' and !HasTrailingSlash('$(BaseIntermediateOutputPath)')) was evaluated as ('obj\' != '' and !HasTrailingSlash('obj\')).
                    Task "Error" skipped, due to false condition; ('$(IntermediateOutputPath)' != '' and !HasTrailingSlash('$(IntermediateOutputPath)')) was evaluated as ('x64\Release\' != '' and !HasTrailingSlash('x64\Release\')).
-13:50:13.877     1>Done building target "_CheckForInvalidConfigurationAndPlatform" in project "math3d.vcxproj".: (TargetId:2)
-13:50:13.877     1>Target "_PrepareForRebuild: (TargetId:3)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Rebuild" depends on it):
+15:59:48.690     1>Done building target "_CheckForInvalidConfigurationAndPlatform" in project "math3d.vcxproj".: (TargetId:2)
+15:59:48.690     1>Target "_PrepareForRebuild: (TargetId:3)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Rebuild" depends on it):
                    Set Property: BuildType=Rebuild
                    Set Property: _BuildActionType=Rebuild
                    Removed Item(s): 
                        CustomBuildStep=
                            math3d
                                    Message=Performing Custom Build Step
-13:50:13.877     1>Done building target "_PrepareForRebuild" in project "math3d.vcxproj".: (TargetId:3)
-13:50:13.877     1>Target "BeforeRebuild: (TargetId:4)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Rebuild" depends on it):
-13:50:13.877     1>Done building target "BeforeRebuild" in project "math3d.vcxproj".: (TargetId:4)
-13:50:13.877     1>Target "_PrepareForClean: (TargetId:5)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
+15:59:48.690     1>Done building target "_PrepareForRebuild" in project "math3d.vcxproj".: (TargetId:3)
+15:59:48.690     1>Target "BeforeRebuild: (TargetId:4)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Rebuild" depends on it):
+15:59:48.690     1>Done building target "BeforeRebuild" in project "math3d.vcxproj".: (TargetId:4)
+15:59:48.690     1>Target "_PrepareForClean: (TargetId:5)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
                    Set Property: _BuildActionType=Clean
                    Using "Delete" task from assembly "Microsoft.Build.Tasks.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
                    Task "Delete" (TaskId:4)
                      Task Parameter:Files=x64\Release\math3d.tlog\math3d.lastbuildstate (TaskId:4)
                      Deleting file "x64\Release\math3d.tlog\math3d.lastbuildstate". (TaskId:4)
                    Done executing task "Delete". (TaskId:4)
-13:50:13.877     1>Done building target "_PrepareForClean" in project "math3d.vcxproj".: (TargetId:5)
-13:50:13.877     1>Target "BeforeClean: (TargetId:6)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
-13:50:13.877     1>Done building target "BeforeClean" in project "math3d.vcxproj".: (TargetId:6)
+15:59:48.691     1>Done building target "_PrepareForClean" in project "math3d.vcxproj".: (TargetId:5)
+15:59:48.691     1>Target "BeforeClean: (TargetId:6)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
+15:59:48.691     1>Done building target "BeforeClean" in project "math3d.vcxproj".: (TargetId:6)
                    Target "UnmanagedUnregistration" skipped, due to false condition; ((('$(_AssemblyTimestampBeforeCompile)' != '$(_AssemblyTimestampAfterCompile)' or '$(RegisterForComInterop)' != 'true' or '$(OutputType)' != 'library') or
                                        ('$(_AssemblyTimestampBeforeCompile)' == '')) and
                                       Exists('@(_UnmanagedRegistrationCache)')) was evaluated as ((('' != '' or '' != 'true' or 'library' != 'library') or
                                        ('' == '')) and
                                       Exists('obj\math3d.vcxproj.UnmanagedRegistration.cache')).
-13:50:13.877     1>Target "CoreClean: (TargetId:7)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
+15:59:48.691     1>Target "CoreClean: (TargetId:7)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
                    Task "Delete" (TaskId:5)
                      Task Parameter:
                          Files=
@@ -1217,8 +1217,8 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                      Task Parameter:File=x64\Release\math3d.vcxproj.FileListAbsolute.txt (TaskId:12)
                      Task Parameter:Overwrite=True (TaskId:12)
                    Done executing task "WriteLinesToFile". (TaskId:12)
-13:50:13.877     1>Done building target "CoreClean" in project "math3d.vcxproj".: (TargetId:7)
-13:50:13.877     1>Target "AssignProjectConfiguration: (TargetId:8)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CleanReferencedProjects" depends on it):
+15:59:48.692     1>Done building target "CoreClean" in project "math3d.vcxproj".: (TargetId:7)
+15:59:48.692     1>Target "AssignProjectConfiguration: (TargetId:8)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CleanReferencedProjects" depends on it):
                    Set Property: ShouldUnsetParentConfigurationAndPlatform=true
                    Using "AssignProjectConfiguration" task from assembly "Microsoft.Build.Tasks.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
                    Task "AssignProjectConfiguration" (TaskId:13)
@@ -1233,22 +1233,22 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                      Task Parameter:OnlyReferenceAndBuildProjectsEnabledInSolutionConfiguration=True (TaskId:13)
                      Task Parameter:ShouldUnsetParentConfigurationAndPlatform=True (TaskId:13)
                    Done executing task "AssignProjectConfiguration". (TaskId:13)
-13:50:13.877     1>Done building target "AssignProjectConfiguration" in project "math3d.vcxproj".: (TargetId:8)
-13:50:13.877     1>Target "_SplitProjectReferencesByFileExistence: (TargetId:9)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CleanReferencedProjects" depends on it):
+15:59:48.692     1>Done building target "AssignProjectConfiguration" in project "math3d.vcxproj".: (TargetId:8)
+15:59:48.692     1>Target "_SplitProjectReferencesByFileExistence: (TargetId:9)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CleanReferencedProjects" depends on it):
                    Task "ResolveNonMSBuildProjectOutput" skipped, due to false condition; ('$(BuildingInsideVisualStudio)'=='true' and '@(ProjectReferenceWithConfiguration)'!='') was evaluated as ('true'=='true' and ''!='').
-13:50:13.877     1>Done building target "_SplitProjectReferencesByFileExistence" in project "math3d.vcxproj".: (TargetId:9)
-13:50:13.877     1>Target "CleanReferencedProjects: (TargetId:10)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
+15:59:48.692     1>Done building target "_SplitProjectReferencesByFileExistence" in project "math3d.vcxproj".: (TargetId:9)
+15:59:48.692     1>Target "CleanReferencedProjects: (TargetId:10)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
                    Task "MSBuild" skipped, due to false condition; ('$(BuildingInsideVisualStudio)' != 'true' and '$(BuildProjectReferences)' == 'true' and '@(_MSBuildProjectReferenceExistent)' != '') was evaluated as ('true' != 'true' and 'true' == 'true' and '' != '').
-13:50:13.877     1>Done building target "CleanReferencedProjects" in project "math3d.vcxproj".: (TargetId:10)
-13:50:13.877     1>Target "CleanPublishFolder: (TargetId:11)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
+15:59:48.692     1>Done building target "CleanReferencedProjects" in project "math3d.vcxproj".: (TargetId:10)
+15:59:48.692     1>Target "CleanPublishFolder: (TargetId:11)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
                    Task "RemoveDir" skipped, due to false condition; ('$(PublishDir)'=='$(OutputPath)app.publish\' and Exists('$(PublishDir)')) was evaluated as ('D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\app.publish\'=='D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\app.publish\' and Exists('D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\app.publish\')).
-13:50:13.877     1>Done building target "CleanPublishFolder" in project "math3d.vcxproj".: (TargetId:11)
-13:50:13.877     1>Target "AfterClean: (TargetId:12)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
-13:50:13.877     1>Done building target "AfterClean" in project "math3d.vcxproj".: (TargetId:12)
+15:59:48.692     1>Done building target "CleanPublishFolder" in project "math3d.vcxproj".: (TargetId:11)
+15:59:48.692     1>Target "AfterClean: (TargetId:12)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
+15:59:48.692     1>Done building target "AfterClean" in project "math3d.vcxproj".: (TargetId:12)
                    Target "EntityClean" skipped, due to false condition; ('@(EntityDeploy)' != '') was evaluated as ('' != '').
-13:50:13.877     1>Target "BeforeCppClean: (TargetId:13)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CppClean" depends on it):
-13:50:13.877     1>Done building target "BeforeCppClean" in project "math3d.vcxproj".: (TargetId:13)
-13:50:13.877     1>Target "CoreCppClean: (TargetId:14)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CppClean" depends on it):
+15:59:48.695     1>Target "BeforeCppClean: (TargetId:13)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CppClean" depends on it):
+15:59:48.695     1>Done building target "BeforeCppClean" in project "math3d.vcxproj".: (TargetId:13)
+15:59:48.695     1>Target "CoreCppClean: (TargetId:14)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CppClean" depends on it):
                    Task "MakeDir" (TaskId:14)
                      Task Parameter:Directories=x64\Release\ (TaskId:14)
                    Done executing task "MakeDir". (TaskId:14)
@@ -1297,45 +1297,45 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                              d:\dev\ks.hotelgame\lua\libs\math3d\math3d\x64\release\math3d.tlog\math3d.write.1u.tlog (TaskId:16)
                      Task Parameter:Overwrite=True (TaskId:16)
                    Done executing task "WriteLinesToFile". (TaskId:16)
-13:50:13.893     1>Done building target "CoreCppClean" in project "math3d.vcxproj".: (TargetId:14)
-13:50:13.893     1>Target "AfterCppClean: (TargetId:15)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CppClean" depends on it):
-13:50:13.893     1>Done building target "AfterCppClean" in project "math3d.vcxproj".: (TargetId:15)
-13:50:13.893     1>Target "PGInstrumentedClean: (TargetId:16)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CppClean" depends on it):
+15:59:48.700     1>Done building target "CoreCppClean" in project "math3d.vcxproj".: (TargetId:14)
+15:59:48.700     1>Target "AfterCppClean: (TargetId:15)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CppClean" depends on it):
+15:59:48.700     1>Done building target "AfterCppClean" in project "math3d.vcxproj".: (TargetId:15)
+15:59:48.700     1>Target "PGInstrumentedClean: (TargetId:16)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CppClean" depends on it):
                    Task "Delete" (TaskId:17)
                    Done executing task "Delete". (TaskId:17)
-13:50:13.893     1>Done building target "PGInstrumentedClean" in project "math3d.vcxproj".: (TargetId:16)
-13:50:13.893     1>Target "CppClean: (TargetId:17)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
-13:50:13.893     1>Done building target "CppClean" in project "math3d.vcxproj".: (TargetId:17)
-13:50:13.893     1>Target "Clean: (TargetId:18)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Rebuild" depends on it):
-13:50:13.893     1>Done building target "Clean" in project "math3d.vcxproj".: (TargetId:18)
-13:50:13.893     1>Target "_PrepareForBuild: (TargetId:19)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
+15:59:48.700     1>Done building target "PGInstrumentedClean" in project "math3d.vcxproj".: (TargetId:16)
+15:59:48.700     1>Target "CppClean: (TargetId:17)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Clean" depends on it):
+15:59:48.700     1>Done building target "CppClean" in project "math3d.vcxproj".: (TargetId:17)
+15:59:48.700     1>Target "Clean: (TargetId:18)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Rebuild" depends on it):
+15:59:48.700     1>Done building target "Clean" in project "math3d.vcxproj".: (TargetId:18)
+15:59:48.700     1>Target "_PrepareForBuild: (TargetId:19)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
                    Set Property: _BuildActionType=Build
                    Task "CreateItem" skipped, due to false condition; ('%(CustomBuild.IncludeFileToTool)'!='') was evaluated as (''!='').
-13:50:13.893     1>Done building target "_PrepareForBuild" in project "math3d.vcxproj".: (TargetId:19)
-13:50:13.893     1>Target "_PrepareForReferenceResolution: (TargetId:20)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveReferences" depends on it):
+15:59:48.701     1>Done building target "_PrepareForBuild" in project "math3d.vcxproj".: (TargetId:19)
+15:59:48.701     1>Target "_PrepareForReferenceResolution: (TargetId:20)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveReferences" depends on it):
                    Set Property: TargetFrameworkMoniker=
                    Set Property: _FindDependencies=false
                    Set Property: AdditionalExplicitAssemblyReferences=
                    Task "Message" skipped, due to false condition; ('$(_REFERENCE_DEBUG)'=='true') was evaluated as (''=='true').
-13:50:13.893     1>Done building target "_PrepareForReferenceResolution" in project "math3d.vcxproj".: (TargetId:20)
+15:59:48.701     1>Done building target "_PrepareForReferenceResolution" in project "math3d.vcxproj".: (TargetId:20)
                    Target "ComputeCrtSDKReference" skipped, due to false condition; ('@(ClCompile)'!='' and '$(WindowsAppContainer)'=='true' and '$(UseCrtSDKReference)' != 'false') was evaluated as ('math3d.cpp'!='' and 'false'=='true' and '' != 'false').
-13:50:13.893     1>Target "BeforeResolveReferences: (TargetId:21)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveReferences" depends on it):
-13:50:13.893     1>Done building target "BeforeResolveReferences" in project "math3d.vcxproj".: (TargetId:21)
+15:59:48.701     1>Target "BeforeResolveReferences: (TargetId:21)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveReferences" depends on it):
+15:59:48.701     1>Done building target "BeforeResolveReferences" in project "math3d.vcxproj".: (TargetId:21)
                    Target "AssignProjectConfiguration" skipped. Previously built successfully.
                    Target "AssignProjectConfiguration" skipped. Previously built successfully.
                    Target "_SplitProjectReferencesByFileExistence" skipped. Previously built successfully.
                    Target "_RemoveNameMetadataFromProjectReferenceItems" skipped, due to false condition; ('@(ProjectReference)'!='') was evaluated as (''!='').
-13:50:13.893     1>Target "ResolveProjectReferences: (TargetId:22)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveReferences" depends on it):
+15:59:48.701     1>Target "ResolveProjectReferences: (TargetId:22)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveReferences" depends on it):
                    Task "MSBuild" skipped, due to false condition; ('%(_MSBuildProjectReferenceExistent.BuildReference)' == 'true' and '@(ProjectReferenceWithConfiguration)' != '' and ('$(BuildingInsideVisualStudio)' == 'true' or '$(BuildProjectReferences)' != 'true') and '$(VisualStudioVersion)' != '10.0' and '@(_MSBuildProjectReferenceExistent)' != '') was evaluated as ('' == 'true' and '' != '' and ('true' == 'true' or 'true' != 'true') and '14.0' != '10.0' and '' != '').
                    Task "MSBuild" skipped, due to false condition; ('%(_MSBuildProjectReferenceExistent.BuildReference)' == 'true' and '@(ProjectReferenceWithConfiguration)' != '' and ('$(BuildingInsideVisualStudio)' == 'true' or '$(BuildProjectReferences)' != 'true') and '$(VisualStudioVersion)' == '10.0' and '@(_MSBuildProjectReferenceExistent)' != '') was evaluated as ('' == 'true' and '' != '' and ('true' == 'true' or 'true' != 'true') and '14.0' == '10.0' and '' != '').
                    Task "MSBuild" skipped, due to false condition; ('%(_MSBuildProjectReferenceExistent.BuildReference)' == 'true' and '@(ProjectReferenceWithConfiguration)' != '' and '$(BuildingInsideVisualStudio)' != 'true' and '$(BuildProjectReferences)' == 'true' and '@(_MSBuildProjectReferenceExistent)' != '') was evaluated as ('' == 'true' and '' != '' and 'true' != 'true' and 'true' == 'true' and '' != '').
                    Task "MSBuild" skipped, due to false condition; ('%(_MSBuildProjectReferenceExistent.BuildReference)' == 'true' and '@(ProjectReferenceWithConfiguration)' != '' and '$(BuildingProject)' == 'true' and '@(_MSBuildProjectReferenceExistent)' != '') was evaluated as ('' == 'true' and '' != '' and 'true' == 'true' and '' != '').
                    Task "Warning" skipped, due to false condition; ('@(ProjectReferenceWithConfiguration)' != '' and '@(_MSBuildProjectReferenceNonexistent)' != '') was evaluated as ('' != '' and '' != '').
-13:50:13.893     1>Done building target "ResolveProjectReferences" in project "math3d.vcxproj".: (TargetId:22)
+15:59:48.701     1>Done building target "ResolveProjectReferences" in project "math3d.vcxproj".: (TargetId:22)
                    Target "FindInvalidProjectReferences" skipped, due to false condition; ('$(FindInvalidProjectReferences)' == 'true') was evaluated as ('' == 'true').
                    Target "ResolveNativeReferences" skipped, due to false condition; ('@(NativeReference)'!='') was evaluated as (''!='').
                    Target "_PrepareForReferenceResolution" skipped. Previously built successfully.
-13:50:13.893     1>Target "GetFrameworkPaths: (TargetId:23)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.NetFramework.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveAssemblyReferences" depends on it):
+15:59:48.701     1>Target "GetFrameworkPaths: (TargetId:23)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.NetFramework.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveAssemblyReferences" depends on it):
                    Added Item(s): _TargetFramework40DirectoryItem=C:\Windows\Microsoft.NET\Framework\v4.0.30319
                    Added Item(s): _TargetFramework35DirectoryItem=C:\Windows\Microsoft.NET\Framework\v3.5
                    Added Item(s): _TargetFramework30DirectoryItem=C:\Windows\Microsoft.NET\Framework\v3.0
@@ -1345,16 +1345,16 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                    Set Property: TargetFrameworkDirectory=C:\Windows\Microsoft.NET\Framework\v4.0.30319
                    Set Property: TargetFrameworkSDKDirectory=C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\
                    Added Item(s): _TargetFrameworkSDKDirectoryItem=C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\
-13:50:13.893     1>Done building target "GetFrameworkPaths" in project "math3d.vcxproj".: (TargetId:23)
+15:59:48.701     1>Done building target "GetFrameworkPaths" in project "math3d.vcxproj".: (TargetId:23)
                    Target "GetWinFXPath" skipped, due to false condition; (('@(Page)' != '' or '@(ApplicationDefinition)' != '' or '@(Resource)' != '') and ('$(GetWinFXNativePath)' != '' or '$(GetWinFXWoWPath)' != '' )) was evaluated as (('' != '' or '' != '' or '' != '') and ('' != '' or '' != '' )).
-13:50:13.893     1>Target "GetReferenceAssemblyPaths: (TargetId:24)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveAssemblyReferences" depends on it):
+15:59:48.701     1>Target "GetReferenceAssemblyPaths: (TargetId:24)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveAssemblyReferences" depends on it):
                    Set Property: TargetFrameworkDirectory=
                    Task "GetReferenceAssemblyPaths" skipped, due to false condition; ('$(TargetFrameworkMoniker)' != '' and ('$(_TargetFrameworkDirectories)' == '' or '$(_FullFrameworkReferenceAssemblyPaths)' == '')) was evaluated as ('' != '' and ('C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0' == '' or 'C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0' == '')).
                    Set Property: TargetFrameworkDirectory=C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0;;
                    Set Property: TargetFrameworkDirectory=C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0;;;C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral
                    Set Property: RemoveAssemblyFoldersIfNoTargetFramework=true
-13:50:13.893     1>Done building target "GetReferenceAssemblyPaths" in project "math3d.vcxproj".: (TargetId:24)
-13:50:13.893     1>Target "SetBuildDefaultEnvironmentVariables: (TargetId:25)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.Cpp.Current.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareForBuild" depends on it):
+15:59:48.702     1>Done building target "GetReferenceAssemblyPaths" in project "math3d.vcxproj".: (TargetId:24)
+15:59:48.702     1>Target "SetBuildDefaultEnvironmentVariables: (TargetId:25)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.Cpp.Current.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareForBuild" depends on it):
                    Using "SetEnv" task from assembly "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.Build.CppTasks.Common.dll".
                    Task "SetEnv" (TaskId:18)
                      Task Parameter:Name=PATH (TaskId:18)
@@ -1384,9 +1384,9 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                      INCLUDE=C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\atlmfc\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt;;;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;; (TaskId:21)
                      Output Property: INCLUDE=C:\Program Files %28x86%29\Microsoft Visual Studio 14.0\VC\include%3bC:\Program Files %28x86%29\Microsoft Visual Studio 14.0\VC\atlmfc\include%3bC:\Program Files %28x86%29\Windows Kits\10\Include\10.0.10150.0\ucrt%3b%3b%3bC:\Program Files %28x86%29\Windows Kits\8.1\Include\um%3bC:\Program Files %28x86%29\Windows Kits\8.1\Include\shared%3bC:\Program Files %28x86%29\Windows Kits\8.1\Include\winrt%3b%3b (TaskId:21)
                    Done executing task "SetEnv". (TaskId:21)
-13:50:13.893     1>Done building target "SetBuildDefaultEnvironmentVariables" in project "math3d.vcxproj".: (TargetId:25)
+15:59:48.702     1>Done building target "SetBuildDefaultEnvironmentVariables" in project "math3d.vcxproj".: (TargetId:25)
                    Target "SetUserMacroEnvironmentVariables" skipped, due to false condition; ('@(BuildMacro)' != '' and '$(DesignTimeBuild)' != 'true') was evaluated as ('' != '' and '' != 'true').
-13:50:13.893     1>Target "GetResolvedWinMD: (TargetId:26)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareForBuild" depends on it):
+15:59:48.702     1>Target "GetResolvedWinMD: (TargetId:26)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareForBuild" depends on it):
                    Added Item(s): 
                        Link=
                            tmp
@@ -1477,8 +1477,8 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                                    TypeLibraryResourceID=1
                                    UACExecutionLevel=AsInvoker
                                    UACUIAccess=false
-13:50:13.893     1>Done building target "GetResolvedWinMD" in project "math3d.vcxproj".: (TargetId:26)
-13:50:13.893     1>Target "PlatformPrepareForBuild: (TargetId:27)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.Cpp.Platform.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareForBuild" depends on it):
+15:59:48.703     1>Done building target "GetResolvedWinMD" in project "math3d.vcxproj".: (TargetId:26)
+15:59:48.703     1>Target "PlatformPrepareForBuild: (TargetId:27)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.Cpp.Platform.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareForBuild" depends on it):
                    Set Property: ConfigurationPlatformExists=true
                    Set Property: _CurrentPlatformToolsetShortName=v140
                    Task "VCMessage" skipped, due to false condition; ('$(_Error64bitToolsNotInstalled)' == 'true') was evaluated as ('' == 'true').
@@ -1486,19 +1486,19 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                    Task "VCMessage" skipped, due to false condition; ('$(DesignTimeBuild)'!='true' and '$(_ToolsetFound)' != 'true' and '$(PlatformToolset)' == 'v100') was evaluated as (''!='true' and 'true' != 'true' and 'v140' == 'v100').
                    Task "VCMessage" skipped, due to false condition; ('$(DesignTimeBuild)'!='true' and '$(_ToolsetFound)' != 'true' and '$(PlatformToolset)' == 'v90') was evaluated as (''!='true' and 'true' != 'true' and 'v140' == 'v90').
                    Task "VCMessage" skipped, due to false condition; ('$(DesignTimeBuild)'!='true' and '$(_ToolsetFound)' != 'true' and '$(PlatformToolset)' != 'v90' and '$(PlatformToolset)' != 'v100' and '$(PlatformToolset)' != 'v110') was evaluated as (''!='true' and 'true' != 'true' and 'v140' != 'v90' and 'v140' != 'v100' and 'v140' != 'v110').
-13:50:13.893     1>Done building target "PlatformPrepareForBuild" in project "math3d.vcxproj".: (TargetId:27)
+15:59:48.703     1>Done building target "PlatformPrepareForBuild" in project "math3d.vcxproj".: (TargetId:27)
                    Target "GetFrameworkPaths" skipped. Previously built successfully.
                    Target "GetReferenceAssemblyPaths" skipped. Previously built successfully.
                    Target "AssignLinkMetadata" skipped, due to false condition; ( '$(SynthesizeLinkMetadata)' == 'true' ) was evaluated as ( '' == 'true' ).
-13:50:13.893     1>Target "SetCABuildNativeEnvironmentVariables: (TargetId:28)" in file "C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v14.0\CodeAnalysis\Microsoft.CodeAnalysis.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareForBuild" depends on it):
+15:59:48.703     1>Target "SetCABuildNativeEnvironmentVariables: (TargetId:28)" in file "C:\Program Files (x86)\MSBuild\Microsoft\VisualStudio\v14.0\CodeAnalysis\Microsoft.CodeAnalysis.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareForBuild" depends on it):
                    Initializing task factory "CodeTaskFactory" from assembly "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Build.Tasks.Core.dll".
                    Using "SetEnvironmentVariable" task from the task factory "Code Task Factory".
                    Task "SetEnvironmentVariable" (TaskId:22)
                      Task Parameter:EnvValue=C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\atlmfc\include;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include;C:\Program Files (x86)\Windows Kits\8.1\Include\um;C:\Program Files (x86)\Windows Kits\8.1\Include\shared;C:\Program Files (x86)\Windows Kits\8.1\Include\winrt;; (TaskId:22)
                      Task Parameter:EnvKey=CAExcludePath (TaskId:22)
                    Done executing task "SetEnvironmentVariable". (TaskId:22)
-13:50:13.971     1>Done building target "SetCABuildNativeEnvironmentVariables" in project "math3d.vcxproj".: (TargetId:28)
-13:50:13.971     1>Target "PrepareForBuild: (TargetId:29)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveAssemblyReferences" depends on it):
+15:59:48.708     1>Done building target "SetCABuildNativeEnvironmentVariables" in project "math3d.vcxproj".: (TargetId:28)
+15:59:48.708     1>Target "PrepareForBuild: (TargetId:29)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveAssemblyReferences" depends on it):
                    Set Property: TargetDir=D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\
                    Set Property: LocalDebuggerCommand=D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.dll
                    Set Property: BuildProjectReferences=false
@@ -1527,23 +1527,23 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                              D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\
                              x64\Release\math3d.tlog\ (TaskId:24)
                    Done executing task "MakeDir". (TaskId:24)
-13:50:13.971     1>Done building target "PrepareForBuild" in project "math3d.vcxproj".: (TargetId:29)
+15:59:48.710     1>Done building target "PrepareForBuild" in project "math3d.vcxproj".: (TargetId:29)
                    Target "_PrepareForReferenceResolution" skipped. Previously built successfully.
                    Target "ComputeCrtSDKReference" skipped, due to false condition; ('@(ClCompile)'!='' and '$(WindowsAppContainer)'=='true' and '$(UseCrtSDKReference)' != 'false') was evaluated as ('math3d.cpp'!='' and 'false'=='true' and '' != 'false').
-13:50:13.971     1>Target "GetInstalledSDKLocations: (TargetId:30)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveSDKReferences" depends on it):
+15:59:48.711     1>Target "GetInstalledSDKLocations: (TargetId:30)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveSDKReferences" depends on it):
                    Task "GetInstalledSDKLocations" skipped, due to false condition; ('@(SDKReference)' != '') was evaluated as ('' != '').
                    Task "GetInstalledSDKLocations" skipped, due to false condition; ('@(SDKReference)' != '' and '$(SupportWindows81SDKs)' == 'true' and '$(TargetPlatformIdentifierWindows81)' != '' and '$(TargetPlatformVersionWindows81)' != '') was evaluated as ('' != '' and '' == 'true' and '' != '' and '' != '').
                    Task "GetInstalledSDKLocations" skipped, due to false condition; ('@(SDKReference)' != '' and '$(SupportWindowsPhone81SDKs)' == 'true' and '$(TargetPlatformIdentifierWindowsPhone81)' != '' and '$(TargetPlatformVersionWindowsPhone81)' != '') was evaluated as ('' != '' and '' == 'true' and '' != '' and '' != '').
-13:50:13.971     1>Done building target "GetInstalledSDKLocations" in project "math3d.vcxproj".: (TargetId:30)
-13:50:13.971     1>Target "ResolveSDKReferences: (TargetId:31)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveAssemblyReferences" depends on it):
+15:59:48.711     1>Done building target "GetInstalledSDKLocations" in project "math3d.vcxproj".: (TargetId:30)
+15:59:48.711     1>Target "ResolveSDKReferences: (TargetId:31)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveAssemblyReferences" depends on it):
                    Task "ResolveSDKReference" skipped, due to false condition; ('@(SDKReference)'!='') was evaluated as (''!='').
-13:50:13.971     1>Done building target "ResolveSDKReferences" in project "math3d.vcxproj".: (TargetId:31)
+15:59:48.711     1>Done building target "ResolveSDKReferences" in project "math3d.vcxproj".: (TargetId:31)
                    Target "ResolveSDKReferences" skipped. Previously built successfully.
-13:50:13.971     1>Target "ExpandSDKReferences: (TargetId:32)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveAssemblyReferences" depends on it):
+15:59:48.711     1>Target "ExpandSDKReferences: (TargetId:32)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveAssemblyReferences" depends on it):
                    Task "GetSDKReferenceFiles" skipped, due to false condition; ('@(ResolvedSDKReference)'!='') was evaluated as (''!='').
-13:50:13.971     1>Done building target "ExpandSDKReferences" in project "math3d.vcxproj".: (TargetId:32)
+15:59:48.711     1>Done building target "ExpandSDKReferences" in project "math3d.vcxproj".: (TargetId:32)
                    Target "ResolveNuGetPackageAssets" skipped, due to false condition; ('$(ResolveNuGetPackages)' == 'true' and exists('$(ProjectLockFile)')) was evaluated as ('true' == 'true' and exists('project.lock.json')).
-13:50:13.971     1>Target "ResolveAssemblyReferences: (TargetId:33)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveReferences" depends on it):
+15:59:48.711     1>Target "ResolveAssemblyReferences: (TargetId:33)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveReferences" depends on it):
                    Added Item(s): 
                        _ReferenceInstalledAssemblyDirectory=
                            C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0
@@ -1552,19 +1552,19 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                    Set Property: ResolveAssemblyReferencesSilent=false
                    Set Property: ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch=Warning
                    Task "ResolveAssemblyReference" skipped, due to false condition; ('@(Reference)'!='' or '@(_ResolvedProjectReferencePaths)'!='' or '@(_ExplicitReference)' != '') was evaluated as (''!='' or ''!='' or '' != '').
-13:50:13.971     1>Done building target "ResolveAssemblyReferences" in project "math3d.vcxproj".: (TargetId:33)
+15:59:48.711     1>Done building target "ResolveAssemblyReferences" in project "math3d.vcxproj".: (TargetId:33)
                    Target "GenerateBindingRedirects" skipped, due to false condition; ('$(AutoGenerateBindingRedirects)' == 'true' and '$(GenerateBindingRedirectsOutputType)' == 'true') was evaluated as ('' == 'true' and '' == 'true').
                    Target "GenerateBindingRedirectsUpdateAppConfig" skipped, due to false condition; ('$(AutoGenerateBindingRedirects)' == 'true' and '$(GenerateBindingRedirectsOutputType)' == 'true' and Exists('$(_GenerateBindingRedirectsIntermediateAppConfig)')) was evaluated as ('' == 'true' and '' == 'true' and Exists('x64\Release\math3d.vcxproj.math3d.dll.config')).
                    Target "ResolveComReferences" skipped, due to false condition; ('@(COMReference)'!='' or '@(COMFileReference)'!='') was evaluated as (''!='' or ''!='').
-13:50:13.971     1>Target "AfterResolveReferences: (TargetId:34)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveReferences" depends on it):
-13:50:13.971     1>Done building target "AfterResolveReferences" in project "math3d.vcxproj".: (TargetId:34)
+15:59:48.711     1>Target "AfterResolveReferences: (TargetId:34)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ResolveReferences" depends on it):
+15:59:48.711     1>Done building target "AfterResolveReferences" in project "math3d.vcxproj".: (TargetId:34)
                    Target "ImplicitlyExpandDesignTimeFacades" skipped, due to false condition; ('$(ImplicitlyExpandDesignTimeFacades)' == 'true') was evaluated as ('' == 'true').
                    Target "ResolveTestReferences" skipped, due to false condition; ('@(Shadow)'!='') was evaluated as (''!='').
-13:50:13.971     1>Target "ResolveReferences: (TargetId:35)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
-13:50:13.971     1>Done building target "ResolveReferences" in project "math3d.vcxproj".: (TargetId:35)
+15:59:48.711     1>Target "ResolveReferences: (TargetId:35)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
+15:59:48.711     1>Done building target "ResolveReferences" in project "math3d.vcxproj".: (TargetId:35)
                    Target "PrepareForBuild" skipped. Previously built successfully.
                    Target "PrepareForBuild" skipped. Previously built successfully.
-13:50:13.971     1>Target "InitializeBuildStatus: (TargetId:36)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
+15:59:48.711     1>Target "InitializeBuildStatus: (TargetId:36)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
                    Task "ReadLinesFromFile" (TaskId:25)
                      Task Parameter:File=x64\Release\math3d.tlog\math3d.lastbuildstate (TaskId:25)
                    Done executing task "ReadLinesFromFile". (TaskId:25)
@@ -1584,71 +1584,71 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                      Task Parameter:Files=x64\Release\math3d.tlog\unsuccessfulbuild (TaskId:27)
                      Creating "x64\Release\math3d.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified. (TaskId:27)
                    Done executing task "Touch". (TaskId:27)
-13:50:13.971     1>Done building target "InitializeBuildStatus" in project "math3d.vcxproj".: (TargetId:36)
+15:59:48.712     1>Done building target "InitializeBuildStatus" in project "math3d.vcxproj".: (TargetId:36)
                    Target "AssignProjectConfiguration" skipped. Previously built successfully.
                    Target "_SplitProjectReferencesByFileExistence" skipped. Previously built successfully.
-13:50:13.971     1>Target "BuildGenerateSourcesTraverse: (TargetId:37)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "BuildGenerateSources" depends on it):
+15:59:48.712     1>Target "BuildGenerateSourcesTraverse: (TargetId:37)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "BuildGenerateSources" depends on it):
                    Task "MSBuild" skipped, due to false condition; ('$(BuildPassReferences)' == 'true' and '@(ProjectReferenceWithConfiguration)' != '' and '@(_MSBuildProjectReferenceExistent)' != '' and '%(_MSBuildProjectReferenceExistent.BuildReference)' == 'true') was evaluated as ('' == 'true' and '' != '' and '' != '' and '' == 'true').
-13:50:13.971     1>Done building target "BuildGenerateSourcesTraverse" in project "math3d.vcxproj".: (TargetId:37)
+15:59:48.712     1>Done building target "BuildGenerateSourcesTraverse" in project "math3d.vcxproj".: (TargetId:37)
                    Target "PrepareForBuild" skipped. Previously built successfully.
                    Target "ResolveReferences" skipped. Previously built successfully.
-13:50:13.971     1>Target "BeforeBuildGenerateSources: (TargetId:38)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildGenerateSourcesAction" depends on it):
-13:50:13.971     1>Done building target "BeforeBuildGenerateSources" in project "math3d.vcxproj".: (TargetId:38)
-13:50:13.971     1>Target "PreBuildEvent: (TargetId:39)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildGenerateSourcesAction" depends on it):
+15:59:48.712     1>Target "BeforeBuildGenerateSources: (TargetId:38)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildGenerateSourcesAction" depends on it):
+15:59:48.712     1>Done building target "BeforeBuildGenerateSources" in project "math3d.vcxproj".: (TargetId:38)
+15:59:48.712     1>Target "PreBuildEvent: (TargetId:39)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildGenerateSourcesAction" depends on it):
                    Task "Message" skipped, due to false condition; ('%(PreBuildEvent.Message)' != '' and '%(PreBuildEvent.Command)' != '') was evaluated as ('' != '' and '' != '').
                    Task "Exec" skipped, due to false condition; ('%(PreBuildEvent.Command)' != '') was evaluated as ('' != '').
-13:50:13.971     1>Done building target "PreBuildEvent" in project "math3d.vcxproj".: (TargetId:39)
+15:59:48.712     1>Done building target "PreBuildEvent" in project "math3d.vcxproj".: (TargetId:39)
                    Target "CustomBuild" skipped, due to false condition; ('@(CustomBuild)' != '') was evaluated as ('' != '').
                    Target "FxCompile" skipped, due to false condition; ('@(FxCompile)' != '') was evaluated as ('' != '').
                    Target "Xsd" skipped, due to false condition; ('@(Xsd)' != '') was evaluated as ('' != '').
-13:50:13.971     1>Target "_Xsd: (TargetId:40)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildGenerateSourcesAction" depends on it):
-13:50:13.971     1>Done building target "_Xsd" in project "math3d.vcxproj".: (TargetId:40)
-13:50:13.971     1>Target "MakeDirsForMidl: (TargetId:41)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Midl" depends on it):
+15:59:48.712     1>Target "_Xsd: (TargetId:40)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildGenerateSourcesAction" depends on it):
+15:59:48.712     1>Done building target "_Xsd" in project "math3d.vcxproj".: (TargetId:40)
+15:59:48.712     1>Target "MakeDirsForMidl: (TargetId:41)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Midl" depends on it):
                    Set Property: Midl_OutputDir=
                    Task "Makedir" (TaskId:28)
                    Done executing task "Makedir". (TaskId:28)
-13:50:13.971     1>Done building target "MakeDirsForMidl" in project "math3d.vcxproj".: (TargetId:41)
+15:59:48.712     1>Done building target "MakeDirsForMidl" in project "math3d.vcxproj".: (TargetId:41)
                    Target "Midl" skipped, due to false condition; ('@(Midl)' != '') was evaluated as ('' != '').
                    Target "CustomBuild" skipped, due to false condition; ('@(CustomBuild)' != '') was evaluated as ('' != '').
                    Target "FxCompile" skipped, due to false condition; ('@(FxCompile)' != '') was evaluated as ('' != '').
-13:50:13.971     1>Target "ComputeMIDLGeneratedCompileInputs: (TargetId:42)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Midl" depends on it):
+15:59:48.712     1>Target "ComputeMIDLGeneratedCompileInputs: (TargetId:42)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Midl" depends on it):
                    Set Property: Midl_OutputDir=
-13:50:13.971     1>Done building target "ComputeMIDLGeneratedCompileInputs" in project "math3d.vcxproj".: (TargetId:42)
-13:50:13.971     1>Target "AfterMidl: (TargetId:43)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Midl" depends on it):
-13:50:13.971     1>Done building target "AfterMidl" in project "math3d.vcxproj".: (TargetId:43)
-13:50:13.971     1>Target "_Midl: (TargetId:44)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildGenerateSourcesAction" depends on it):
-13:50:13.971     1>Done building target "_Midl" in project "math3d.vcxproj".: (TargetId:44)
-13:50:13.971     1>Target "AfterBuildGenerateSources: (TargetId:45)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildGenerateSourcesAction" depends on it):
-13:50:13.971     1>Done building target "AfterBuildGenerateSources" in project "math3d.vcxproj".: (TargetId:45)
-13:50:13.971     1>Target "AfterBuildGenerateSourcesEvent: (TargetId:46)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildGenerateSourcesAction" depends on it):
-13:50:13.971     1>Done building target "AfterBuildGenerateSourcesEvent" in project "math3d.vcxproj".: (TargetId:46)
-13:50:13.971     1>Target "_BuildGenerateSourcesAction: (TargetId:47)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "BuildGenerateSources" depends on it):
-13:50:13.971     1>Done building target "_BuildGenerateSourcesAction" in project "math3d.vcxproj".: (TargetId:47)
-13:50:13.971     1>Target "BuildGenerateSources: (TargetId:48)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
-13:50:13.971     1>Done building target "BuildGenerateSources" in project "math3d.vcxproj".: (TargetId:48)
+15:59:48.712     1>Done building target "ComputeMIDLGeneratedCompileInputs" in project "math3d.vcxproj".: (TargetId:42)
+15:59:48.712     1>Target "AfterMidl: (TargetId:43)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Midl" depends on it):
+15:59:48.712     1>Done building target "AfterMidl" in project "math3d.vcxproj".: (TargetId:43)
+15:59:48.712     1>Target "_Midl: (TargetId:44)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildGenerateSourcesAction" depends on it):
+15:59:48.712     1>Done building target "_Midl" in project "math3d.vcxproj".: (TargetId:44)
+15:59:48.712     1>Target "AfterBuildGenerateSources: (TargetId:45)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildGenerateSourcesAction" depends on it):
+15:59:48.712     1>Done building target "AfterBuildGenerateSources" in project "math3d.vcxproj".: (TargetId:45)
+15:59:48.712     1>Target "AfterBuildGenerateSourcesEvent: (TargetId:46)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildGenerateSourcesAction" depends on it):
+15:59:48.712     1>Done building target "AfterBuildGenerateSourcesEvent" in project "math3d.vcxproj".: (TargetId:46)
+15:59:48.712     1>Target "_BuildGenerateSourcesAction: (TargetId:47)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "BuildGenerateSources" depends on it):
+15:59:48.712     1>Done building target "_BuildGenerateSourcesAction" in project "math3d.vcxproj".: (TargetId:47)
+15:59:48.712     1>Target "BuildGenerateSources: (TargetId:48)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
+15:59:48.712     1>Done building target "BuildGenerateSources" in project "math3d.vcxproj".: (TargetId:48)
                    Target "AssignProjectConfiguration" skipped. Previously built successfully.
                    Target "_SplitProjectReferencesByFileExistence" skipped. Previously built successfully.
-13:50:13.971     1>Target "BuildCompileTraverse: (TargetId:49)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "BuildCompile" depends on it):
+15:59:48.712     1>Target "BuildCompileTraverse: (TargetId:49)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "BuildCompile" depends on it):
                    Task "MSBuild" skipped, due to false condition; ('$(BuildPassReferences)' == 'true' and '@(ProjectReferenceWithConfiguration)' != '' and '@(_MSBuildProjectReferenceExistent)' != ''  and '%(_MSBuildProjectReferenceExistent.BuildReference)' == 'true') was evaluated as ('' == 'true' and '' != '' and '' != ''  and '' == 'true').
-13:50:13.971     1>Done building target "BuildCompileTraverse" in project "math3d.vcxproj".: (TargetId:49)
+15:59:48.713     1>Done building target "BuildCompileTraverse" in project "math3d.vcxproj".: (TargetId:49)
                    Target "PrepareForBuild" skipped. Previously built successfully.
                    Target "ResolveReferences" skipped. Previously built successfully.
-13:50:13.971     1>Target "BeforeClCompile: (TargetId:50)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
-13:50:13.971     1>Done building target "BeforeClCompile" in project "math3d.vcxproj".: (TargetId:50)
+15:59:48.713     1>Target "BeforeClCompile: (TargetId:50)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
+15:59:48.713     1>Done building target "BeforeClCompile" in project "math3d.vcxproj".: (TargetId:50)
                    Target "ComputeMIDLGeneratedCompileInputs" skipped. Previously built successfully.
-13:50:13.971     1>Target "ComputeCLInputPDBName: (TargetId:51)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
-13:50:13.971     1>Done building target "ComputeCLInputPDBName" in project "math3d.vcxproj".: (TargetId:51)
+15:59:48.713     1>Target "ComputeCLInputPDBName: (TargetId:51)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
+15:59:48.713     1>Done building target "ComputeCLInputPDBName" in project "math3d.vcxproj".: (TargetId:51)
                    Target "ResolveReferences" skipped. Previously built successfully.
-13:50:13.971     1>Target "ComputeReferenceCLInput: (TargetId:52)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
+15:59:48.713     1>Target "ComputeReferenceCLInput: (TargetId:52)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
                    Task "WriteLinesToFile" skipped, due to false condition; (('@(_ReferenceCopyLocalPaths)'!='') and '$(DesignTimeBuild)' != 'true') was evaluated as ((''!='') and '' != 'true').
                    Task "Message" skipped, due to false condition; ('$(_REFERENCE_DEBUG)'=='true') was evaluated as (''=='true').
-13:50:13.971     1>Done building target "ComputeReferenceCLInput" in project "math3d.vcxproj".: (TargetId:52)
-13:50:13.971     1>Target "WarnCompileDuplicatedFilename: (TargetId:53)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
+15:59:48.713     1>Done building target "ComputeReferenceCLInput" in project "math3d.vcxproj".: (TargetId:52)
+15:59:48.713     1>Target "WarnCompileDuplicatedFilename: (TargetId:53)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
                    Task "VCMessage" skipped, due to false condition; ('%(ClCompile.ExcludedFromBuild)' != 'true' and '%(Filename)%(Extension)' != '@(ClCompile->'%(Filename)%(Extension)')' and '%(ObjectFileName)' == '@(ClCompile->Metadata(ObjectFileName)->Distinct())') was evaluated as ('' != 'true' and 'math3d.cpp' != 'math3d.cpp' and 'x64\Release\' == 'x64\Release\').
-13:50:13.971     1>Done building target "WarnCompileDuplicatedFilename" in project "math3d.vcxproj".: (TargetId:53)
-13:50:13.971     1>Target "FixupCLCompileOptions: (TargetId:54)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
-13:50:13.971     1>Done building target "FixupCLCompileOptions" in project "math3d.vcxproj".: (TargetId:54)
-13:50:13.971     1>Target "MakeDirsForCl: (TargetId:55)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
+15:59:48.713     1>Done building target "WarnCompileDuplicatedFilename" in project "math3d.vcxproj".: (TargetId:53)
+15:59:48.713     1>Target "FixupCLCompileOptions: (TargetId:54)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
+15:59:48.713     1>Done building target "FixupCLCompileOptions" in project "math3d.vcxproj".: (TargetId:54)
+15:59:48.713     1>Target "MakeDirsForCl: (TargetId:55)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
                    Added Item(s): ClDirsToMake=D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release
                    Added Item(s): ClDirsToMake=D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release
                    Added Item(s): ClDirsToMake=D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release
@@ -1667,25 +1667,25 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                            D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release
                            D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release
                            D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release
-13:50:13.971     1>Done building target "MakeDirsForCl" in project "math3d.vcxproj".: (TargetId:55)
+15:59:48.713     1>Done building target "MakeDirsForCl" in project "math3d.vcxproj".: (TargetId:55)
                    Target "PrepareForBuild" skipped. Previously built successfully.
                    Target "SetBuildDefaultEnvironmentVariables" skipped. Previously built successfully.
                    Target "SetUserMacroEnvironmentVariables" skipped, due to false condition; ('@(BuildMacro)' != '' and '$(DesignTimeBuild)' != 'true') was evaluated as ('' != '' and '' != 'true').
-13:50:13.971     1>Target "_SelectedFiles: (TargetId:56)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "SelectClCompile" depends on it):
-13:50:13.971     1>Done building target "_SelectedFiles" in project "math3d.vcxproj".: (TargetId:56)
+15:59:48.714     1>Target "_SelectedFiles: (TargetId:56)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "SelectClCompile" depends on it):
+15:59:48.714     1>Done building target "_SelectedFiles" in project "math3d.vcxproj".: (TargetId:56)
                    Target "ComputeMIDLGeneratedCompileInputs" skipped. Previously built successfully.
                    Target "ComputeCLInputPDBName" skipped. Previously built successfully.
                    Target "ComputeReferenceCLInput" skipped. Previously built successfully.
                    Target "WarnCompileDuplicatedFilename" skipped. Previously built successfully.
                    Target "FixupCLCompileOptions" skipped. Previously built successfully.
                    Target "_SelectedFiles" skipped. Previously built successfully.
-13:50:13.971     1>Target "SelectCustomBuild: (TargetId:57)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "SelectClCompile" depends on it):
-13:50:13.971     1>Done building target "SelectCustomBuild" in project "math3d.vcxproj".: (TargetId:57)
-13:50:13.971     1>Target "SelectClCompile: (TargetId:58)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ClCompile" depends on it):
-13:50:13.971     1>Done building target "SelectClCompile" in project "math3d.vcxproj".: (TargetId:58)
+15:59:48.714     1>Target "SelectCustomBuild: (TargetId:57)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "SelectClCompile" depends on it):
+15:59:48.714     1>Done building target "SelectCustomBuild" in project "math3d.vcxproj".: (TargetId:57)
+15:59:48.714     1>Target "SelectClCompile: (TargetId:58)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ClCompile" depends on it):
+15:59:48.714     1>Done building target "SelectClCompile" in project "math3d.vcxproj".: (TargetId:58)
                    Target "GenerateTargetFrameworkMonikerAttribute" skipped, due to false condition; ('$(GenerateTargetFrameworkAttribute)' == 'true') was evaluated as ('false' == 'true').
                    Target "ManagedIncrementalBuildPreProcessDependencyGraph" skipped, due to false condition; ('@(ClCompile)' != '' and '$(EnableManagedIncrementalBuild)' == 'True') was evaluated as ('math3d.cpp' != '' and 'false' == 'True').
-13:50:13.971     1>Target "ClCompile: (TargetId:59)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
+15:59:48.714     1>Target "ClCompile: (TargetId:59)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
                    Set Property: CLToolArchitecture=Native32Bit
                    Set Property: CLDeleteOutputOnExecute=true
                    Task "Delete" (TaskId:30)
@@ -1829,46 +1829,46 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                      Task Parameter:YieldDuringToolExecution=True (TaskId:31)
                      Forcing recompile of all source files due to missing PDB "x64\Release\vc140.pdb". (TaskId:31)
                      Environment Variables passed to tool: (TaskId:31)
-                       VS_UNICODE_OUTPUT=1008 (TaskId:31)
+                       VS_UNICODE_OUTPUT=1360 (TaskId:31)
                      C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /GL /D NDEBUG /D _WINDOWS /D _USRDLL /D MATH3D_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Release\\" /Fd"x64\Release\vc140.pdb" /Gd /TP /errorReport:prompt math3d.cpp (TaskId:31)
                      Tracking command: (TaskId:31)
-                     C:\Program Files (x86)\MSBuild\14.0\bin\Tracker.exe /d "C:\Program Files (x86)\MSBuild\14.0\bin\FileTracker.dll" /i D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.tlog /r D:\DEV\KS.HOTELGAME\LUA\LIBS\MATH3D\MATH3D\MATH3D.CPP /b MSBuildConsole_CancelEvent8dcc751bf8c24b2dbc23a83fd0ebc32f  /c "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe"  /c /Zi /nologo /W3 /WX- /O2 /Oi /GL /D NDEBUG /D _WINDOWS /D _USRDLL /D MATH3D_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Release\\" /Fd"x64\Release\vc140.pdb" /Gd /TP /errorReport:prompt math3d.cpp (TaskId:31)
+                     C:\Program Files (x86)\MSBuild\14.0\bin\Tracker.exe /d "C:\Program Files (x86)\MSBuild\14.0\bin\FileTracker.dll" /i D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.tlog /r D:\DEV\KS.HOTELGAME\LUA\LIBS\MATH3D\MATH3D\MATH3D.CPP /b MSBuildConsole_CancelEvent1be79849e59e4666853f69d57095a047  /c "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe"  /c /Zi /nologo /W3 /WX- /O2 /Oi /GL /D NDEBUG /D _WINDOWS /D _USRDLL /D MATH3D_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Release\\" /Fd"x64\Release\vc140.pdb" /Gd /TP /errorReport:prompt math3d.cpp (TaskId:31)
                      math3d.cpp (TaskId:31)
                    Done executing task "CL". (TaskId:31)
-13:50:14.096     1>Done building target "ClCompile" in project "math3d.vcxproj".: (TargetId:59)
+15:59:48.822     1>Done building target "ClCompile" in project "math3d.vcxproj".: (TargetId:59)
                    Target "ManagedIncrementalBuildPostProcessDependencyGraph" skipped, due to false condition; ('@(ClCompile)' != '' and '$(EnableManagedIncrementalBuild)' == 'True') was evaluated as ('math3d.cpp' != '' and 'false' == 'True').
-13:50:14.096     1>Target "AfterClCompile: (TargetId:60)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
-13:50:14.096     1>Done building target "AfterClCompile" in project "math3d.vcxproj".: (TargetId:60)
-13:50:14.096     1>Target "_ClCompile: (TargetId:61)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildCompileAction" depends on it):
-13:50:14.096     1>Done building target "_ClCompile" in project "math3d.vcxproj".: (TargetId:61)
+15:59:48.822     1>Target "AfterClCompile: (TargetId:60)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ClCompile" depends on it):
+15:59:48.822     1>Done building target "AfterClCompile" in project "math3d.vcxproj".: (TargetId:60)
+15:59:48.822     1>Target "_ClCompile: (TargetId:61)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildCompileAction" depends on it):
+15:59:48.822     1>Done building target "_ClCompile" in project "math3d.vcxproj".: (TargetId:61)
                    Target "_ResGen" skipped, due to false condition; ('@(EmbeddedResource)'!='') was evaluated as (''!='').
-13:50:14.096     1>Target "BeforeResourceCompile: (TargetId:62)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ResourceCompile" depends on it):
-13:50:14.096     1>Done building target "BeforeResourceCompile" in project "math3d.vcxproj".: (TargetId:62)
-13:50:14.096     1>Target "MakeDirsForResourceCompile: (TargetId:63)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ResourceCompile" depends on it):
+15:59:48.822     1>Target "BeforeResourceCompile: (TargetId:62)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ResourceCompile" depends on it):
+15:59:48.822     1>Done building target "BeforeResourceCompile" in project "math3d.vcxproj".: (TargetId:62)
+15:59:48.822     1>Target "MakeDirsForResourceCompile: (TargetId:63)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ResourceCompile" depends on it):
                    Task "MakeDir" (TaskId:32)
                    Done executing task "MakeDir". (TaskId:32)
-13:50:14.096     1>Done building target "MakeDirsForResourceCompile" in project "math3d.vcxproj".: (TargetId:63)
+15:59:48.822     1>Done building target "MakeDirsForResourceCompile" in project "math3d.vcxproj".: (TargetId:63)
                    Target "ResourceCompile" skipped, due to false condition; ('@(ResourceCompile)' != '') was evaluated as ('' != '').
-13:50:14.096     1>Target "AfterResourceCompile: (TargetId:64)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ResourceCompile" depends on it):
-13:50:14.096     1>Done building target "AfterResourceCompile" in project "math3d.vcxproj".: (TargetId:64)
-13:50:14.096     1>Target "_ResourceCompile: (TargetId:65)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildCompileAction" depends on it):
-13:50:14.096     1>Done building target "_ResourceCompile" in project "math3d.vcxproj".: (TargetId:65)
+15:59:48.822     1>Target "AfterResourceCompile: (TargetId:64)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_ResourceCompile" depends on it):
+15:59:48.822     1>Done building target "AfterResourceCompile" in project "math3d.vcxproj".: (TargetId:64)
+15:59:48.822     1>Target "_ResourceCompile: (TargetId:65)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildCompileAction" depends on it):
+15:59:48.822     1>Done building target "_ResourceCompile" in project "math3d.vcxproj".: (TargetId:65)
                    Target "_ImpLib" skipped, due to false condition; ('$(ImpLibCompiled)' == 'true') was evaluated as ('' == 'true').
                    Target "_Lib" skipped, due to false condition; ('$(LibCompiled)' == 'true') was evaluated as ('' == 'true').
-13:50:14.096     1>Target "AfterBuildCompileEvent: (TargetId:66)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildCompileAction" depends on it):
-13:50:14.096     1>Done building target "AfterBuildCompileEvent" in project "math3d.vcxproj".: (TargetId:66)
-13:50:14.096     1>Target "_BuildCompileAction: (TargetId:67)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "BuildCompile" depends on it):
-13:50:14.096     1>Done building target "_BuildCompileAction" in project "math3d.vcxproj".: (TargetId:67)
-13:50:14.096     1>Target "BuildCompile: (TargetId:68)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
-13:50:14.096     1>Done building target "BuildCompile" in project "math3d.vcxproj".: (TargetId:68)
+15:59:48.822     1>Target "AfterBuildCompileEvent: (TargetId:66)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildCompileAction" depends on it):
+15:59:48.822     1>Done building target "AfterBuildCompileEvent" in project "math3d.vcxproj".: (TargetId:66)
+15:59:48.822     1>Target "_BuildCompileAction: (TargetId:67)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "BuildCompile" depends on it):
+15:59:48.822     1>Done building target "_BuildCompileAction" in project "math3d.vcxproj".: (TargetId:67)
+15:59:48.822     1>Target "BuildCompile: (TargetId:68)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
+15:59:48.822     1>Done building target "BuildCompile" in project "math3d.vcxproj".: (TargetId:68)
                    Target "AssignProjectConfiguration" skipped. Previously built successfully.
                    Target "_SplitProjectReferencesByFileExistence" skipped. Previously built successfully.
-13:50:14.096     1>Target "BuildLinkTraverse: (TargetId:69)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "BuildLink" depends on it):
+15:59:48.822     1>Target "BuildLinkTraverse: (TargetId:69)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "BuildLink" depends on it):
                    Task "MSBuild" skipped, due to false condition; ('$(BuildPassReferences)' == 'true' and '@(ProjectReferenceWithConfiguration)' != '' and '@(_MSBuildProjectReferenceExistent)' != ''  and '%(_MSBuildProjectReferenceExistent.BuildReference)' == 'true') was evaluated as ('' == 'true' and '' != '' and '' != ''  and '' == 'true').
-13:50:14.096     1>Done building target "BuildLinkTraverse" in project "math3d.vcxproj".: (TargetId:69)
+15:59:48.822     1>Done building target "BuildLinkTraverse" in project "math3d.vcxproj".: (TargetId:69)
                    Target "PrepareForBuild" skipped. Previously built successfully.
                    Target "ResolveReferences" skipped. Previously built successfully.
-13:50:14.096     1>Target "ComputeLegacyManifestEmbedding: (TargetId:70)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
+15:59:48.822     1>Target "ComputeLegacyManifestEmbedding: (TargetId:70)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
                    Added Item(s): 
                        Manifest=
                            temp
@@ -1896,26 +1896,26 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                                    TrackerLogDirectory=x64\Release\math3d.tlog\
                                    UpdateFileHashes=false
                                    VerboseOutput=true
-13:50:14.096     1>Done building target "ComputeLegacyManifestEmbedding" in project "math3d.vcxproj".: (TargetId:70)
-13:50:14.096     1>Target "BeforeLink: (TargetId:71)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
-13:50:14.096     1>Done building target "BeforeLink" in project "math3d.vcxproj".: (TargetId:71)
-13:50:14.096     1>Target "ComputeRCOutputs: (TargetId:72)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ComputeRCGeneratedLinkInputs" depends on it):
-13:50:14.096     1>Done building target "ComputeRCOutputs" in project "math3d.vcxproj".: (TargetId:72)
-13:50:14.096     1>Target "ComputeRCGeneratedLinkInputs: (TargetId:73)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
-13:50:14.096     1>Done building target "ComputeRCGeneratedLinkInputs" in project "math3d.vcxproj".: (TargetId:73)
-13:50:14.096     1>Target "ComputeManifestGeneratedLinkerInputs: (TargetId:74)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
-13:50:14.096     1>Done building target "ComputeManifestGeneratedLinkerInputs" in project "math3d.vcxproj".: (TargetId:74)
-13:50:14.096     1>Target "ComputeCustomBuildOutput: (TargetId:75)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:48.823     1>Done building target "ComputeLegacyManifestEmbedding" in project "math3d.vcxproj".: (TargetId:70)
+15:59:48.823     1>Target "BeforeLink: (TargetId:71)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:48.823     1>Done building target "BeforeLink" in project "math3d.vcxproj".: (TargetId:71)
+15:59:48.823     1>Target "ComputeRCOutputs: (TargetId:72)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ComputeRCGeneratedLinkInputs" depends on it):
+15:59:48.823     1>Done building target "ComputeRCOutputs" in project "math3d.vcxproj".: (TargetId:72)
+15:59:48.823     1>Target "ComputeRCGeneratedLinkInputs: (TargetId:73)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:48.823     1>Done building target "ComputeRCGeneratedLinkInputs" in project "math3d.vcxproj".: (TargetId:73)
+15:59:48.823     1>Target "ComputeManifestGeneratedLinkerInputs: (TargetId:74)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:48.823     1>Done building target "ComputeManifestGeneratedLinkerInputs" in project "math3d.vcxproj".: (TargetId:74)
+15:59:48.823     1>Target "ComputeCustomBuildOutput: (TargetId:75)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
                    Task "CreateItem" skipped, due to false condition; ('%(CustomBuildDirsToMake.OutputFileToTool)'!='') was evaluated as (''!='').
                    Task "MakeDir" (TaskId:33)
                    Done executing task "MakeDir". (TaskId:33)
-13:50:14.096     1>Done building target "ComputeCustomBuildOutput" in project "math3d.vcxproj".: (TargetId:75)
+15:59:48.823     1>Done building target "ComputeCustomBuildOutput" in project "math3d.vcxproj".: (TargetId:75)
                    Target "ComputeMIDLGeneratedCompileInputs" skipped. Previously built successfully.
                    Target "ComputeCLInputPDBName" skipped. Previously built successfully.
                    Target "ComputeReferenceCLInput" skipped. Previously built successfully.
                    Target "WarnCompileDuplicatedFilename" skipped. Previously built successfully.
                    Target "FixupCLCompileOptions" skipped. Previously built successfully.
-13:50:14.096     1>Target "ComputeCLOutputs: (TargetId:76)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ComputeCLGeneratedLinkInputs" depends on it):
+15:59:48.823     1>Target "ComputeCLOutputs: (TargetId:76)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "ComputeCLGeneratedLinkInputs" depends on it):
                    Added Item(s): 
                        Obj=
                            x64\Release\math3d.obj
@@ -1977,8 +1977,8 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                                    WholeProgramOptimization=true
                                    WinRTNoStdLib=false
                                    XMLDocumentationFileName=x64\Release\
-13:50:14.096     1>Done building target "ComputeCLOutputs" in project "math3d.vcxproj".: (TargetId:76)
-13:50:14.096     1>Target "ComputeCLGeneratedLinkInputs: (TargetId:77)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:48.824     1>Done building target "ComputeCLOutputs" in project "math3d.vcxproj".: (TargetId:76)
+15:59:48.824     1>Target "ComputeCLGeneratedLinkInputs: (TargetId:77)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
                    Added Item(s): 
                        Link=
                            x64\Release\math3d.obj
@@ -2023,11 +2023,11 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                                    TypeLibraryResourceID=1
                                    UACExecutionLevel=AsInvoker
                                    UACUIAccess=false
-13:50:14.096     1>Done building target "ComputeCLGeneratedLinkInputs" in project "math3d.vcxproj".: (TargetId:77)
-13:50:14.096     1>Target "ComputeLinkInputsFromProject: (TargetId:78)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
-13:50:14.096     1>Done building target "ComputeLinkInputsFromProject" in project "math3d.vcxproj".: (TargetId:78)
+15:59:48.824     1>Done building target "ComputeCLGeneratedLinkInputs" in project "math3d.vcxproj".: (TargetId:77)
+15:59:48.824     1>Target "ComputeLinkInputsFromProject: (TargetId:78)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:48.824     1>Done building target "ComputeLinkInputsFromProject" in project "math3d.vcxproj".: (TargetId:78)
                    Target "ComputeReferenceLinkInputs" skipped, due to false condition; (@(ProjectReference) != '') was evaluated as ( != '').
-13:50:14.096     1>Target "ComputeManifestInputsTargets: (TargetId:79)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:48.824     1>Target "ComputeManifestInputsTargets: (TargetId:79)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
                    Added Item(s): 
                        Manifest=
                            temp
@@ -2056,10 +2056,10 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                                    TrackerLogDirectory=x64\Release\math3d.tlog\
                                    UpdateFileHashes=false
                                    VerboseOutput=true
-13:50:14.096     1>Done building target "ComputeManifestInputsTargets" in project "math3d.vcxproj".: (TargetId:79)
+15:59:48.824     1>Done building target "ComputeManifestInputsTargets" in project "math3d.vcxproj".: (TargetId:79)
                    Target "ManifestResourceCompile" skipped, due to false condition; ('$(EmbedManifestBy)' == 'LINK' and '@(Manifest)' != '') was evaluated as ('MT' == 'LINK' and '' != '').
                    Target "AssignWinFXEmbeddedResource" skipped, due to false condition; ('@(WinFXEmbeddedResource)' != '') was evaluated as ('' != '').
-13:50:14.096     1>Target "AssignTargetPaths: (TargetId:80)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareResourceNames" depends on it):
+15:59:48.824     1>Target "AssignTargetPaths: (TargetId:80)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareResourceNames" depends on it):
                    Using "AssignTargetPath" task from assembly "Microsoft.Build.Tasks.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
                    Task "AssignTargetPath" (TaskId:34)
                      Task Parameter:RootFolder=D:\dev\KS.HotelGame\lua\libs\math3d\math3d (TaskId:34)
@@ -2074,9 +2074,9 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                      Task Parameter:RootFolder=D:\dev\KS.HotelGame\lua\libs\math3d\math3d (TaskId:37)
                    Done executing task "AssignTargetPath". (TaskId:37)
                    Task "AssignTargetPath" skipped, due to false condition; ('@(_DeploymentBaseManifestWithTargetPath)'=='' and '%(None.Extension)'=='.manifest') was evaluated as (''=='' and ''=='.manifest').
-13:50:14.096     1>Done building target "AssignTargetPaths" in project "math3d.vcxproj".: (TargetId:80)
+15:59:48.825     1>Done building target "AssignTargetPaths" in project "math3d.vcxproj".: (TargetId:80)
                    Target "AssignTargetPaths" skipped. Previously built successfully.
-13:50:14.096     1>Target "SplitResourcesByCulture: (TargetId:81)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareResourceNames" depends on it):
+15:59:48.825     1>Target "SplitResourcesByCulture: (TargetId:81)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareResourceNames" depends on it):
                    Task "Warning" skipped, due to false condition; ('@(ResxWithNoCulture)'!='') was evaluated as (''!='').
                    Task "Warning" skipped, due to false condition; ('@(ResxWithCulture)'!='') was evaluated as (''!='').
                    Task "Warning" skipped, due to false condition; ('@(NonResxWithCulture)'!='') was evaluated as (''!='').
@@ -2084,13 +2084,13 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                    Using "AssignCulture" task from assembly "Microsoft.Build.Tasks.Core, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
                    Task "AssignCulture" (TaskId:38)
                    Done executing task "AssignCulture". (TaskId:38)
-13:50:14.096     1>Done building target "SplitResourcesByCulture" in project "math3d.vcxproj".: (TargetId:81)
+15:59:48.825     1>Done building target "SplitResourcesByCulture" in project "math3d.vcxproj".: (TargetId:81)
                    Target "CreateManifestResourceNames" skipped, due to false condition; ('@(EmbeddedResource)' != '') was evaluated as ('' != '').
-13:50:14.096     1>Target "CreateCustomManifestResourceNames: (TargetId:82)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareResourceNames" depends on it):
-13:50:14.096     1>Done building target "CreateCustomManifestResourceNames" in project "math3d.vcxproj".: (TargetId:82)
-13:50:14.096     1>Target "PrepareResourceNames: (TargetId:83)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
-13:50:14.096     1>Done building target "PrepareResourceNames" in project "math3d.vcxproj".: (TargetId:83)
-13:50:14.096     1>Target "MakeDirsForLink: (TargetId:84)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:48.825     1>Target "CreateCustomManifestResourceNames: (TargetId:82)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareResourceNames" depends on it):
+15:59:48.825     1>Done building target "CreateCustomManifestResourceNames" in project "math3d.vcxproj".: (TargetId:82)
+15:59:48.825     1>Target "PrepareResourceNames: (TargetId:83)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:48.825     1>Done building target "PrepareResourceNames" in project "math3d.vcxproj".: (TargetId:83)
+15:59:48.825     1>Target "MakeDirsForLink: (TargetId:84)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
                    Set Property: _LinkImportLibrary=D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.lib
                    Added Item(s): _LinkImportLibraryFile=D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.lib
                    Added Item(s): LinkDirsToMake=D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release
@@ -2112,25 +2112,25 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                            D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release
                            D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\
                    Removed Item(s): _LinkImportLibraryFile=D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.lib
-13:50:14.096     1>Done building target "MakeDirsForLink" in project "math3d.vcxproj".: (TargetId:84)
-13:50:14.096     1>Target "DoLinkOutputFilesMatch: (TargetId:85)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:48.826     1>Done building target "MakeDirsForLink" in project "math3d.vcxproj".: (TargetId:84)
+15:59:48.826     1>Target "DoLinkOutputFilesMatch: (TargetId:85)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
                    Added Item(s): _OutputFileFromLink=D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.dll
                    Task "VCMessage" skipped, due to false condition; ('@(_OutputFileFromLink)' == '') was evaluated as ('D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.dll' == '').
                    Task "VCMessage" skipped, due to false condition; ('@(_OutputFileFromLink)' != '' and '%(_OutputFileFromLink.FullPath)' != '$([System.IO.Path]::GetFullPath($(TargetPath)))') was evaluated as ('D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.dll' != '' and 'D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.dll' != 'D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.dll').
                    Task "VCMessage" skipped, due to false condition; ('@(_OutputFileFromLink)' != '' and '%(_OutputFileFromLink.Extension)' != '' and '%(_OutputFileFromLink.Extension)' != '$(TargetExt)') was evaluated as ('D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.dll' != '' and '.dll' != '' and '.dll' != '.dll').
                    Task "VCMessage" skipped, due to false condition; ('@(_OutputFileFromLink)' != '' and '%(_OutputFileFromLink.Filename)' != '' and '%(_OutputFileFromLink.Filename)' != '$(TargetName)') was evaluated as ('D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.dll' != '' and 'math3d' != '' and 'math3d' != 'math3d').
                    Task "VCMessage" skipped, due to false condition; ('%(Link.MinimumRequiredVersion)' != '' and ('%(Link.Subsystem)' == '' or '%(Link.Subsystem)' == 'NotSet')) was evaluated as ('' != '' and ('Windows' == '' or 'Windows' == 'NotSet')).
-13:50:14.096     1>Done building target "DoLinkOutputFilesMatch" in project "math3d.vcxproj".: (TargetId:85)
-13:50:14.096     1>Target "PreLinkEvent: (TargetId:86)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:48.826     1>Done building target "DoLinkOutputFilesMatch" in project "math3d.vcxproj".: (TargetId:85)
+15:59:48.826     1>Target "PreLinkEvent: (TargetId:86)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
                    Task "Message" skipped, due to false condition; ('%(PreLinkEvent.Message)' != '' and '%(PreLinkEvent.Command)' != '') was evaluated as ('' != '' and '' != '').
                    Task "Exec" skipped, due to false condition; ('%(PreLinkEvent.Command)' != '') was evaluated as ('' != '').
-13:50:14.096     1>Done building target "PreLinkEvent" in project "math3d.vcxproj".: (TargetId:86)
-13:50:14.096     1>Target "ComputeLinkSwitches: (TargetId:87)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Link" depends on it):
+15:59:48.826     1>Done building target "PreLinkEvent" in project "math3d.vcxproj".: (TargetId:86)
+15:59:48.826     1>Target "ComputeLinkSwitches: (TargetId:87)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Link" depends on it):
                    Set Property: Link_MinimalRebuildFromTracking=true
                    Set Property: LinkToolArchitecture=Native32Bit
                    Set Property: _GenerateWindowsMetadata=
-13:50:14.096     1>Done building target "ComputeLinkSwitches" in project "math3d.vcxproj".: (TargetId:87)
-13:50:14.096     1>Target "Link: (TargetId:88)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:48.827     1>Done building target "ComputeLinkSwitches" in project "math3d.vcxproj".: (TargetId:87)
+15:59:48.827     1>Target "Link: (TargetId:88)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
                    Using "Link" task from assembly "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.Build.CppTasks.Common.dll".
                    Task "Link" (TaskId:40)
                      Task Parameter:BuildingInIde=True (TaskId:40)
@@ -2238,10 +2238,10 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                      Task Parameter:MinimalRebuildFromTracking=True (TaskId:40)
                      Task Parameter:ToolArchitecture=Native32Bit (TaskId:40)
                      Environment Variables passed to tool: (TaskId:40)
-                       VS_UNICODE_OUTPUT=824 (TaskId:40)
+                       VS_UNICODE_OUTPUT=1344 (TaskId:40)
                      C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG:incremental /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.lib" /MACHINE:X64 /DLL x64\Release\math3d.obj (TaskId:40)
                      Tracking command: (TaskId:40)
-                     C:\Program Files (x86)\MSBuild\14.0\bin\Tracker.exe /a /d "C:\Program Files (x86)\MSBuild\14.0\bin\FileTracker.dll" /i D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.tlog /r D:\DEV\KS.HOTELGAME\LUA\LIBS\MATH3D\MATH3D\X64\RELEASE\MATH3D.OBJ /b MSBuildConsole_CancelEvent72594a2052aa4cbd9178236792c0fa79  /c "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe"  /ERRORREPORT:PROMPT /OUT:"D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG:incremental /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.lib" /MACHINE:X64 /DLL x64\Release\math3d.obj (TaskId:40)
+                     C:\Program Files (x86)\MSBuild\14.0\bin\Tracker.exe /a /d "C:\Program Files (x86)\MSBuild\14.0\bin\FileTracker.dll" /i D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.tlog /r D:\DEV\KS.HOTELGAME\LUA\LIBS\MATH3D\MATH3D\X64\RELEASE\MATH3D.OBJ /b MSBuildConsole_CancelEventf2886478264449b6bee4d8dfaa7b1fa0  /c "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe"  /ERRORREPORT:PROMPT /OUT:"D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG:incremental /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.lib" /MACHINE:X64 /DLL x64\Release\math3d.obj (TaskId:40)
                         Creating library D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.lib and object D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.exp (TaskId:40)
                      Generating code (TaskId:40)
                      All 30 functions were compiled because no usable IPDB/IOBJ from previous compilation was found. (TaskId:40)
@@ -2253,11 +2253,11 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                      Task Parameter:Importance=High (TaskId:41)
                      math3d.vcxproj -> D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.dll (TaskId:41)
                    Done executing task "Message". (TaskId:41)
-13:50:14.626     1>Done building target "Link" in project "math3d.vcxproj".: (TargetId:88)
+15:59:49.039     1>Done building target "Link" in project "math3d.vcxproj".: (TargetId:88)
                    Target "MetaGenInputsOutputs" skipped, due to false condition; ('$(EnableManagedIncrementalBuild)' == 'True') was evaluated as ('false' == 'True').
                    Target "ComputeMetaGenInputs" skipped, due to false condition; ('$(CLRSupport)'!='' and '$(CLRSupport)'!='false') was evaluated as ('false'!='' and 'false'!='false').
                    Target "MetaGen" skipped, due to false condition; ('@(MetaGen)' != '') was evaluated as ('' != '').
-13:50:14.626     1>Target "ComputeLinkImportLibraryOutputsForClean: (TargetId:89)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:49.039     1>Target "ComputeLinkImportLibraryOutputsForClean: (TargetId:89)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
                    Added Item(s): _LinkImportLibrary=D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.lib
                    Added Item(s): 
                        _LinkSecondaryOutput=
@@ -2277,30 +2277,30 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                        _LinkSecondaryOutput=
                            D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.lib
                            D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.exp
-13:50:14.642     1>Done building target "ComputeLinkImportLibraryOutputsForClean" in project "math3d.vcxproj".: (TargetId:89)
-13:50:14.642     1>Target "AfterLink: (TargetId:90)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
-13:50:14.642     1>Done building target "AfterLink" in project "math3d.vcxproj".: (TargetId:90)
-13:50:14.642     1>Target "_Link: (TargetId:91)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
-13:50:14.642     1>Done building target "_Link" in project "math3d.vcxproj".: (TargetId:91)
-13:50:14.642     1>Target "_ALink: (TargetId:92)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
-13:50:14.642     1>Done building target "_ALink" in project "math3d.vcxproj".: (TargetId:92)
+15:59:49.040     1>Done building target "ComputeLinkImportLibraryOutputsForClean" in project "math3d.vcxproj".: (TargetId:89)
+15:59:49.040     1>Target "AfterLink: (TargetId:90)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_Link" depends on it):
+15:59:49.040     1>Done building target "AfterLink" in project "math3d.vcxproj".: (TargetId:90)
+15:59:49.040     1>Target "_Link: (TargetId:91)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
+15:59:49.040     1>Done building target "_Link" in project "math3d.vcxproj".: (TargetId:91)
+15:59:49.040     1>Target "_ALink: (TargetId:92)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
+15:59:49.040     1>Done building target "_ALink" in project "math3d.vcxproj".: (TargetId:92)
                    Target "ComputeLegacyManifestEmbedding" skipped. Previously built successfully.
-13:50:14.642     1>Target "_Manifest: (TargetId:93)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
+15:59:49.040     1>Target "_Manifest: (TargetId:93)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
                    Task "CallTarget" skipped, due to false condition; ('$(LegacyManifestEmbedding)' == 'true') was evaluated as ('' == 'true').
-13:50:14.642     1>Done building target "_Manifest" in project "math3d.vcxproj".: (TargetId:93)
-13:50:14.642     1>Target "RegisterOutput: (TargetId:94)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
+15:59:49.040     1>Done building target "_Manifest" in project "math3d.vcxproj".: (TargetId:93)
+15:59:49.040     1>Target "RegisterOutput: (TargetId:94)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
                    Task "Exec" skipped, due to false condition; ('$(ConfigurationType)'=='DynamicLibrary' and '%(Link.RegisterOutput)'=='true' and '%(Link.PerUserRedirection)'!='true') was evaluated as ('DynamicLibrary'=='DynamicLibrary' and 'false'=='true' and 'false'!='true').
                    Task "Exec" skipped, due to false condition; ('$(ConfigurationType)'=='DynamicLibrary' and '%(Link.RegisterOutput)'=='true' and '%(Link.PerUserRedirection)'=='true') was evaluated as ('DynamicLibrary'=='DynamicLibrary' and 'false'=='true' and 'false'=='true').
                    Task "Exec" skipped, due to false condition; ('$(ConfigurationType)'=='Application' and '%(Link.RegisterOutput)'=='true' and '%(Link.PerUserRedirection)'!='true') was evaluated as ('DynamicLibrary'=='Application' and 'false'=='true' and 'false'!='true').
                    Task "Exec" skipped, due to false condition; ('$(ConfigurationType)'=='Application' and '%(Link.RegisterOutput)'=='true' and '%(Link.PerUserRedirection)'=='true') was evaluated as ('DynamicLibrary'=='Application' and 'false'=='true' and 'false'=='true').
                    Task "VCMessage" skipped, due to false condition; ('$(_RegisterOutputExitCode)' != '' and '$(_RegisterOutputExitCode)' != '0') was evaluated as ('' != '' and '' != '0').
-13:50:14.642     1>Done building target "RegisterOutput" in project "math3d.vcxproj".: (TargetId:94)
+15:59:49.040     1>Done building target "RegisterOutput" in project "math3d.vcxproj".: (TargetId:94)
                    Target "PrepareForBuild" skipped. Previously built successfully.
                    Target "ResolveReferences" skipped. Previously built successfully.
-13:50:14.642     1>Target "ResolvedXDCMake: (TargetId:95)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_XdcMake" depends on it):
+15:59:49.040     1>Target "ResolvedXDCMake: (TargetId:95)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_XdcMake" depends on it):
                    Task "MSBuild" skipped, due to false condition; ('%(_MSBuildProjectReferenceExistent.Extension)' == '.vcxproj' and '@(ProjectReferenceWithConfiguration)' != '' and '@(_MSBuildProjectReferenceExistent)' != '' and '$(_ClCompileGenerateXMLDocumentationFiles)' == 'true') was evaluated as ('' == '.vcxproj' and '' != '' and '' != '' and '' == 'true').
-13:50:14.642     1>Done building target "ResolvedXDCMake" in project "math3d.vcxproj".: (TargetId:95)
-13:50:14.642     1>Target "ComputeCLCompileGeneratedXDCFiles: (TargetId:96)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_XdcMake" depends on it):
+15:59:49.040     1>Done building target "ResolvedXDCMake" in project "math3d.vcxproj".: (TargetId:95)
+15:59:49.040     1>Target "ComputeCLCompileGeneratedXDCFiles: (TargetId:96)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_XdcMake" depends on it):
                    Added Item(s): 
                        XdcMake=
                            temp
@@ -2323,68 +2323,68 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                                    OutputFile=D:\dev\KS.HotelGame\lua\libs\math3d\math3d\x64\Release\math3d.xml
                                    SuppressStartupBanner=true
                                    TrackerLogDirectory=x64\Release\math3d.tlog\
-13:50:14.642     1>Done building target "ComputeCLCompileGeneratedXDCFiles" in project "math3d.vcxproj".: (TargetId:96)
-13:50:14.642     1>Target "MakeDirsForXdcMake: (TargetId:97)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_XdcMake" depends on it):
+15:59:49.040     1>Done building target "ComputeCLCompileGeneratedXDCFiles" in project "math3d.vcxproj".: (TargetId:96)
+15:59:49.040     1>Target "MakeDirsForXdcMake: (TargetId:97)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_XdcMake" depends on it):
                    Task "MakeDir" (TaskId:43)
                    Done executing task "MakeDir". (TaskId:43)
-13:50:14.642     1>Done building target "MakeDirsForXdcMake" in project "math3d.vcxproj".: (TargetId:97)
+15:59:49.040     1>Done building target "MakeDirsForXdcMake" in project "math3d.vcxproj".: (TargetId:97)
                    Target "XdcMake" skipped, due to false condition; ('@(XdcMake)' != '') was evaluated as ('' != '').
-13:50:14.642     1>Target "_XdcMake: (TargetId:98)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
-13:50:14.642     1>Done building target "_XdcMake" in project "math3d.vcxproj".: (TargetId:98)
-13:50:14.642     1>Target "ComputeCLCompileGeneratedSbrFiles: (TargetId:99)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BscMake" depends on it):
-13:50:14.642     1>Done building target "ComputeCLCompileGeneratedSbrFiles" in project "math3d.vcxproj".: (TargetId:99)
-13:50:14.642     1>Target "MakeDirsForBscMake: (TargetId:100)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BscMake" depends on it):
+15:59:49.041     1>Target "_XdcMake: (TargetId:98)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
+15:59:49.041     1>Done building target "_XdcMake" in project "math3d.vcxproj".: (TargetId:98)
+15:59:49.041     1>Target "ComputeCLCompileGeneratedSbrFiles: (TargetId:99)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BscMake" depends on it):
+15:59:49.041     1>Done building target "ComputeCLCompileGeneratedSbrFiles" in project "math3d.vcxproj".: (TargetId:99)
+15:59:49.041     1>Target "MakeDirsForBscMake: (TargetId:100)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BscMake" depends on it):
                    Task "MakeDir" (TaskId:44)
                    Done executing task "MakeDir". (TaskId:44)
-13:50:14.642     1>Done building target "MakeDirsForBscMake" in project "math3d.vcxproj".: (TargetId:100)
+15:59:49.041     1>Done building target "MakeDirsForBscMake" in project "math3d.vcxproj".: (TargetId:100)
                    Target "BscMake" skipped, due to false condition; ('@(BscMake)' != '') was evaluated as ('' != '').
                    Target "CustomBuildStep" skipped, due to false condition; ('@(CustomBuildStep)' != '' and '$(SelectedFiles)'=='') was evaluated as ('' != '' and ''=='').
-13:50:14.642     1>Target "_BscMake: (TargetId:101)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
-13:50:14.642     1>Done building target "_BscMake" in project "math3d.vcxproj".: (TargetId:101)
+15:59:49.041     1>Target "_BscMake: (TargetId:101)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
+15:59:49.041     1>Done building target "_BscMake" in project "math3d.vcxproj".: (TargetId:101)
                    Target "RunMergeNativeCodeAnalysis" skipped, due to false condition; ('$(Language)'=='C++' and '$(RunCodeAnalysisOnThisProject)'=='true') was evaluated as ('C++'=='C++' and ''=='true').
                    Target "RunNativeCodeAnalysis" skipped, due to false condition; ('$(Language)'=='C++' and '$(RunCodeAnalysisOnThisProject)'=='true') was evaluated as ('C++'=='C++' and ''=='true').
-13:50:14.642     1>Target "_GenerateSatelliteAssemblyInputs: (TargetId:102)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CreateSatelliteAssemblies" depends on it):
+15:59:49.041     1>Target "_GenerateSatelliteAssemblyInputs: (TargetId:102)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CreateSatelliteAssemblies" depends on it):
                    Task "Warning" skipped, due to false condition; ('@(ManifestResourceWithCulture)'!='' and '%(ManifestResourceWithCulture.EmittedForCompatibilityOnly)'=='') was evaluated as (''!='' and ''=='').
                    Task "Warning" skipped, due to false condition; ('@(ManifestNonResxWithCultureOnDisk)'!='' and '%(ManifestNonResxWithCultureOnDisk.EmittedForCompatibilityOnly)'=='') was evaluated as (''!='' and ''=='').
-13:50:14.642     1>Done building target "_GenerateSatelliteAssemblyInputs" in project "math3d.vcxproj".: (TargetId:102)
+15:59:49.041     1>Done building target "_GenerateSatelliteAssemblyInputs" in project "math3d.vcxproj".: (TargetId:102)
                    Target "ComputeIntermediateSatelliteAssemblies" skipped, due to false condition; (@(ReferenceSatellitePaths->'%(DestinationSubDirectory)') != '') was evaluated as ( != '').
                    Target "GenerateSatelliteAssemblies" skipped, due to false condition; ('@(_SatelliteAssemblyResourceInputs)' != '') was evaluated as ('' != '').
-13:50:14.642     1>Target "CreateSatelliteAssemblies: (TargetId:103)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
-13:50:14.642     1>Done building target "CreateSatelliteAssemblies" in project "math3d.vcxproj".: (TargetId:103)
-13:50:14.642     1>Target "_Appverifier: (TargetId:104)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
-13:50:14.642     1>Done building target "_Appverifier" in project "math3d.vcxproj".: (TargetId:104)
-13:50:14.642     1>Target "_Deploy: (TargetId:105)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
-13:50:14.642     1>Done building target "_Deploy" in project "math3d.vcxproj".: (TargetId:105)
+15:59:49.041     1>Target "CreateSatelliteAssemblies: (TargetId:103)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
+15:59:49.041     1>Done building target "CreateSatelliteAssemblies" in project "math3d.vcxproj".: (TargetId:103)
+15:59:49.041     1>Target "_Appverifier: (TargetId:104)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
+15:59:49.041     1>Done building target "_Appverifier" in project "math3d.vcxproj".: (TargetId:104)
+15:59:49.041     1>Target "_Deploy: (TargetId:105)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
+15:59:49.041     1>Done building target "_Deploy" in project "math3d.vcxproj".: (TargetId:105)
                    Target "ComputeIntermediateSatelliteAssemblies" skipped, due to false condition; (@(ReferenceSatellitePaths->'%(DestinationSubDirectory)') != '') was evaluated as ( != '').
                    Target "_CopyFilesMarkedCopyLocal" skipped, due to false condition; ('@(ReferenceCopyLocalPaths)' != '') was evaluated as ('' != '').
                    Target "AssignTargetPaths" skipped. Previously built successfully.
                    Target "_SplitProjectReferencesByFileExistence" skipped. Previously built successfully.
-13:50:14.642     1>Target "GetCopyToOutputDirectoryXamlAppDefs: (TargetId:106)" in file "C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Xaml.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "GetCopyToOutputDirectoryItems" depends on it):
+15:59:49.041     1>Target "GetCopyToOutputDirectoryXamlAppDefs: (TargetId:106)" in file "C:\Windows\Microsoft.NET\Framework\v4.0.30319\Microsoft.Xaml.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "GetCopyToOutputDirectoryItems" depends on it):
                    Task "AssignTargetPath" (TaskId:45)
                      Task Parameter:RootFolder=D:\dev\KS.HotelGame\lua\libs\math3d\math3d (TaskId:45)
                    Done executing task "AssignTargetPath". (TaskId:45)
-13:50:14.642     1>Done building target "GetCopyToOutputDirectoryXamlAppDefs" in project "math3d.vcxproj".: (TargetId:106)
-13:50:14.642     1>Target "GetCopyToOutputDirectoryItems: (TargetId:107)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_CopySourceItemsToOutputDirectory" depends on it):
+15:59:49.041     1>Done building target "GetCopyToOutputDirectoryXamlAppDefs" in project "math3d.vcxproj".: (TargetId:106)
+15:59:49.041     1>Target "GetCopyToOutputDirectoryItems: (TargetId:107)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_CopySourceItemsToOutputDirectory" depends on it):
                    Set Property: _GCTODIKeepDuplicates=false
                    Set Property: _GCTODIKeepMetadata=CopyToOutputDirectory;TargetPath
                    Task "MSBuild" skipped, due to false condition; ('@(_MSBuildProjectReferenceExistent)' != '' and '$(_GetChildProjectCopyToOutputDirectoryItems)' == 'true' and '%(_MSBuildProjectReferenceExistent.Private)' != 'false' and '$(UseCommonOutputDirectory)' != 'true') was evaluated as ('' != '' and 'true' == 'true' and '' != 'false' and 'false' != 'true').
                    Task "AssignTargetPath" (TaskId:46)
                      Task Parameter:RootFolder=D:\dev\KS.HotelGame\lua\libs\math3d\math3d (TaskId:46)
                    Done executing task "AssignTargetPath". (TaskId:46)
-13:50:14.642     1>Done building target "GetCopyToOutputDirectoryItems" in project "math3d.vcxproj".: (TargetId:107)
+15:59:49.044     1>Done building target "GetCopyToOutputDirectoryItems" in project "math3d.vcxproj".: (TargetId:107)
                    Target "_CopyOutOfDateSourceItemsToOutputDirectory" skipped, due to false condition; ( '@(_SourceItemsToCopyToOutputDirectory)' != '' ) was evaluated as ( '' != '' ).
                    Target "_CopyOutOfDateSourceItemsToOutputDirectoryAlways" skipped, due to false condition; ( '@(_SourceItemsToCopyToOutputDirectoryAlways)' != '' ) was evaluated as ( '' != '' ).
-13:50:14.642     1>Target "_CopySourceItemsToOutputDirectory: (TargetId:108)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CopyFilesToOutputDirectory" depends on it):
-13:50:14.642     1>Done building target "_CopySourceItemsToOutputDirectory" in project "math3d.vcxproj".: (TargetId:108)
+15:59:49.044     1>Target "_CopySourceItemsToOutputDirectory: (TargetId:108)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CopyFilesToOutputDirectory" depends on it):
+15:59:49.044     1>Done building target "_CopySourceItemsToOutputDirectory" in project "math3d.vcxproj".: (TargetId:108)
                    Target "_CopyAppConfigFile" skipped, due to false condition; ( '@(AppConfigWithTargetPath)' != '' ) was evaluated as ( '' != '' ).
                    Target "_CopyManifestFiles" skipped, due to false condition; ( '$(_DeploymentCopyApplicationManifest)'=='true' or '$(GenerateClickOnceManifests)'=='true' ) was evaluated as ( ''=='true' or ''=='true' ).
-13:50:14.642     1>Target "_CheckForCompileOutputs: (TargetId:109)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CopyFilesToOutputDirectory" depends on it):
+15:59:49.044     1>Target "_CheckForCompileOutputs: (TargetId:109)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "CopyFilesToOutputDirectory" depends on it):
                    Added Item(s): FileWrites=x64\Release\math3d.dll
                    Set Property: _DocumentationFileProduced=false
                    Set Property: _DebugSymbolsProduced=false
-13:50:14.642     1>Done building target "_CheckForCompileOutputs" in project "math3d.vcxproj".: (TargetId:109)
+15:59:49.044     1>Done building target "_CheckForCompileOutputs" in project "math3d.vcxproj".: (TargetId:109)
                    Target "_SGenCheckForOutputs" skipped, due to false condition; ('$(_SGenGenerateSerializationAssembliesConfig)' == 'On' or ('@(WebReferenceUrl)'!='' and '$(_SGenGenerateSerializationAssembliesConfig)' == 'Auto')) was evaluated as ('Auto' == 'On' or (''!='' and 'Auto' == 'Auto')).
-13:50:14.642     1>Target "CopyFilesToOutputDirectory: (TargetId:110)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareForRun" depends on it):
+15:59:49.044     1>Target "CopyFilesToOutputDirectory: (TargetId:110)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "PrepareForRun" depends on it):
                    Set Property: CreateHardLinksForCopyFilesToOutputDirectoryIfPossible=false
                    Set Property: CopyBuildOutputToOutputDirectory=true
                    Set Property: CopyOutputSymbolsToOutputDirectory=true
@@ -2398,22 +2398,22 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                    Task "Copy" skipped, due to false condition; ('@(ReferenceComWrappersToCopyLocal)' != '' or '@(ResolvedIsolatedComModules)' != '' or '@(_DeploymentLooseManifestFile)' != '' or '@(NativeReferenceFile)' != '' ) was evaluated as ('' != '' or '' != '' or '' != '' or '' != '' ).
                    Task "Copy" skipped, due to false condition; ('$(SkipCopyWinMDArtifact)' != 'true' and '@(WinMDExpArtifacts)' != '') was evaluated as ('' != 'true' and '' != '').
                    Task "Message" skipped, due to false condition; ('$(SkipCopyWinMDArtifact)' != 'true' and '$(_WindowsMetadataOutputPath)' != '') was evaluated as ('' != 'true' and '' != '').
-13:50:14.642     1>Done building target "CopyFilesToOutputDirectory" in project "math3d.vcxproj".: (TargetId:110)
-13:50:14.642     1>Target "PrepareForRun: (TargetId:111)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
-13:50:14.642     1>Done building target "PrepareForRun" in project "math3d.vcxproj".: (TargetId:111)
+15:59:49.044     1>Done building target "CopyFilesToOutputDirectory" in project "math3d.vcxproj".: (TargetId:110)
+15:59:49.044     1>Target "PrepareForRun: (TargetId:111)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
+15:59:49.044     1>Done building target "PrepareForRun" in project "math3d.vcxproj".: (TargetId:111)
                    Target "CustomBuildStep" skipped, due to false condition; ('@(CustomBuildStep)' != '' and '$(SelectedFiles)'=='') was evaluated as ('' != '' and ''=='').
-13:50:14.642     1>Target "PostBuildEvent: (TargetId:112)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
+15:59:49.044     1>Target "PostBuildEvent: (TargetId:112)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppCommon.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "_BuildLinkAction" depends on it):
                    Task "Message" skipped, due to false condition; ('%(PostBuildEvent.Message)' != '' and '%(PostBuildEvent.Command)' != '') was evaluated as ('' != '' and '' != '').
                    Task "Exec" skipped, due to false condition; ('%(PostBuildEvent.Command)' != '') was evaluated as ('' != '').
-13:50:14.642     1>Done building target "PostBuildEvent" in project "math3d.vcxproj".: (TargetId:112)
-13:50:14.642     1>Target "_BuildLinkAction: (TargetId:113)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "BuildLink" depends on it):
-13:50:14.642     1>Done building target "_BuildLinkAction" in project "math3d.vcxproj".: (TargetId:113)
-13:50:14.642     1>Target "BuildLink: (TargetId:114)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
-13:50:14.642     1>Done building target "BuildLink" in project "math3d.vcxproj".: (TargetId:114)
+15:59:49.044     1>Done building target "PostBuildEvent" in project "math3d.vcxproj".: (TargetId:112)
+15:59:49.044     1>Target "_BuildLinkAction: (TargetId:113)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "BuildLink" depends on it):
+15:59:49.044     1>Done building target "_BuildLinkAction" in project "math3d.vcxproj".: (TargetId:113)
+15:59:49.044     1>Target "BuildLink: (TargetId:114)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
+15:59:49.044     1>Done building target "BuildLink" in project "math3d.vcxproj".: (TargetId:114)
                    Target "CreateTfsBuildInfoResource" skipped, due to false condition; ( $(AddBuildInfoToAssembly)==true ) was evaluated as ( false==true ).
-13:50:14.642     1>Target "AfterBuild: (TargetId:115)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
-13:50:14.642     1>Done building target "AfterBuild" in project "math3d.vcxproj".: (TargetId:115)
-13:50:14.642     1>Target "FinalizeBuildStatus: (TargetId:116)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
+15:59:49.044     1>Target "AfterBuild: (TargetId:115)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
+15:59:49.044     1>Done building target "AfterBuild" in project "math3d.vcxproj".: (TargetId:115)
+15:59:49.044     1>Target "FinalizeBuildStatus: (TargetId:116)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Build" depends on it):
                    Task "Delete" (TaskId:47)
                      Task Parameter:Files=x64\Release\math3d.tlog\unsuccessfulbuild (TaskId:47)
                      Deleting file "x64\Release\math3d.tlog\unsuccessfulbuild". (TaskId:47)
@@ -2422,54 +2422,52 @@ XTC_IDE = 43ba27574a454b538bdb0a59aee40cfe
                      Task Parameter:Files=x64\Release\math3d.tlog\math3d.lastbuildstate (TaskId:48)
                      Touching "x64\Release\math3d.tlog\math3d.lastbuildstate". (TaskId:48)
                    Done executing task "Touch". (TaskId:48)
-13:50:14.642     1>Done building target "FinalizeBuildStatus" in project "math3d.vcxproj".: (TargetId:116)
-13:50:14.642     1>Target "Build: (TargetId:117)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Rebuild" depends on it):
-13:50:14.642     1>Done building target "Build" in project "math3d.vcxproj".: (TargetId:117)
-13:50:14.642     1>Target "AfterRebuild: (TargetId:118)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Rebuild" depends on it):
-13:50:14.642     1>Done building target "AfterRebuild" in project "math3d.vcxproj".: (TargetId:118)
-13:50:14.642     1>Target "Rebuild: (TargetId:119)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (entry point):
-13:50:14.642     1>Done building target "Rebuild" in project "math3d.vcxproj".: (TargetId:119)
-13:50:14.642     1>Done Building Project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (Rebuild target(s)).
+15:59:49.045     1>Done building target "FinalizeBuildStatus" in project "math3d.vcxproj".: (TargetId:116)
+15:59:49.045     1>Target "Build: (TargetId:117)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Rebuild" depends on it):
+15:59:49.045     1>Done building target "Build" in project "math3d.vcxproj".: (TargetId:117)
+15:59:49.045     1>Target "AfterRebuild: (TargetId:118)" in file "C:\Program Files (x86)\MSBuild\14.0\bin\Microsoft.Common.CurrentVersion.targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (target "Rebuild" depends on it):
+15:59:49.045     1>Done building target "AfterRebuild" in project "math3d.vcxproj".: (TargetId:118)
+15:59:49.045     1>Target "Rebuild: (TargetId:119)" in file "C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.BuildSteps.Targets" from project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (entry point):
+15:59:49.045     1>Done building target "Rebuild" in project "math3d.vcxproj".: (TargetId:119)
+15:59:49.045     1>Done Building Project "D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj" (Rebuild target(s)).
 
 Project Performance Summary:
-      796 ms  D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj   1 calls
-                796 ms  Rebuild                                    1 calls
+      357 ms  D:\dev\KS.HotelGame\lua\libs\math3d\math3d\math3d.vcxproj   1 calls
+                357 ms  Rebuild                                    1 calls
 
 Target Performance Summary:
-        0 ms  InitializeBuildStatus                      1 calls
-        0 ms  MakeDirsForCl                              1 calls
+        0 ms  AfterRebuild                               1 calls
         0 ms  AfterClCompile                             1 calls
         0 ms  ComputeCLCompileGeneratedXDCFiles          1 calls
         0 ms  SelectCustomBuild                          1 calls
-        0 ms  CoreClean                                  1 calls
         0 ms  AfterClean                                 1 calls
         0 ms  ComputeManifestGeneratedLinkerInputs       1 calls
         0 ms  ResolveReferences                          1 calls
         0 ms  SelectClCompile                            1 calls
         0 ms  _CheckForCompileOutputs                    1 calls
-        0 ms  GetResolvedWinMD                           1 calls
-        0 ms  BuildCompileTraverse                       1 calls
         0 ms  _Manifest                                  1 calls
+        0 ms  CleanPublishFolder                         1 calls
         0 ms  CleanReferencedProjects                    1 calls
-        0 ms  _PrepareForBuild                           1 calls
         0 ms  PostBuildEvent                             1 calls
         0 ms  _Midl                                      1 calls
         0 ms  BuildCompile                               1 calls
         0 ms  BeforeClean                                1 calls
         0 ms  _ClCompile                                 1 calls
         0 ms  FixupCLCompileOptions                      1 calls
-        0 ms  GetReferenceAssemblyPaths                  1 calls
         0 ms  CreateCustomManifestResourceNames          1 calls
         0 ms  AfterCppClean                              1 calls
-        0 ms  CleanPublishFolder                         1 calls
+        0 ms  ComputeCLInputPDBName                      1 calls
+        0 ms  ResolveAssemblyReferences                  1 calls
+        0 ms  BeforeLink                                 1 calls
+        0 ms  AfterBuild                                 1 calls
+        0 ms  MakeDirsForCl                              1 calls
+        0 ms  AfterBuildCompileEvent                     1 calls
         0 ms  ExpandSDKReferences                        1 calls
-        0 ms  Clean                                      1 calls
         0 ms  ComputeCLCompileGeneratedSbrFiles          1 calls
         0 ms  GetCopyToOutputDirectoryXamlAppDefs        1 calls
         0 ms  _CopySourceItemsToOutputDirectory          1 calls
         0 ms  GetFrameworkPaths                          1 calls
         0 ms  AfterResourceCompile                       1 calls
-        0 ms  _PrepareForClean                           1 calls
         0 ms  ComputeCustomBuildOutput                   1 calls
         0 ms  PGInstrumentedClean                        1 calls
         0 ms  _Xsd                                       1 calls
@@ -2477,7 +2475,6 @@ Target Performance Summary:
         0 ms  RegisterOutput                             1 calls
         0 ms  Rebuild                                    1 calls
         0 ms  MakeDirsForBscMake                         1 calls
-        0 ms  ComputeLinkSwitches                        1 calls
         0 ms  BeforeRebuild                              1 calls
         0 ms  MakeDirsForResourceCompile                 1 calls
         0 ms  _ResourceCompile                           1 calls
@@ -2490,73 +2487,75 @@ Target Performance Summary:
         0 ms  _XdcMake                                   1 calls
         0 ms  CreateSatelliteAssemblies                  1 calls
         0 ms  CopyFilesToOutputDirectory                 1 calls
-        0 ms  ComputeCLInputPDBName                      1 calls
-        0 ms  ResolveAssemblyReferences                  1 calls
-        0 ms  AfterRebuild                               1 calls
-        0 ms  AfterBuild                                 1 calls
-        0 ms  BeforeLink                                 1 calls
-        0 ms  _SelectedFiles                             1 calls
+        0 ms  Clean                                      1 calls
+        0 ms  ComputeManifestInputsTargets               1 calls
+        0 ms  ComputeMIDLGeneratedCompileInputs          1 calls
+        0 ms  BeforeClCompile                            1 calls
+        0 ms  _PrepareForRebuild                         1 calls
+        0 ms  ComputeRCGeneratedLinkInputs               1 calls
+        0 ms  ResolveSDKReferences                       1 calls
+        0 ms  SplitResourcesByCulture                    1 calls
+        0 ms  AfterLink                                  1 calls
+        0 ms  PrepareResourceNames                       1 calls
+        0 ms  AfterBuildGenerateSourcesEvent             1 calls
+        0 ms  ResolveProjectReferences                   1 calls
+        0 ms  BuildGenerateSources                       1 calls
+        0 ms  SetBuildDefaultEnvironmentVariables        1 calls
         0 ms  AfterResolveReferences                     1 calls
+        0 ms  _Appverifier                               1 calls
         0 ms  BeforeResolveReferences                    1 calls
         0 ms  DoLinkOutputFilesMatch                     1 calls
         0 ms  ComputeReferenceCLInput                    1 calls
         0 ms  PrepareForRun                              1 calls
         0 ms  PreBuildEvent                              1 calls
         0 ms  MakeDirsForMidl                            1 calls
+        0 ms  _SelectedFiles                             1 calls
         0 ms  _BscMake                                   1 calls
-        0 ms  _Appverifier                               1 calls
-        0 ms  AfterBuildGenerateSourcesEvent             1 calls
-        0 ms  MakeDirsForLink                            1 calls
-        0 ms  BuildLink                                  1 calls
-        0 ms  ComputeCLOutputs                           1 calls
-        0 ms  FinalizeBuildStatus                        1 calls
-        0 ms  ResolveSDKReferences                       1 calls
-        0 ms  _ALink                                     1 calls
-        0 ms  ComputeCLGeneratedLinkInputs               1 calls
-        0 ms  ResolveProjectReferences                   1 calls
-        0 ms  _SplitProjectReferencesByFileExistence     1 calls
+        0 ms  AssignProjectConfiguration                 1 calls
         0 ms  BuildGenerateSourcesTraverse               1 calls
-        0 ms  AssignTargetPaths                          1 calls
-        0 ms  ComputeLegacyManifestEmbedding             1 calls
-        0 ms  _BuildGenerateSourcesAction                1 calls
-        0 ms  PrepareResourceNames                       1 calls
-        0 ms  BeforeClCompile                            1 calls
-        0 ms  SplitResourcesByCulture                    1 calls
-        0 ms  AfterBuildCompileEvent                     1 calls
-        0 ms  ComputeManifestInputsTargets               1 calls
-        0 ms  SetBuildDefaultEnvironmentVariables        1 calls
-        0 ms  GetCopyToOutputDirectoryItems              1 calls
         0 ms  _BuildLinkAction                           1 calls
         0 ms  BeforeResourceCompile                      1 calls
         0 ms  AfterMidl                                  1 calls
         0 ms  PreLinkEvent                               1 calls
         0 ms  _GenerateSatelliteAssemblyInputs           1 calls
+        0 ms  _ALink                                     1 calls
         0 ms  _Deploy                                    1 calls
-        0 ms  _PrepareForReferenceResolution             1 calls
-        0 ms  AfterLink                                  1 calls
-        0 ms  PrepareForBuild                            1 calls
-        0 ms  CppClean                                   1 calls
-        0 ms  AssignProjectConfiguration                 1 calls
-        0 ms  ComputeRCGeneratedLinkInputs               1 calls
-        0 ms  _PrepareForRebuild                         1 calls
-        0 ms  BuildGenerateSources                       1 calls
+        0 ms  BuildLink                                  1 calls
         0 ms  _BuildCompileAction                        1 calls
-        0 ms  GetInstalledSDKLocations                   1 calls
-        0 ms  ComputeMIDLGeneratedCompileInputs          1 calls
-        0 ms  PlatformPrepareForBuild                    1 calls
-        0 ms  ResolvedXDCMake                            1 calls
-        0 ms  BeforeBuildGenerateSources                 1 calls
+        0 ms  _PrepareForReferenceResolution             1 calls
+        0 ms  ComputeCLGeneratedLinkInputs               1 calls
         0 ms  Build                                      1 calls
+        0 ms  BeforeBuildGenerateSources                 1 calls
+        0 ms  ResolvedXDCMake                            1 calls
+        0 ms  _BuildGenerateSourcesAction                1 calls
+        0 ms  PlatformPrepareForBuild                    1 calls
         0 ms  MakeDirsForXdcMake                         1 calls
-       16 ms  ComputeLinkImportLibraryOutputsForClean    1 calls
-       16 ms  CoreCppClean                               1 calls
-       31 ms  _CheckForInvalidConfigurationAndPlatform   1 calls
-       78 ms  SetCABuildNativeEnvironmentVariables       1 calls
-      125 ms  ClCompile                                  1 calls
-      530 ms  Link                                       1 calls
+        0 ms  GetInstalledSDKLocations                   1 calls
+        0 ms  CppClean                                   1 calls
+        0 ms  _SplitProjectReferencesByFileExistence     1 calls
+        1 ms  CoreClean                                  1 calls
+        1 ms  BuildCompileTraverse                       1 calls
+        1 ms  _PrepareForBuild                           1 calls
+        1 ms  AssignTargetPaths                          1 calls
+        1 ms  ComputeLinkImportLibraryOutputsForClean    1 calls
+        1 ms  ComputeLegacyManifestEmbedding             1 calls
+        1 ms  FinalizeBuildStatus                        1 calls
+        1 ms  _PrepareForClean                           1 calls
+        1 ms  InitializeBuildStatus                      1 calls
+        1 ms  ComputeLinkSwitches                        1 calls
+        1 ms  MakeDirsForLink                            1 calls
+        1 ms  GetResolvedWinMD                           1 calls
+        1 ms  GetReferenceAssemblyPaths                  1 calls
+        1 ms  ComputeCLOutputs                           1 calls
+        2 ms  _CheckForInvalidConfigurationAndPlatform   1 calls
+        2 ms  PrepareForBuild                            1 calls
+        3 ms  GetCopyToOutputDirectoryItems              1 calls
+        5 ms  SetCABuildNativeEnvironmentVariables       1 calls
+        5 ms  CoreCppClean                               1 calls
+      108 ms  ClCompile                                  1 calls
+      212 ms  Link                                       1 calls
 
 Task Performance Summary:
-        0 ms  AssignTargetPath                           6 calls
         0 ms  RemoveDuplicates                           1 calls
         0 ms  SetEnvironmentVariable                     1 calls
         0 ms  FindUnderPath                              2 calls
@@ -2565,14 +2564,15 @@ Task Performance Summary:
         0 ms  Touch                                      2 calls
         0 ms  SetEnv                                     4 calls
         0 ms  AssignProjectConfiguration                 1 calls
-        0 ms  Delete                                     6 calls
         0 ms  AssignCulture                              1 calls
         0 ms  Message                                    3 calls
         0 ms  ReadLinesFromFile                          2 calls
-       16 ms  CppClean                                   1 calls
-      125 ms  CL                                         1 calls
-      530 ms  Link                                       1 calls
+        1 ms  AssignTargetPath                           6 calls
+        2 ms  Delete                                     6 calls
+        5 ms  CppClean                                   1 calls
+      108 ms  CL                                         1 calls
+      212 ms  Link                                       1 calls
 
 Build succeeded.
 
-Time Elapsed 00:00:00.79
+Time Elapsed 00:00:00.36
