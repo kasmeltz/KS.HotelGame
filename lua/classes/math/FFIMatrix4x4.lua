@@ -17,6 +17,12 @@ ffi.cdef[[
 	void matrix4x4Inverse(float *m1, float *m2);
 	void matrix4x4TransformCoordinate(float *v1, float *v2, float *m);
 	void matrix4x4Translation(float *m, float x, float y, float z);
+	void matrix4x4RotationYawPitchRoll(float *m, float yaw, float pitch, float roll);
+	void matrix4x4RotationQuaternion(float *q, float *m);
+	void matrix4x4LookAtLH(float *m, float *eye, float *target, float *up);
+	void matrix4x4PerspectiveFovRH(float *m, float fov, float aspect, float znear, float zfar);	
+	void matrix4x4Project(float *v1, float *v2, float *m, float x, float y, float width, float height, float minZ, float maxZ);
+	void quaternionRotationYawPitchRoll(float *q, float yaw, float pitch, float roll);	
 ]]
 
 local math3d = ffi.load 'math3d'
@@ -180,6 +186,40 @@ end
 function FFIMatrix4x4.translationInline(r, x, y, z)
 	math3d.matrix4x4Translation(r, x, y, z)
 end
+
+function FFIMatrix4x4.rotationYawPitchRoll(yaw, pitch, roll)
+	local r = FFIMatrix4x4.newMatrix()
+	math3d.matrix4x4RotationYawPitchRoll(r, yaw, pitch, roll)
+	return r
+end
+
+function FFIMatrix4x4.rotationYawPitchRollInline(r, yaw, pitch, roll)
+	math3d.matrix4x4RotationYawPitchRoll(r, yaw, pitch, roll)
+end
+
+function FFIMatrix4x4.lookAtLH(veye, vtarget, vup)
+	local r = FFIMatrix4x4.newMatrix()
+	math3d.matrix4x4LookAtLH(r, veye, vtarget, vup)
+	return r
+end
+
+function FFIMatrix4x4.lookAtLHInline(r, veye, vtarget, vup)
+	math3d.matrix4x4LookAtLH(r, veye, vtarget, vup)
+end
+
+function FFIMatrix4x4.perspectiveFovRH(fov, aspect, znear, zfar)
+	local r = FFIMatrix4x4.newMatrix()
+	math3d.matrix4x4PerspectiveFovRH(r, fov, aspect, znear, zfar)
+	return r
+end
+
+function FFIMatrix4x4.perspectiveFovRHInline(r, fov, aspect, znear, zfar)
+	math3d.matrix4x4PerspectiveFovRH(r, fov, aspect, znear, zfar)
+end	
+
+function FFIMatrix4x4.project(r, v, m, x, y, width, height, minZ, maxZ)
+	math3d.matrix4x4Project(r, v, m, x, y, width, height, minZ, maxZ)
+end	
 
 function FFIMatrix4x4.display(m, sep)
 	local sep = sep or ','

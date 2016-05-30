@@ -1,4 +1,5 @@
 #include "math3d.h"
+#include "stdlib.h"
 #include <math.h>
 
 extern "C"
@@ -279,6 +280,109 @@ extern "C"
 		m[14] = z;
 	}
 
+	DECLDIR void matrix4x4RotationYawPitchRoll(float *m, float yaw, float pitch, float roll)
+	{
+		float *q = (float*)malloc(16);
+		quaternionRotationYawPitchRoll(q, yaw, pitch, roll);
+		matrix4x4RotationQuaternion(q, m);
+		free(q);
+	}
+
+	DECLDIR void matrix4x4RotationQuaternion(float *q, float *m)
+	{
+		float q_x = q[0];
+		float q_y = q[1];
+		float q_z = q[2];
+		float q_w = q[3];
+
+		float xx = q_x * q_x;
+		float yy = q_y * q_y;
+		float zz = q_z * q_z;
+		float xy = q_x * q_y;
+		float zw = q_z * q_w;
+		float zx = q_z * q_x;
+		float yw = q_y * q_w;
+		float yz = q_y * q_z;
+		float xw = q_x * q_w;
+
+		m[0] = 1;
+		m[5] = 1;
+		m[10] = 1;
+		m[15] = 1;
+		
+		m[0] = 1.0f - (2.0f * (yy + zz));
+		m[1] = 2.0f * (xy + zw);
+		m[2] = 2.0f * (zx - yw);
+		m[4] = 2.0f * (xy - zw);
+		m[5] = 1.0f - (2.0f * (zz + xx));
+		m[6] = 2.0f * (yz + xw);
+		m[8] = 2.0f * (zx + yw);
+		m[9] = 2.0f * (yz - xw);
+		m[10] = 1.0f - (2.0f * (yy + xx));
+	}
+
+	DECLDIR void matrix4x4LookAtLH(float *m, float *eye, float *target, float *up)
+	{
+		float *xaxis = (float*)malloc(12);
+		float *yaxis = (float*)malloc(12);
+		float *zaxis = (float*)malloc(12);
+
+		vector3Subtract(zaxis, target, eye);
+		vector3Normalize(zaxis, zaxis);
+		vector3Cross(xaxis, up, zaxis);
+		vector3Normalize(xaxis, xaxis);
+		vector3Cross(yaxis, zaxis, xaxis);
+
+		m[0] = 1;
+		m[5] = 1;
+		m[10] = 1;
+		m[15] = 1;
+
+		m[0] = xaxis[0];
+		m[4] = xaxis[1];
+		m[8] = xaxis[2];
+
+		m[1] = yaxis[0];
+		m[5] = yaxis[1];
+		m[9] = yaxis[2];
+
+		m[2] = zaxis[0];
+		m[6] = zaxis[1];
+		m[10] = zaxis[2];
+
+		m[12] = -vector3Dot(xaxis, eye);
+		m[13] = -vector3Dot(yaxis, eye);
+		m[14] = -vector3Dot(zaxis, eye);
+
+		free(xaxis);
+		free(yaxis);
+		free(zaxis);
+	}
+
+	DECLDIR void matrix4x4PerspectiveFovRH(float *m, float fov, float aspect, float znear, float zfar)
+	{
+		float yScale = (float)(1.0f / tanf(fov * 0.5f));
+		float q = zfar / (znear - zfar);
+
+		m[0] = yScale / aspect;
+		m[5] = yScale;
+		m[10] = q;
+		m[11] = -1.0f;
+		m[14] = q * znear;
+	}
+
+	DECLDIR void matrix4x4Project(float *v1, float *v2, float *m, float x, float y, float width, float height, float minZ, float maxZ)
+	{		
+		matrix4x4TransformCoordinate(v1, v2, m);
+		float v1_x = v1[0];
+		float v1_y = v1[1];
+		float v1_z = v1[2];
+
+		v1[0] = ((1.0f + v1_x) * 0.5f * width) + x;
+		v1[1] = ((1.0f - v1_y) * 0.5f * height) + y;
+		v1[2] = (v1_z * (maxZ - minZ)) + minZ;
+	}
+
 	// VECTOR3
 	DECLDIR void vector3ScalarAdd(float *v1, float *v2, float v)
 	{
@@ -378,5 +482,25 @@ extern "C"
 		v1[0] = v2[0] / l;
 		v1[1] = v2[1] / l;
 		v1[2] = v2[2] / l;
+	}
+
+	// QUATERNION
+	DECLDIR void quaternionRotationYawPitchRoll(float *q, float yaw, float pitch, float roll)
+	{
+		float halfRoll = roll * 0.5f;
+		float halfPitch = pitch * 0.5f;
+		float halfYaw = yaw * 0.5f;
+
+		float sinRoll = sinf(halfRoll);
+		float cosRoll = cosf(halfRoll);
+		float sinPitch = sinf(halfPitch);
+		float cosPitch = cosf(halfPitch);
+		float sinYaw = sinf(halfYaw);
+		float cosYaw = cosf(halfYaw);
+
+		q[0] = (cosYaw * sinPitch * cosRoll) + (sinYaw * cosPitch * sinRoll);
+		q[1] = (sinYaw * cosPitch * cosRoll) - (cosYaw * sinPitch * sinRoll);
+		q[2] = (cosYaw * cosPitch * sinRoll) - (sinYaw * sinPitch * cosRoll);
+		q[3] = (cosYaw * cosPitch * cosRoll) + (sinYaw * sinPitch * sinRoll);
 	}
 }
