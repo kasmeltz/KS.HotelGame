@@ -23,6 +23,7 @@ function SpaceSimulatorScene:init(gameWorld)
 	mesh.rotation = FFIVector3.newVector()
 	mesh.position = FFIVector3.newVector()
 	FFIVector3.setValues(mesh.position, 0, 0, 0)
+	FFIVector3.setValues(mesh.rotation, 0, 0, 0)
 	
 	mesh.vertCount = 8
 	mesh.vertices = {}
@@ -80,10 +81,8 @@ function SpaceSimulatorScene:draw(dt)
 	FFIMatrix4x4.rotationYawPitchRollInline(rotationMatrix, mesh.rotation[0], mesh.rotation[1], mesh.rotation[2])
 	FFIMatrix4x4.translationInline(tranlsationMatrix, mesh.position[0], mesh.position[1], mesh.position[2])	
 	FFIMatrix4x4.multiplyInline(worldMatrix, rotationMatrix, tranlsationMatrix)
-	--FFIMatrix4x4.multiplyInline(worldViewProjectionMatrix, worldMatrix, viewMatrix)
-	--FFIMatrix4x4.multiplyInline(worldViewProjectionMatrix, worldViewProjectionMatrix, projectionMatrix)
-	FFIMatrix4x4.multiplyInline(worldViewProjectionMatrix, viewMatrix, projectionMatrix)
-	FFIMatrix4x4.multiplyInline(worldViewProjectionMatrix, worldViewProjectionMatrix, worldMatrix)
+	FFIMatrix4x4.multiplyInline(worldViewProjectionMatrix, worldMatrix, viewMatrix)
+	FFIMatrix4x4.multiplyInline(worldViewProjectionMatrix, worldViewProjectionMatrix, projectionMatrix)
 	for i = 0, mesh.vertCount - 1 do
 		FFIMatrix4x4.project(ssv1, mesh.vertices[i], worldViewProjectionMatrix, 0, 0, sw, sh, -10, 10)	
 		love.graphics.points(ssv1[0], ssv1[1])
@@ -91,12 +90,24 @@ function SpaceSimulatorScene:draw(dt)
 end
 
 function SpaceSimulatorScene:update(dt)
+	local mesh = self.mesh
+	
 	if love.keyboard.isDown('up') then
-		self.cameraPosition[2] = self.cameraPosition[2] - 10 * dt
+		mesh.rotation[1] = mesh.rotation[1] + 1 * dt
+		--self.cameraPosition[2] = self.cameraPosition[2] - 10 * dt
 	end
 	
 	if love.keyboard.isDown('down') then
-		self.cameraPosition[2]  = self.cameraPosition[2] + 10 * dt
+		mesh.rotation[1] = mesh.rotation[1] - 1 * dt
+		--self.cameraPosition[2]  = self.cameraPosition[2] + 10 * dt
+	end	
+	
+	if love.keyboard.isDown('left') then
+		mesh.rotation[0] = mesh.rotation[0] - 1 * dt
+	end
+	
+	if love.keyboard.isDown('right') then
+		mesh.rotation[0] = mesh.rotation[0] + 1 * dt
 	end
 end
 
