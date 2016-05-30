@@ -1,4 +1,5 @@
 #include "math3d.h"
+#include <math.h>
 
 extern "C"
 {
@@ -247,5 +248,105 @@ extern "C"
 		m1[13] = m1_13 / det;
 		m1[14] = m1_14 / det;
 		m1[15] = m1_15 / det;
+	}
+
+	DECLDIR void vector3ScalarAdd(float *v1, float *v2, float v)
+	{
+		v1[0] = v2[0] + v;
+		v1[1] = v2[1] + v;
+		v1[2] = v2[2] + v;
+	}
+
+	DECLDIR void vector3Add(float *v3, float *v1, float *v2)
+	{
+		v3[0] = v1[0] + v2[0];
+		v3[1] = v1[1] + v2[1];
+		v3[2] = v1[2] + v2[2];
+	}
+
+	DECLDIR void vector3ScalarSubtract(float *v1, float *v2, float v)
+	{
+		v1[0] = v2[0] - v;
+		v1[1] = v2[1] - v;
+		v1[2] = v2[2] - v;
+	}
+
+	DECLDIR void vector3Subtract(float *v3, float *v1, float *v2)
+	{
+		v3[0] = v1[0] - v2[0];
+		v3[1] = v1[1] - v2[1];
+		v3[2] = v1[2] - v2[2];
+	}
+
+	DECLDIR void vector3ScalarMultiply(float *v1, float *v2, float v)
+	{
+		v1[0] = v2[0] * v;
+		v1[1] = v2[1] * v;
+		v1[2] = v2[2] * v;
+	}
+
+	DECLDIR void vector3ScalarDivide(float *v1, float *v2, float v)
+	{
+		v1[0] = v2[0] / v;
+		v1[1] = v2[1] / v;
+		v1[2] = v2[2] / v;
+	}
+
+	DECLDIR float vector3Dot(float *v1, float *v2)
+	{
+		//a1b1 + a2b2 + a3b3
+		return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
+	}
+
+	DECLDIR void vector3Cross(float *v3, float *v1, float *v2)
+	{
+		//[a2 * b3 - a3 * b2, a3 * b1 - a1 * b3, a1 * b2 - a2 * b1]
+		float v1_x = v1[0];
+		float v1_y = v1[1];
+		float v1_z = v1[2];
+
+		float v2_x = v2[0];
+		float v2_y = v2[1];
+		float v2_z = v2[2];
+
+		v3[0] = v1_y * v2_z - v1_z * v2_y;
+		v3[1] = v1_z * v2_x - v1_x * v2_z;
+		v3[2] = v1_x * v2_y - v1_y * v2_x;
+	}
+	
+	DECLDIR float vector3LengthSquared(float *v1)
+	{
+		float x = v1[0];
+		float y = v1[1];
+		float z = v1[2];
+
+		return x * x + y * y + z * z;
+	}
+
+	DECLDIR float vector3Length(float *v1)
+	{
+		return sqrtf(vector3LengthSquared(v1));
+	}
+
+	DECLDIR float vector3DistanceSquared(float *v1, float *v2)
+	{
+		float dx = v1[0] - v2[0];
+		float dy = v1[1] - v2[1];
+		float dz = v1[2] - v2[2];
+
+		return dx * dx + dy * dy + dz * dz;
+	}
+
+	DECLDIR float vector3Distance(float *v1, float *v2)
+	{
+		return sqrtf(vector3DistanceSquared(v1, v2));
+	}
+
+	DECLDIR void vector3Normalize(float *v1, float *v2) 
+	{
+		float l = vector3Length(v2);
+		v1[0] = v2[0] / l;
+		v1[1] = v2[1] / l;
+		v1[2] = v2[2] / l;
 	}
 }

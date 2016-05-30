@@ -3,6 +3,23 @@ local FFIVector3 = class('FFIVector3')
 local instance = FFIVector3()
 
 local ffi = require 'ffi'
+ffi.cdef[[	
+	void vector3ScalarAdd(float *v1, float *v2, float v);
+	void vector3Add(float *v3, float *v1, float *v2);
+	void vector3ScalarSubtract(float *v1, float *v2, float v);
+	void vector3Subtract(float *v3, float *v1, float *v2);
+	void vector3ScalarMultiply(float *v1, float *v2, float v);
+	void vector3ScalarDivide(float *v1, float *v2, float v);
+	float vector3Dot(float *v1, float *v2);
+	void vector3Cross(float *v3, float *v1, float *v2);
+	float vector3LengthSquared(float *v1);
+	float vector3Length(float *v1);
+	float vector3DistanceSquared(float *v1, float *v2);
+	float vector3Distance(float *v1, float *v2);
+	void vector3Normalize(float *v1, float *v2);
+]]
+
+local math3d = ffi.load 'math3d'
 
 function FFIVector3.new() 
   error('Cannot instantiate FFIMatrix')
@@ -19,209 +36,126 @@ function FFIVector3:getInstance()
   return instance
 end
 
-function FFIVector3.newVector(x, y, z)
-	local ffiVector = ffi.new('double[?]', 3)
-	ffiVector[0] = x
-	ffiVector[1] = y
-	ffiVector[2] = z
+function FFIVector3.newVector()
+	local ffiVector = ffi.new('float[3]')
 	return ffiVector
 end
 
 function FFIVector3.copy(v)
-	return FFIVector3.newVector(v.x, v.y, v.z)
-end
-
---[[
-function FFIMatrix.setValue(m, r, c, v)
-	local d = m.data
-	local idx = r * m.columns + c
-	d[idx] = v
-end
-
-function FFIMatrix.scalarMultiply(m, v)
-	local result = FFIMatrix.newMatrix(m.rows, m.columns)		
-	local a = m.data
-	local b = result.data
-	local counter = m.rows * m.columns - 1
-	for idx = 0, counter do
-		b[idx] = a[idx] * v
-	end	
+	local result = FFIVector3.newVector()
+	ffi.copy(result, v, 12)
 	return result
 end
 
-function FFIMatrix.scalarMultiplyInline(m, v)
-	local a = m.data
-	local counter = m.rows * m.columns - 1
-	for idx = 0, counter do
-		a[idx] = a[idx] * v
-	end	
+function FFIVector3.setValues(v, x, y, z)
+	v[0] = x
+	v[1] = y
+	v[2] = z
 end
 
-function FFIMatrix.multiply(m1, m2)
-	local aRows, aCols = m1.rows, m1.columns
-	local bRows, bCols = m2.rows, m2.columns
-	
-	if aRows ~= bCols or aCols ~= bRows then
-		error('Matrix multiplication requires that #columns a = #rows b and #rows a = #columns b')
-	end
-
-	local a = m1.data
-	local b = m2.data	
-
-	local result = FFIMatrix.newMatrix(m1.rows, m2.columns)		
-	local d = result.data
-	local dRows, dCols = result.rows, result.columns
-	
-	for r = 0, aRows - 1 do
-		for c = 0, bCols - 1 do
-			local cell = 0
-			for i = 0, aCols - 1 do
-				local aIdx = r * aCols + i
-				local bIdx = i * bCols + c			
-				cell = cell + a[aIdx] * b[bIdx]
-			end
-			local mIdx = r * dCols + c
-			d[mIdx] = cell
-		end
-	end
-	
-	return result
+function FFIVector3.scalarAdd(v1, v)
+	local r = FFIVector3.newVector(0, 0, 0)
+	math3d.vector3ScalarAdd(r, v1, v)
+	return r
 end
 
-function FFIMatrix.scalarAdd(m, v)
-	local result = FFIMatrix.newMatrix(m.rows, m.columns)		
-	local a = m.data
-	local b = result.data
-	local counter = m.rows * m.columns - 1
-	for idx = 0, counter do
-		b[idx] = a[idx] + v
-	end	
-	return result
+function FFIVector3.scalarAddInline(r, v1, v)
+	math3d.vector3ScalarAdd(r, v1, v)
 end
 
-function FFIMatrix.scalarAddInline(m, v)
-	local a = m.data
-	local counter = m.rows * m.columns - 1
-	for idx = 0, counter do
-		a[idx] = a[idx] + v
-	end	
+function FFIVector3.add(v1, v2)
+	local r = FFIVector3.newVector(0, 0, 0)
+	math3d.vector3Add(r, v1, v2)
+	return r
 end
 
-function FFIMatrix.add(m1, m2)
-	local aRows, aCols = m1.rows, m1.columns
-	local bRows, bCols = m2.rows, m2.columns
-	
-	if aRows ~= bRows or aCols ~= bCols then
-		error('Matrix multiplication requires that #columns a = #rows b and #rows a = #columns b')
-	end
-
-	local a = m1.data
-	local b = m2.data	
-
-	local result = FFIMatrix.newMatrix(m1.rows, m1.columns)		
-	local c = result.data
-	
-	local counter = m1.rows * m1.columns - 1
-	for idx = 0, counter do
-		c[idx] = a[idx] + b[idx]
-	end	
-	
-	return result
+function FFIVector3.addInline(r, v1, v2)
+	math3d.vector3Add(r, v1, v2)
 end
 
-function FFIMatrix.addInline(m1, m2)
-		local aRows, aCols = m1.rows, m1.columns
-	local bRows, bCols = m2.rows, m2.columns
-	
-	if aRows ~= bRows or aCols ~= bCols then
-		error('Matrix multiplication requires that #columns a = #rows b and #rows a = #columns b')
-	end
-
-	local a = m1.data
-	local b = m2.data	
-	
-	local counter = m1.rows * m1.columns - 1
-	for idx = 0, counter do
-		a[idx] = a[idx] + b[idx]
-	end	
+function FFIVector3.scalarSubtract(v1, v)
+	local r = FFIVector3.newVector(0, 0, 0)
+	math3d.vector3ScalarSubtract(r, v1, v)
+	return r
 end
 
-function FFIMatrix.scalarSubtract(m, v)
-	local result = FFIMatrix.newMatrix(m.rows, m.columns)		
-	local a = m.data
-	local b = result.data
-	local counter = m.rows * m.columns - 1
-	for idx = 0, counter do
-		b[idx] = a[idx] - v
-	end	
-	return result
+function FFIVector3.scalarSubtractInline(r, v1, v)
+	math3d.vector3ScalarSubtract(r, v1, v)
 end
 
-function FFIMatrix.scalarSubtractInline(m, v)
-	local a = m.data
-	local counter = m.rows * m.columns - 1
-	for idx = 0, counter do
-		a[idx] = a[idx] - v
-	end	
+function FFIVector3.subtract(v1, v2)
+	local r = FFIVector3.newVector(0, 0, 0)
+	math3d.vector3Subtract(r, v1, v2)
+	return r
 end
 
-function FFIMatrix.subtract(m1, m2)
-	local aRows, aCols = m1.rows, m1.columns
-	local bRows, bCols = m2.rows, m2.columns
-	
-	if aRows ~= bRows or aCols ~= bCols then
-		error('Matrix multiplication requires that #columns a = #rows b and #rows a = #columns b')
-	end
-
-	local a = m1.data
-	local b = m2.data	
-
-	local result = FFIMatrix.newMatrix(m1.rows, m1.columns)		
-	local c = result.data
-	
-	local counter = m1.rows * m1.columns - 1
-	for idx = 0, counter do
-		c[idx] = a[idx] - b[idx]
-	end	
-	
-	return result
+function FFIVector3.subtractInline(r, v1, v2)
+	math3d.vector3Subtract(r, v1, v2)
 end
 
-function FFIMatrix.subtractInline(m1, m2)
-		local aRows, aCols = m1.rows, m1.columns
-	local bRows, bCols = m2.rows, m2.columns
-	
-	if aRows ~= bRows or aCols ~= bCols then
-		error('Matrix multiplication requires that #columns a = #rows b and #rows a = #columns b')
-	end
-
-	local a = m1.data
-	local b = m2.data	
-	
-	local counter = m1.rows * m1.columns - 1
-	for idx = 0, counter do
-		a[idx] = a[idx] - b[idx]
-	end	
+function FFIVector3.scalarMultiply(v1, v)
+	local r = FFIVector3.newVector(0, 0, 0)
+	math3d.vector3ScalarMultiply(r, v1, v)
+	return r
 end
 
-function FFIMatrix.display(m, sep)
-	local sep = sep or ' '
-	local d = m.data
-	print('[')
-	local idx = 0
-	for r = 0, m.rows - 1 do
-		local s = ''
-		s = s .. '['
-		for c = 0, m.columns - 2 do
-			s = s .. d[idx] .. sep
-			idx = idx + 1
-		end
-		s = s .. d[idx] .. ']'
-		idx = idx + 1
-		print(s)
-	end	
-	print(']')
+function FFIVector3.scalarMultiplyInline(r, v1, v)
+	math3d.vector3ScalarMultiply(r, v1, v)
 end
-]]
+
+function FFIVector3.scalarDivide(v1, v)
+	local r = FFIVector3.newVector(0, 0, 0)
+	math3d.vector3ScalarDivide(r, v1, v)
+	return r
+end
+
+function FFIVector3.scalarDivideInline(r, v1, v)
+	math3d.vector3ScalarDivide(r, v1, v)
+end
+
+function FFIVector3.dot(v1, v2)
+	return math3d.vector3Dot(v1, v2)
+end
+
+function FFIVector3.cross(v1, v2)
+	local r = FFIVector3.newVector(0, 0, 0)
+	math3d.vector3Cross(r, v1, v2)
+	return r
+end
+
+function FFIVector3.crossInline(r, v1, v2)
+	math3d.vector3Cross(r, v1, v2)
+end
+
+function FFIVector3.lengthSquared(v1)
+	return math3d.vector3LengthSquared(v1)
+end
+
+function FFIVector3.length(v1)
+	return math3d.vector3Length(v1)
+end
+
+function FFIVector3.distanceSquared(v1, v2)
+	return math3d.vector3DistanceSquared(v1, v2)
+end
+
+function FFIVector3.distance(v1, v2)
+	return math3d.vector3Distance(v1, v2)
+end
+
+function FFIVector3.normalize(v1)
+	local r = FFIVector3.newVector(0, 0, 0)
+	math3d.vector3Normalize(r, v1)
+	return r
+end
+
+function FFIVector3.normalizeInline(r, v1)
+	math3d.vector3Normalize(r, v1)
+end
+
+function FFIVector3.display(v, sep)
+	local sep = sep or ','
+	print('[' .. v[0] .. sep .. v[1] .. sep .. v[2] .. ']')
+end
 
 return FFIVector3

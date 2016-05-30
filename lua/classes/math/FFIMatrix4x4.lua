@@ -158,7 +158,7 @@ function FFIMatrix4x4.inverseInline(r, m1)
 end
 
 function FFIMatrix4x4.display(m, sep)
-	local sep = sep or ' '
+	local sep = sep or ','
 	print('[')
 	print('[' .. m[0] .. sep .. m[1] .. sep .. m[2].. sep .. m[3] .. ']')
 	print('[' .. m[4] .. sep .. m[5] .. sep .. m[6].. sep .. m[7] .. ']')
