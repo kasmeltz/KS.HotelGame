@@ -1,499 +1,417 @@
 #include "math3d.h"
 #include "stdlib.h"
+#include "stdio.h"
 #include <math.h>
 
 extern "C"
 {
 	// MATRIX 4x4
-	DECLDIR void matrix4x4Identity(float *m1)
+	DECLDIR void matrix4x4Zero(matrix4x4 *m)
 	{
-		m1[0] = m1[5] = m1[10] = m1[15] = 1;
-		m1[1] = m1[2] = m1[3] = m1[4] = m1[6] = m1[7] = m1[8] = m1[9] = m1[11] = m1[12] = m1[13] = m1[14] = 0;
+		m->M11 = m->M12 = m->M13 = m->M14 = 0;
+		m->M21 = m->M22 = m->M23 = m->M24 = 0;
+		m->M31 = m->M32 = m->M33 = m->M34 = 0;
+		m->M41 = m->M42 = m->M43 = m->M44 = 0;
 	}
 
-	DECLDIR void matrix4x4Transpose(float *m1, float *m2)
+	DECLDIR void matrix4x4Identity(matrix4x4 *m)
 	{
-		float m2_0 = m2[0];
-		float m2_1 = m2[1];
-		float m2_2 = m2[2];
-		float m2_3 = m2[3];
-		float m2_4 = m2[4];
-		float m2_5 = m2[5];
-		float m2_6 = m2[6];
-		float m2_7 = m2[7];
-		float m2_8 = m2[8];
-		float m2_9 = m2[9];
-		float m2_10 = m2[10];
-		float m2_11 = m2[11];
-		float m2_12 = m2[12];
-		float m2_13 = m2[13];
-		float m2_14 = m2[14];
-		float m2_15 = m2[15];
-
-		m1[0] = m2_0; m1[1] = m2_4; m1[2] = m2_8; m1[3] = m2_12;
-		m1[4] = m2_1; m1[5] = m2_5; m1[6] = m2_9; m1[7] = m2_13;
-		m1[8] = m2_2; m1[9] = m2_6; m1[10] = m2_10; m1[11] = m2_14;
-		m1[12] = m2_3; m1[13] = m2_7; m1[14] = m2_11; m1[15] = m2_15;
+		m->M11 = m->M22 = m->M33 = m->M44 = 1;
+		m->M12 = m->M13 = m->M14 = m->M21 = m->M23 = m->M24 = m->M31 = m->M32 = m->M34 = m->M41 = m->M42 = m->M43 = 0;			
 	}
 
-	DECLDIR void matrix4x4ScalarMultiply(float *m1, float *m2, float v)
+	DECLDIR void matrix4x4Transpose(matrix4x4 *result, matrix4x4 *m)
 	{
-		m1[0] = m2[0] * v;
-		m1[1] = m2[1] * v;
-		m1[2] = m2[2] * v;
-		m1[3] = m2[3] * v;
-		m1[4] = m2[4] * v;
-		m1[5] = m2[5] * v;
-		m1[6] = m2[6] * v;
-		m1[7] = m2[7] * v;
-		m1[8] = m2[8] * v;
-		m1[9] = m2[9] * v;
-		m1[10] = m2[10] * v;
-		m1[11] = m2[11] * v;
-		m1[12] = m2[12] * v;
-		m1[13] = m2[13] * v;
-		m1[14] = m2[14] * v;
-		m1[15] = m2[15] * v;
+		result->M11 = m->M11; 
+		result->M12 = m->M21; 
+		result->M13 = m->M31; 
+		result->M14 = m->M41;
+		result->M21 = m->M12; 
+		result->M22 = m->M22; 
+		result->M23 = m->M32; 
+		result->M24 = m->M42;
+		result->M31 = m->M13; 
+		result->M32 = m->M23; 
+		result->M33 = m->M33; 
+		result->M34 = m->M43;
+		result->M41 = m->M14; 
+		result->M42 = m->M24; 
+		result->M43 = m->M34; 
+		result->M44 = m->M44;
 	}
 
-	DECLDIR void matrix4x4Multiply(float *m3, float *m1, float *m2)
+	DECLDIR void matrix4x4ScalarMultiply(matrix4x4 *result, matrix4x4 *left, float right)
 	{
-		float m1_0 = m1[0];
-		float m1_1 = m1[1];
-		float m1_2 = m1[2];
-		float m1_3 = m1[3];
-		float m1_4 = m1[4];
-		float m1_5 = m1[5];
-		float m1_6 = m1[6];
-		float m1_7 = m1[7];
-		float m1_8 = m1[8];
-		float m1_9 = m1[9];
-		float m1_10 = m1[10];
-		float m1_11 = m1[11];
-		float m1_12 = m1[12];
-		float m1_13 = m1[13];
-		float m1_14 = m1[14];
-		float m1_15 = m1[15];
-
-		float m2_0 = m2[0];
-		float m2_1 = m2[1];
-		float m2_2 = m2[2];
-		float m2_3 = m2[3];
-		float m2_4 = m2[4];
-		float m2_5 = m2[5];
-		float m2_6 = m2[6];
-		float m2_7 = m2[7];
-		float m2_8 = m2[8];
-		float m2_9 = m2[9];
-		float m2_10 = m2[10];
-		float m2_11 = m2[11];
-		float m2_12 = m2[12];
-		float m2_13 = m2[13];
-		float m2_14 = m2[14];
-		float m2_15 = m2[15];
-
-		m3[0] = m1_0 * m2_0 + m1_1 * m2_4 + m1_2 * m2_8 + m1_3 * m2_12;
-		m3[1] = m1_0 * m2_1 + m1_1 * m2_5 + m1_2 * m2_9 + m1_3 * m2_13;
-		m3[2] = m1_0 * m2_2 + m1_1 * m2_6 + m1_2 * m2_10 + m1_3 * m2_14;
-		m3[3] = m1_0 * m2_3 + m1_1 * m2_7 + m1_2 * m2_11 + m1_3 * m2_15;
-
-		m3[4] = m1_4 * m2_0 + m1_5 * m2_4 + m1_6 * m2_8 + m1_7 * m2_12;
-		m3[5] = m1_4 * m2_1 + m1_5 * m2_5 + m1_6 * m2_9 + m1_7 * m2_13;
-		m3[6] = m1_4 * m2_2 + m1_5 * m2_6 + m1_6 * m2_10 + m1_7 * m2_14;
-		m3[7] = m1_4 * m2_3 + m1_5 * m2_7 + m1_6 * m2_11 + m1_7 * m2_15;
-
-		m3[8] = m1_8 * m2_0 + m1_9 * m2_4 + m1_10 * m2_8 + m1_11 * m2_12;
-		m3[9] = m1_8 * m2_1 + m1_9 * m2_5 + m1_10 * m2_9 + m1_11 * m2_13;
-		m3[10] = m1_8 * m2_2 + m1_9 * m2_6 + m1_10 * m2_10 + m1_11 * m2_14;
-		m3[11] = m1_8 * m2_3 + m1_9 * m2_7 + m1_10 * m2_11 + m1_11 * m2_15;
-
-		m3[12] = m1_12 * m2_0 + m1_13 * m2_4 + m1_14 * m2_8 + m1_15 * m2_12;
-		m3[13] = m1_12 * m2_1 + m1_13 * m2_5 + m1_14 * m2_9 + m1_15 * m2_13;
-		m3[14] = m1_12 * m2_2 + m1_13 * m2_6 + m1_14 * m2_10 + m1_15 * m2_14;
-		m3[15] = m1_12 * m2_3 + m1_13 * m2_7 + m1_14 * m2_11 + m1_15 * m2_15;
+		result->M11 = left->M11 * right;
+		result->M12 = left->M12 * right;
+		result->M13 = left->M13 * right;
+		result->M14 = left->M14 * right;
+		result->M21 = left->M21 * right;
+		result->M22 = left->M22 * right;
+		result->M23 = left->M23 * right;
+		result->M24 = left->M24 * right;
+		result->M31 = left->M31 * right;
+		result->M32 = left->M32 * right;
+		result->M33 = left->M33 * right;
+		result->M34 = left->M34 * right;
+		result->M41 = left->M41 * right;
+		result->M42 = left->M42 * right;
+		result->M43 = left->M43 * right;
+		result->M44 = left->M44 * right;
 	}
 
-	DECLDIR void matrix4x4ScalarAdd(float *m1, float *m2, float v)
+	DECLDIR void matrix4x4Multiply(matrix4x4 *result, matrix4x4 *left, matrix4x4 *right)
 	{
-		m1[0] = m2[0] + v;
-		m1[1] = m2[1] + v;
-		m1[2] = m2[2] + v;
-		m1[3] = m2[3] + v;
-		m1[4] = m2[4] + v;
-		m1[5] = m2[5] + v;
-		m1[6] = m2[6] + v;
-		m1[7] = m2[7] + v;
-		m1[8] = m2[8] + v;
-		m1[9] = m2[9] + v;
-		m1[10] = m2[10] + v;
-		m1[11] = m2[11] + v;
-		m1[12] = m2[12] + v;
-		m1[13] = m2[13] + v;
-		m1[14] = m2[14] + v;
-		m1[15] = m2[15] + v;
+		result->M11 = (left->M11 * right->M11) + (left->M12 * right->M21) + (left->M13 * right->M31) + (left->M14 * right->M41);
+		result->M12 = (left->M11 * right->M12) + (left->M12 * right->M22) + (left->M13 * right->M32) + (left->M14 * right->M42);
+		result->M13 = (left->M11 * right->M13) + (left->M12 * right->M23) + (left->M13 * right->M33) + (left->M14 * right->M43);
+		result->M14 = (left->M11 * right->M14) + (left->M12 * right->M24) + (left->M13 * right->M34) + (left->M14 * right->M44);
+		result->M21 = (left->M21 * right->M11) + (left->M22 * right->M21) + (left->M23 * right->M31) + (left->M24 * right->M41);
+		result->M22 = (left->M21 * right->M12) + (left->M22 * right->M22) + (left->M23 * right->M32) + (left->M24 * right->M42);
+		result->M23 = (left->M21 * right->M13) + (left->M22 * right->M23) + (left->M23 * right->M33) + (left->M24 * right->M43);
+		result->M24 = (left->M21 * right->M14) + (left->M22 * right->M24) + (left->M23 * right->M34) + (left->M24 * right->M44);
+		result->M31 = (left->M31 * right->M11) + (left->M32 * right->M21) + (left->M33 * right->M31) + (left->M34 * right->M41);
+		result->M32 = (left->M31 * right->M12) + (left->M32 * right->M22) + (left->M33 * right->M32) + (left->M34 * right->M42);
+		result->M33 = (left->M31 * right->M13) + (left->M32 * right->M23) + (left->M33 * right->M33) + (left->M34 * right->M43);
+		result->M34 = (left->M31 * right->M14) + (left->M32 * right->M24) + (left->M33 * right->M34) + (left->M34 * right->M44);
+		result->M41 = (left->M41 * right->M11) + (left->M42 * right->M21) + (left->M43 * right->M31) + (left->M44 * right->M41);
+		result->M42 = (left->M41 * right->M12) + (left->M42 * right->M22) + (left->M43 * right->M32) + (left->M44 * right->M42);
+		result->M43 = (left->M41 * right->M13) + (left->M42 * right->M23) + (left->M43 * right->M33) + (left->M44 * right->M43);
+		result->M44 = (left->M41 * right->M14) + (left->M42 * right->M24) + (left->M43 * right->M34) + (left->M44 * right->M44);
+	}	
+
+	DECLDIR void matrix4x4Add(matrix4x4 *result, matrix4x4 *left, matrix4x4 *right)
+	{
+		result->M11 = left->M11 + right->M11;
+		result->M12 = left->M12 + right->M12;
+		result->M13 = left->M13 + right->M13;
+		result->M14 = left->M14 + right->M14;
+		result->M21 = left->M21 + right->M21;
+		result->M22 = left->M22 + right->M22;
+		result->M23 = left->M23 + right->M23;
+		result->M24 = left->M24 + right->M24;
+		result->M31 = left->M31 + right->M31;
+		result->M32 = left->M32 + right->M32;
+		result->M33 = left->M33 + right->M33;
+		result->M34 = left->M34 + right->M34;
+		result->M41 = left->M41 + right->M41;
+		result->M42 = left->M42 + right->M42;
+		result->M43 = left->M43 + right->M43;
+		result->M44 = left->M44 + right->M44;
 	}
 
-	DECLDIR void matrix4x4Add(float *m3, float *m1, float *m2)
+	DECLDIR void matrix4x4Subtract(matrix4x4 *result, matrix4x4 *left, matrix4x4 *right)
 	{
-		m3[0] = m1[0] + m2[0];
-		m3[1] = m1[1] + m2[1];
-		m3[2] = m1[2] + m2[2];
-		m3[3] = m1[3] + m2[3];
-		m3[4] = m1[4] + m2[4];
-		m3[5] = m1[5] + m2[5];
-		m3[6] = m1[6] + m2[6];
-		m3[7] = m1[7] + m2[7];
-		m3[8] = m1[8] + m2[8];
-		m3[9] = m1[9] + m2[9];
-		m3[10] = m1[10] + m2[10];
-		m3[11] = m1[11] + m2[11];
-		m3[12] = m1[12] + m2[12];
-		m3[13] = m1[13] + m2[13];
-		m3[14] = m1[14] + m2[14];
-		m3[15] = m1[15] + m2[15];
+		result->M11 = left->M11 - right->M11;
+		result->M12 = left->M12 - right->M12;
+		result->M13 = left->M13 - right->M13;
+		result->M14 = left->M14 - right->M14;
+		result->M21 = left->M21 - right->M21;
+		result->M22 = left->M22 - right->M22;
+		result->M23 = left->M23 - right->M23;
+		result->M24 = left->M24 - right->M24;
+		result->M31 = left->M31 - right->M31;
+		result->M32 = left->M32 - right->M32;
+		result->M33 = left->M33 - right->M33;
+		result->M34 = left->M34 - right->M34;
+		result->M41 = left->M41 - right->M41;
+		result->M42 = left->M42 - right->M42;
+		result->M43 = left->M43 - right->M43;
+		result->M44 = left->M44 - right->M44;
 	}
 
-	DECLDIR void matrix4x4ScalarSubtract(float *m1, float *m2, float v)
+	DECLDIR void matrix4x4Inverse(matrix4x4 *result, matrix4x4 *value)
 	{
-		m1[0] = m2[0] - v;
-		m1[1] = m2[1] - v;
-		m1[2] = m2[2] - v;
-		m1[3] = m2[3] - v;
-		m1[4] = m2[4] - v;
-		m1[5] = m2[5] - v;
-		m1[6] = m2[6] - v;
-		m1[7] = m2[7] - v;
-		m1[8] = m2[8] - v;
-		m1[9] = m2[9] - v;
-		m1[10] = m2[10] - v;
-		m1[11] = m2[11] - v;
-		m1[12] = m2[12] - v;
-		m1[13] = m2[13] - v;
-		m1[14] = m2[14] - v;
-		m1[15] = m2[15] - v;
+		float b0 = (value->M31 * value->M42) - (value->M32 * value->M41);
+		float b1 = (value->M31 * value->M43) - (value->M33 * value->M41);
+		float b2 = (value->M34 * value->M41) - (value->M31 * value->M44);
+		float b3 = (value->M32 * value->M43) - (value->M33 * value->M42);
+		float b4 = (value->M34 * value->M42) - (value->M32 * value->M44);
+		float b5 = (value->M33 * value->M44) - (value->M34 * value->M43);
+
+		float d11 = value->M22 * b5 + value->M23 * b4 + value->M24 * b3;
+		float d12 = value->M21 * b5 + value->M23 * b2 + value->M24 * b1;
+		float d13 = value->M21 * -b4 + value->M22 * b2 + value->M24 * b0;
+		float d14 = value->M21 * b3 + value->M22 * -b1 + value->M23 * b0;
+
+		float det = value->M11 * d11 - value->M12 * d12 + value->M13 * d13 - value->M14 * d14;
+		if (fabs(det) == 0.0f)
+		{
+			matrix4x4Zero(result);
+			return;
+		}
+
+		det = 1.0f / det;
+
+		float a0 = (value->M11 * value->M22) - (value->M12 * value->M21);
+		float a1 = (value->M11 * value->M23) - (value->M13 * value->M21);
+		float a2 = (value->M14 * value->M21) - (value->M11 * value->M24);
+		float a3 = (value->M12 * value->M23) - (value->M13 * value->M22);
+		float a4 = (value->M14 * value->M22) - (value->M12 * value->M24);
+		float a5 = (value->M13 * value->M24) - (value->M14 * value->M23);
+
+		float d21 = value->M12 * b5 + value->M13 * b4 + value->M14 * b3;
+		float d22 = value->M11 * b5 + value->M13 * b2 + value->M14 * b1;
+		float d23 = value->M11 * -b4 + value->M12 * b2 + value->M14 * b0;
+		float d24 = value->M11 * b3 + value->M12 * -b1 + value->M13 * b0;
+
+		float d31 = value->M42 * a5 + value->M43 * a4 + value->M44 * a3;
+		float d32 = value->M41 * a5 + value->M43 * a2 + value->M44 * a1;
+		float d33 = value->M41 * -a4 + value->M42 * a2 + value->M44 * a0;
+		float d34 = value->M41 * a3 + value->M42 * -a1 + value->M43 * a0;
+
+		float d41 = value->M32 * a5 + value->M33 * a4 + value->M34 * a3;
+		float d42 = value->M31 * a5 + value->M33 * a2 + value->M34 * a1;
+		float d43 = value->M31 * -a4 + value->M32 * a2 + value->M34 * a0;
+		float d44 = value->M31 * a3 + value->M32 * -a1 + value->M33 * a0;
+
+		result->M11 = +d11 * det; result->M12 = -d21 * det; result->M13 = +d31 * det; result->M14 = -d41 * det;
+		result->M21 = -d12 * det; result->M22 = +d22 * det; result->M23 = -d32 * det; result->M24 = +d42 * det;
+		result->M31 = +d13 * det; result->M32 = -d23 * det; result->M33 = +d33 * det; result->M34 = -d43 * det;
+		result->M41 = -d14 * det; result->M42 = +d24 * det; result->M43 = -d34 * det; result->M44 = +d44 * det;		
 	}
 
-	DECLDIR void matrix4x4Subtract(float *m3, float *m1, float *m2)
+	DECLDIR void matrix4x4TransformCoordinate(vector3 *result, vector3 *coordinate, matrix4x4 *transform)
 	{
-		m3[0] = m1[0] - m2[0];
-		m3[1] = m1[1] - m2[1];
-		m3[2] = m1[2] - m2[2];
-		m3[3] = m1[3] - m2[3];
-		m3[4] = m1[4] - m2[4];
-		m3[5] = m1[5] - m2[5];
-		m3[6] = m1[6] - m2[6];
-		m3[7] = m1[7] - m2[7];
-		m3[8] = m1[8] - m2[8];
-		m3[9] = m1[9] - m2[9];
-		m3[10] = m1[10] - m2[10];
-		m3[11] = m1[11] - m2[11];
-		m3[12] = m1[12] - m2[12];
-		m3[13] = m1[13] - m2[13];
-		m3[14] = m1[14] - m2[14];
-		m3[15] = m1[15] - m2[15];
+		//printf("============= matrix4x4TransformCoordinate =============\n");
+		//printf("coordinate: %f,%f,%f\n", coordinate->X, coordinate->Y, coordinate->Z);
+
+		float x = (coordinate->X * transform->M11) + (coordinate->Y * transform->M21) + (coordinate->Z * transform->M31) + transform->M41;
+		float y = (coordinate->X * transform->M12) + (coordinate->Y * transform->M22) + (coordinate->Z * transform->M32) + transform->M42;
+		float z = (coordinate->X * transform->M13) + (coordinate->Y * transform->M23) + (coordinate->Z * transform->M33) + transform->M43;
+		float w = 1.0f / ((coordinate->X * transform->M14) + (coordinate->Y * transform->M24) + (coordinate->Z * transform->M34) + transform->M44);
+
+		result->X = x * w;
+		result->Y = y * w;
+		result->Z = z * w;
+
+		//printf("result: %f,%f,%f\n", result->X, result->Y, result->Z);
+		//printf("============= matrix4x4TransformCoordinate =============\n");
 	}
 
-	DECLDIR void matrix4x4Inverse(float *m1, float *m2)
+	DECLDIR void matrix4x4Translation(matrix4x4 *result, vector3 *vector)
 	{
-		float m2_0 = m2[0];
-		float m2_1 = m2[1];
-		float m2_2 = m2[2];
-		float m2_3 = m2[3];
-		float m2_4 = m2[4];
-		float m2_5 = m2[5];
-		float m2_6 = m2[6];
-		float m2_7 = m2[7];
-		float m2_8 = m2[8];
-		float m2_9 = m2[9];
-		float m2_10 = m2[10];
-		float m2_11 = m2[11];
-		float m2_12 = m2[12];
-		float m2_13 = m2[13];
-		float m2_14 = m2[14];
-		float m2_15 = m2[15];
-
-		float m1_0 = m2_5* m2_10* m2_15 - m2_5* m2_14* m2_11 - m2_6* m2_9* m2_15 + m2_6* m2_13* m2_11 + m2_7* m2_9* m2_14 - m2_7* m2_13* m2_10;
-		float m1_1 = -m2_1* m2_10* m2_15 + m2_1* m2_14* m2_11 + m2_2* m2_9* m2_15 - m2_2* m2_13* m2_11 - m2_3* m2_9* m2_14 + m2_3* m2_13* m2_10;
-		float m1_2 = m2_1* m2_6* m2_15 - m2_1* m2_14* m2_7 - m2_2* m2_5* m2_15 + m2_2* m2_13* m2_7 + m2_3* m2_5* m2_14 - m2_3* m2_13* m2_6;
-		float m1_3 = -m2_1* m2_6* m2_11 + m2_1* m2_10* m2_7 + m2_2* m2_5* m2_11 - m2_2* m2_9* m2_7 - m2_3* m2_5* m2_10 + m2_3* m2_9* m2_6;
-
-		float m1_4 = -m2_4* m2_10* m2_15 + m2_4* m2_14* m2_11 + m2_6* m2_8* m2_15 - m2_6* m2_12* m2_11 - m2_7* m2_8* m2_14 + m2_7* m2_12* m2_10;
-		float m1_5 = m2_0* m2_10* m2_15 - m2_0* m2_14* m2_11 - m2_2* m2_8* m2_15 + m2_2* m2_12* m2_11 + m2_3* m2_8* m2_14 - m2_3* m2_12* m2_10;
-		float m1_6 = -m2_0* m2_6* m2_15 + m2_0* m2_14* m2_7 + m2_2* m2_4* m2_15 - m2_2* m2_12* m2_7 - m2_3* m2_4* m2_14 + m2_3* m2_12* m2_6;
-		float m1_7 = m2_0* m2_6* m2_11 - m2_0* m2_10* m2_7 - m2_2* m2_4* m2_11 + m2_2* m2_8* m2_7 + m2_3* m2_4* m2_10 - m2_3* m2_8* m2_6;
-
-		float m1_8 = m2_4* m2_9* m2_15 - m2_4* m2_13* m2_11 - m2_5* m2_8* m2_15 + m2_5* m2_12* m2_11 + m2_7* m2_8* m2_13 - m2_7* m2_12* m2_9;
-		float m1_9 = -m2_0* m2_9* m2_15 + m2_0* m2_13* m2_11 + m2_1* m2_8* m2_15 - m2_1* m2_12* m2_11 - m2_3* m2_8* m2_13 + m2_3* m2_12* m2_9;
-		float m1_10 = m2_0* m2_5* m2_15 - m2_0* m2_13* m2_7 - m2_1* m2_4* m2_15 + m2_1* m2_12* m2_7 + m2_3* m2_4* m2_13 - m2_3* m2_12* m2_5;
-		float m1_11 = -m2_0* m2_5* m2_11 + m2_0* m2_9* m2_7 + m2_1* m2_4* m2_11 - m2_1* m2_8* m2_7 - m2_3* m2_4* m2_9 + m2_3* m2_8* m2_5;
-
-		float m1_12 = -m2_4* m2_9* m2_14 + m2_4* m2_13* m2_10 + m2_5* m2_8* m2_14 - m2_5* m2_12* m2_10 - m2_6* m2_8* m2_13 + m2_6* m2_12* m2_9;
-		float m1_13 = m2_0* m2_9* m2_14 - m2_0* m2_13* m2_10 - m2_1* m2_8* m2_14 + m2_1* m2_12* m2_10 + m2_2* m2_8* m2_13 - m2_2* m2_12* m2_9;
-		float m1_14 = -m2_0* m2_5* m2_14 + m2_0* m2_13* m2_6 + m2_1* m2_4* m2_14 - m2_1* m2_12* m2_6 - m2_2* m2_4* m2_13 + m2_2* m2_12* m2_5;
-		float m1_15 = m2_0* m2_5* m2_10 - m2_0* m2_9* m2_6 - m2_1* m2_4* m2_10 + m2_1* m2_8* m2_6 + m2_2* m2_4* m2_9 - m2_2* m2_8* m2_5;
-
-		float det = m2_0* m1_0 + m2_1* m1_4 + m2_2* m1_8 + m2_3* m1_12;
-
-		m1[0] = m1_0 / det;
-		m1[1] = m1_1 / det;
-		m1[2] = m1_2 / det;
-		m1[3] = m1_3 / det;
-		m1[4] = m1_4 / det;
-		m1[5] = m1_5 / det;
-		m1[6] = m1_6 / det;
-		m1[7] = m1_7 / det;
-		m1[8] = m1_8 / det;
-		m1[9] = m1_9 / det;
-		m1[10] = m1_10 / det;
-		m1[11] = m1_11 / det;
-		m1[12] = m1_12 / det;
-		m1[13] = m1_13 / det;
-		m1[14] = m1_14 / det;
-		m1[15] = m1_15 / det;
+		matrix4x4Identity(result);
+		result->M41 = vector->X;
+		result->M42 = vector->Y;
+		result->M43 = vector->Z;
 	}
 
-	DECLDIR void matrix4x4TransformCoordinate(float *v1, float *v2, float *m)
+	DECLDIR void matrix4x4RotationYawPitchRoll(matrix4x4 *result, vector3 *vector)
 	{
-		float v2_x = v2[0];
-		float v2_y = v2[1];
-		float v2_z = v2[2];
-
-		float x = (v2_x * m[0]) + (v2_y * m[4]) + (v2_z * m[8]) + m[12];
-		float y = (v2_x * m[1]) + (v2_y * m[5]) + (v2_z * m[9]) + m[13];
-		float z = (v2_x * m[2]) + (v2_y * m[6]) + (v2_z * m[10]) + m[14];
-		float w = 1 / ((v2_x * m[3]) + (v2_y * m[7]) + (v2_z * m[11]) + m[15]);
-
-		v1[0] = x * w;
-		v1[1] = y * w;
-		v1[2] = z * w;
+		quaternion q;
+		quaternionRotationYawPitchRoll(&q, vector);
+		matrix4x4RotationQuaternion(result, &q);
 	}
 
-	DECLDIR void matrix4x4Translation(float *m, float x, float y, float z)
+	DECLDIR void matrix4x4RotationQuaternion(matrix4x4 *result, quaternion *rotation)
 	{
-		m[0] = 1;
-		m[5] = 1;
-		m[10] = 1;
-		m[15] = 1;
+		float xx = rotation->X * rotation->X;
+		float yy = rotation->Y * rotation->Y;
+		float zz = rotation->Z * rotation->Z;
+		float xy = rotation->X * rotation->Y;
+		float zw = rotation->Z * rotation->W;
+		float zx = rotation->Z * rotation->X;
+		float yw = rotation->Y * rotation->W;
+		float yz = rotation->Y * rotation->Z;
+		float xw = rotation->X * rotation->W;
 
-		m[12] = x;
-		m[13] = y;
-		m[14] = z;
+		matrix4x4Identity(result);
+		result->M11 = 1.0f - (2.0f * (yy + zz));
+		result->M12 = 2.0f * (xy + zw);
+		result->M13 = 2.0f * (zx - yw);
+		result->M21 = 2.0f * (xy - zw);
+		result->M22 = 1.0f - (2.0f * (zz + xx));
+		result->M23 = 2.0f * (yz + xw);
+		result->M31 = 2.0f * (zx + yw);
+		result->M32 = 2.0f * (yz - xw);
+		result->M33 = 1.0f - (2.0f * (yy + xx));
 	}
 
-	DECLDIR void matrix4x4RotationYawPitchRoll(float *m, float yaw, float pitch, float roll)
-	{
-		float *q = (float*)malloc(16);
-		quaternionRotationYawPitchRoll(q, yaw, pitch, roll);
-		matrix4x4RotationQuaternion(q, m);
-		free(q);
-	}
+	DECLDIR void matrix4x4LookAtLH(matrix4x4 *result, vector3 *eye, vector3 *target, vector3 *up)
+	{	
+		//printf("============= matrix4x4LookAtLH =============\n");
+		//printf("eye: %f,%f,%f\n", eye->X, eye->Y, eye->Z);
+		//printf("target: %f,%f,%f\n", target->X, target->Y, target->Z);
+		//printf("up: %f,%f,%f\n", up->X, up->Y, up->Z);
 
-	DECLDIR void matrix4x4RotationQuaternion(float *q, float *m)
-	{
-		float q_x = q[0];
-		float q_y = q[1];
-		float q_z = q[2];
-		float q_w = q[3];
-
-		float xx = q_x * q_x;
-		float yy = q_y * q_y;
-		float zz = q_z * q_z;
-		float xy = q_x * q_y;
-		float zw = q_z * q_w;
-		float zx = q_z * q_x;
-		float yw = q_y * q_w;
-		float yz = q_y * q_z;
-		float xw = q_x * q_w;
-
-		m[0] = 1;
-		m[5] = 1;
-		m[10] = 1;
-		m[15] = 1;
+		vector3 xaxis, yaxis, zaxis;		
+		vector3Subtract(&zaxis, target, eye);
 		
-		m[0] = 1.0f - (2.0f * (yy + zz));
-		m[1] = 2.0f * (xy + zw);
-		m[2] = 2.0f * (zx - yw);
-		m[4] = 2.0f * (xy - zw);
-		m[5] = 1.0f - (2.0f * (zz + xx));
-		m[6] = 2.0f * (yz + xw);
-		m[8] = 2.0f * (zx + yw);
-		m[9] = 2.0f * (yz - xw);
-		m[10] = 1.0f - (2.0f * (yy + xx));
+		//printf("zaxis after subtract: %f,%f,%f\n", zaxis.X, zaxis.Y, zaxis.Z);
+
+		vector3Normalize(&zaxis, &zaxis);
+
+		//printf("zaxis after normalize: %f,%f,%f\n", zaxis.X, zaxis.Y, zaxis.Z);
+
+		vector3Cross(&xaxis, up, &zaxis);
+
+		//printf("xaxis after cross: %f,%f,%f\n", xaxis.X, xaxis.Y, xaxis.Z);
+
+		vector3Normalize(&xaxis, &xaxis);
+
+		//printf("xaxis after normalize: %f,%f,%f\n", xaxis.X, xaxis.Y, xaxis.Z);
+
+		vector3Cross(&yaxis, &zaxis, &xaxis);
+
+		//printf("yaxis after cross: %f,%f,%f\n", yaxis.X, yaxis.Y, yaxis.Z);
+		
+		matrix4x4Identity(result);
+
+		result->M11 = xaxis.X; result->M21 = xaxis.Y; result->M31 = xaxis.Z;
+		result->M12 = yaxis.X; result->M22 = yaxis.Y; result->M32 = yaxis.Z;
+		result->M13 = zaxis.X; result->M23 = zaxis.Y; result->M33 = zaxis.Z;
+
+		result->M41 = -vector3Dot(&xaxis, eye);
+		result->M42 = -vector3Dot(&yaxis, eye);
+		result->M43 = -vector3Dot(&zaxis, eye);		
+
+		//printf("result :\n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n",
+			//result->M11, result->M12, result->M13, result->M14,
+			//result->M21, result->M22, result->M23, result->M24,
+			//result->M31, result->M32, result->M33, result->M34,
+			//result->M41, result->M42, result->M43, result->M44);
+
+		//printf("============= matrix4x4LookAtLH =============\n");
 	}
 
-	DECLDIR void matrix4x4LookAtLH(float *m, float *eye, float *target, float *up)
+	DECLDIR void matrix4x4PerspectiveFovRH(matrix4x4 *result, float fov, float aspect, float znear, float zfar)
 	{
-		float *xaxis = (float*)malloc(12);
-		float *yaxis = (float*)malloc(12);
-		float *zaxis = (float*)malloc(12);
+		//printf("============= matrix4x4PerspectiveFovRH =============\n");
+		//printf("fov: %f\n", fov);
+		//printf("aspect: %f\n", aspect);
+		//printf("znear: %f\n", znear);
+		//printf("zfar: %f\n", zfar);
 
-		vector3Subtract(zaxis, target, eye);
-		vector3Normalize(zaxis, zaxis);
-		vector3Cross(xaxis, up, zaxis);
-		vector3Normalize(xaxis, xaxis);
-		vector3Cross(yaxis, zaxis, xaxis);
-
-		m[0] = 1;
-		m[5] = 1;
-		m[10] = 1;
-		m[15] = 1;
-
-		m[0] = xaxis[0];
-		m[4] = xaxis[1];
-		m[8] = xaxis[2];
-
-		m[1] = yaxis[0];
-		m[5] = yaxis[1];
-		m[9] = yaxis[2];
-
-		m[2] = zaxis[0];
-		m[6] = zaxis[1];
-		m[10] = zaxis[2];
-
-		m[12] = -vector3Dot(xaxis, eye);
-		m[13] = -vector3Dot(yaxis, eye);
-		m[14] = -vector3Dot(zaxis, eye);
-
-		free(xaxis);
-		free(yaxis);
-		free(zaxis);
-	}
-
-	DECLDIR void matrix4x4PerspectiveFovRH(float *m, float fov, float aspect, float znear, float zfar)
-	{
 		float yScale = (float)(1.0f / tanf(fov * 0.5f));
 		float q = zfar / (znear - zfar);
 
-		m[0] = yScale / aspect;
-		m[5] = yScale;
-		m[10] = q;
-		m[11] = -1.0f;
-		m[14] = q * znear;
+		result->M11 = yScale / aspect;
+		result->M22 = yScale;
+		result->M33 = q;
+		result->M34 = -1.0f;
+		result->M43 = q * znear;
+
+		//printf("result: \n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n",
+			//result->M11, result->M12, result->M13, result->M14,
+			//result->M21, result->M22, result->M23, result->M24,
+			//result->M31, result->M32, result->M33, result->M34,
+			//result->M41, result->M42, result->M43, result->M44);
+
+		//printf("============= matrix4x4PerspectiveFovRH =============\n");
 	}
 
-	DECLDIR void matrix4x4Project(float *v1, float *v2, float *m, float x, float y, float width, float height, float minZ, float maxZ)
-	{		
-		matrix4x4TransformCoordinate(v1, v2, m);
-		float v1_x = v1[0];
-		float v1_y = v1[1];
-		float v1_z = v1[2];
-		
-		//var x = point.X * bmp.PixelWidth + bmp.PixelWidth / 2.0f;
-		//var y = -point.Y * bmp.PixelHeight + bmp.PixelHeight / 2.0f;
-		//v1[0] = v1_x * width + width / 2;
-		//v1[1] = -v1_y * height + height / 2;
-		v1[0] = ((1.0f + v1_x) * 0.5f * width) + x;
-		v1[1] = ((1.0f - v1_y) * 0.5f * height) + y;
-		v1[2] = (v1_z * (maxZ - minZ)) + minZ;
+	DECLDIR void matrix4x4Project(vector3 *result, vector3 *vin, matrix4x4 *m, float x, float y, float width, float height, float minZ, float maxZ)
+	{	
+		//printf("============= matrix4x4Project =============\n");
+
+		vector3 v;
+		matrix4x4TransformCoordinate(&v, vin, m);
+
+		//printf("v after transform: %f,%f,%f\n", v.X, v.Y, v.Z);
+
+		result->X = ((1.0f + v.X) * 0.5f * width) + x;
+		result->Y = ((1.0f - v.Y) * 0.5f * height) + y;
+		result->Z = (v.Z * (maxZ - minZ)) + minZ;
+
+		//printf("result: %f,%f,%f\n", result->X, result->Y, result->Z);
+
+		//printf("============= matrix4x4Project =============\n");
 	}
 
 	// VECTOR3
-	DECLDIR void vector3ScalarAdd(float *v1, float *v2, float v)
+	DECLDIR void vector3ScalarAdd(vector3 *result, vector3 *v1, float v)
 	{
-		v1[0] = v2[0] + v;
-		v1[1] = v2[1] + v;
-		v1[2] = v2[2] + v;
+		result->X = v1->X + v;
+		result->Y = v1->Y + v;
+		result->Z = v1->Z + v;		
 	}
 
-	DECLDIR void vector3Add(float *v3, float *v1, float *v2)
+	DECLDIR void vector3Add(vector3 *result, vector3 *v1, vector3 *v2)
 	{
-		v3[0] = v1[0] + v2[0];
-		v3[1] = v1[1] + v2[1];
-		v3[2] = v1[2] + v2[2];
+		result->X = v1->X + v2->X;
+		result->Y = v1->Y + v2->Y;
+		result->Z = v1->Z + v2->Z;
 	}
 
-	DECLDIR void vector3ScalarSubtract(float *v1, float *v2, float v)
+	DECLDIR void vector3ScalarSubtract(vector3 *result, vector3 *v1, float v)
 	{
-		v1[0] = v2[0] - v;
-		v1[1] = v2[1] - v;
-		v1[2] = v2[2] - v;
+		result->X = v1->X - v;
+		result->Y = v1->Y - v;
+		result->Z = v1->Z - v;
 	}
 
-	DECLDIR void vector3Subtract(float *v3, float *v1, float *v2)
+	DECLDIR void vector3Subtract(vector3 *result, vector3 *v1, vector3 *v2)
 	{
-		v3[0] = v1[0] - v2[0];
-		v3[1] = v1[1] - v2[1];
-		v3[2] = v1[2] - v2[2];
+		result->X = v1->X - v2->X;
+		result->Y = v1->Y - v2->Y;
+		result->Z = v1->Z - v2->Z;
 	}
 
-	DECLDIR void vector3ScalarMultiply(float *v1, float *v2, float v)
+	DECLDIR void vector3ScalarMultiply(vector3 *result, vector3 *v1, float v)
 	{
-		v1[0] = v2[0] * v;
-		v1[1] = v2[1] * v;
-		v1[2] = v2[2] * v;
+		result->X = v1->X * v;
+		result->Y = v1->Y * v;
+		result->Z = v1->Z * v;
 	}
 
-	DECLDIR void vector3ScalarDivide(float *v1, float *v2, float v)
+	DECLDIR void vector3ScalarDivide(vector3 *result, vector3 *v1, float v)
 	{
-		v1[0] = v2[0] / v;
-		v1[1] = v2[1] / v;
-		v1[2] = v2[2] / v;
+		result->X = v1->X / v;
+		result->Y = v1->Y / v;
+		result->Z = v1->Z / v;
 	}
 
-	DECLDIR float vector3Dot(float *v1, float *v2)
+	DECLDIR float vector3Dot(vector3 *v1, vector3 *v2)
 	{
-		//a1b1 + a2b2 + a3b3
-		return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
+		return v1->X * v2->X + v1->Y * v2->Y + v1->Z * v2->Z;
 	}
 
-	DECLDIR void vector3Cross(float *v3, float *v1, float *v2)
+	DECLDIR void vector3Cross(vector3 *result, vector3 *v1, vector3 *v2)
 	{
-		//[a2 * b3 - a3 * b2, a3 * b1 - a1 * b3, a1 * b2 - a2 * b1]
-		float v1_x = v1[0];
-		float v1_y = v1[1];
-		float v1_z = v1[2];
-
-		float v2_x = v2[0];
-		float v2_y = v2[1];
-		float v2_z = v2[2];
-
-		v3[0] = v1_y * v2_z - v1_z * v2_y;
-		v3[1] = v1_z * v2_x - v1_x * v2_z;
-		v3[2] = v1_x * v2_y - v1_y * v2_x;
+		result->X = v1->Y * v2->Z - v1->Z * v2->Y;
+		result->Y = v1->Z * v2->X - v1->X * v2->Z;
+		result->Z = v1->X * v2->Y - v1->Y * v2->X;
 	}
 	
-	DECLDIR float vector3LengthSquared(float *v1)
+	DECLDIR float vector3LengthSquared(vector3 *v1)
 	{
-		float x = v1[0];
-		float y = v1[1];
-		float z = v1[2];
-
-		return x * x + y * y + z * z;
+		return v1->X * v1->X + v1->Y * v1->Y + v1->Z * v1->Z;
 	}
 
-	DECLDIR float vector3Length(float *v1)
+	DECLDIR float vector3Length(vector3 *v1)
 	{
 		return sqrtf(vector3LengthSquared(v1));
 	}
 
-	DECLDIR float vector3DistanceSquared(float *v1, float *v2)
+	DECLDIR float vector3DistanceSquared(vector3 *v1, vector3 *v2)
 	{
-		float dx = v1[0] - v2[0];
-		float dy = v1[1] - v2[1];
-		float dz = v1[2] - v2[2];
+		float dx = v1->X - v2->X;
+		float dy = v1->Y - v2->Y;
+		float dz = v1->Z - v2->Z;
 
 		return dx * dx + dy * dy + dz * dz;
 	}
 
-	DECLDIR float vector3Distance(float *v1, float *v2)
+	DECLDIR float vector3Distance(vector3 *v1, vector3 *v2)
 	{
 		return sqrtf(vector3DistanceSquared(v1, v2));
 	}
 
-	DECLDIR void vector3Normalize(float *v1, float *v2) 
+	DECLDIR void vector3Normalize(vector3 *result, vector3 *v1)
 	{
-		float l = vector3Length(v2);
-		v1[0] = v2[0] / l;
-		v1[1] = v2[1] / l;
-		v1[2] = v2[2] / l;
+		float l = vector3Length(v1);
+		result->X = v1->X / l;
+		result->Y = v1->Y / l;
+		result->Z = v1->Z / l;
 	}
 
 	// QUATERNION
-	DECLDIR void quaternionRotationYawPitchRoll(float *q, float yaw, float pitch, float roll)
+	DECLDIR void quaternionRotationYawPitchRoll(quaternion *q, vector3 *v)
 	{
-		float halfRoll = roll * 0.5f;
-		float halfPitch = pitch * 0.5f;
-		float halfYaw = yaw * 0.5f;
+		float halfYaw = v->X * 0.5f;
+		float halfPitch = v->Y * 0.5f;
+		float halfRoll = v->Z * 0.5f;			
 
 		float sinRoll = sinf(halfRoll);
 		float cosRoll = cosf(halfRoll);
@@ -502,9 +420,9 @@ extern "C"
 		float sinYaw = sinf(halfYaw);
 		float cosYaw = cosf(halfYaw);
 
-		q[0] = (cosYaw * sinPitch * cosRoll) + (sinYaw * cosPitch * sinRoll);
-		q[1] = (sinYaw * cosPitch * cosRoll) - (cosYaw * sinPitch * sinRoll);
-		q[2] = (cosYaw * cosPitch * sinRoll) - (sinYaw * sinPitch * cosRoll);
-		q[3] = (cosYaw * cosPitch * cosRoll) + (sinYaw * sinPitch * sinRoll);
+		q->X = (cosYaw * sinPitch * cosRoll) + (sinYaw * cosPitch * sinRoll);
+		q->Y = (sinYaw * cosPitch * cosRoll) - (cosYaw * sinPitch * sinRoll);
+		q->Z = (cosYaw * cosPitch * sinRoll) - (sinYaw * sinPitch * cosRoll);
+		q->W = (cosYaw * cosPitch * cosRoll) + (sinYaw * sinPitch * sinRoll);
 	}
 }
