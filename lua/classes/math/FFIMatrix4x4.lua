@@ -58,8 +58,7 @@ function FFIMatrix4x4:getInstance()
 end
 
 function FFIMatrix4x4.newMatrix()
-	local m = ffi.new('matrix4x4')
-	return m
+	return ffi.new('matrix4x4')
 end
 
 function FFIMatrix4x4.copy(m)

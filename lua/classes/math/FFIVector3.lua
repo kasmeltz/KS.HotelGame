@@ -42,8 +42,7 @@ function FFIVector3:getInstance()
 end
 
 function FFIVector3.newVector()
-	local ffiVector = ffi.new('vector3')
-	return ffiVector
+	return ffi.new('vector3')
 end
 
 function FFIVector3.copy(v)

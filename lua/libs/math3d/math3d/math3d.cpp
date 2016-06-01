@@ -425,4 +425,17 @@ extern "C"
 		q->Z = (cosYaw * cosPitch * sinRoll) - (sinYaw * sinPitch * cosRoll);
 		q->W = (cosYaw * cosPitch * cosRoll) + (sinYaw * sinPitch * sinRoll);
 	}
+
+	DECLDIR void render(rgba_pixel *buffer, uint32_t width, uint32_t height)
+	{
+		int idx = 0;
+		for (int y = 0;y < height;y++)
+		{
+			for (int x = 0;x < width;x++)
+			{
+				buffer[idx].r = 255;
+				buffer[idx++].a = 255;
+			}
+		}
+	}
 }

@@ -1,5 +1,7 @@
-#ifndef _DLL_TUTORIAL_H_
-#define _DLL_TUTORIAL_H_
+#ifndef _DLL_MATH3D_H_
+#define _DLL_MATH3D_H_
+
+#include "stdint.h"
 
 #define DECLDIR __declspec(dllexport)
 
@@ -23,6 +25,25 @@ extern "C"
 		float M31; float M32; float M33; float M34;
 		float M41; float M42; float M43; float M44;
 	} matrix4x4;
+
+	typedef struct
+	{
+		uint32_t A; uint32_t B; uint32_t C;
+	} face;
+
+	typedef struct
+	{
+		uint32_t vertCount;
+		vector3 position;
+		vector3 rotation;
+		vector3 *vertices;
+		face *faces;
+	} mesh;
+
+	typedef struct 
+	{ 
+		uint8_t r, g, b, a; 
+	} rgba_pixel;
 
 	// MATRIX4
 	DECLDIR void matrix4x4Identity(matrix4x4 *m);
@@ -57,6 +78,9 @@ extern "C"
 	DECLDIR float vector3DistanceSquared(vector3 *v1, vector3 *v2);
 	DECLDIR float vector3Distance(vector3 *v1, vector3 *v2);
 	DECLDIR void vector3Normalize(vector3 *result, vector3 *v1);
+
+	// RENDERER
+	DECLDIR void render(rgba_pixel *buffer, uint32_t width, uint32_t height);
 }
 
 #endif
