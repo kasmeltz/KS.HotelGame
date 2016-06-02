@@ -19,16 +19,12 @@ ffi.cdef[[
 	typedef struct
 	{
 		uint32_t vertCount;
-		uint32_t faceCount;
-		vector3 *vertices;
-		face *faces;			
-	} vertexData;
-	
-	typedef struct
-	{		
 		vector3 position;
 		vector3 rotation;
-		vertexData vertData;
+		vector3 *vertices;
+		vector3 *normals;
+		vector3 *middles;
+		face *faces;		
 	} mesh;
 ]]
 
@@ -51,40 +47,57 @@ end
 
 function FFIMesh.newMesh(vertCount, faceCount)
 	local ffiMesh = {}	
-	--local ffiMesh = ffi.new('mesh')
 	ffiMesh.position = FFIVector3.newVector()
 	ffiMesh.rotation = FFIVector3.newVector()
-	ffiMesh.vertData = {}	
-	--ffiMesh.vertData = ffi.new('vertexData')
-	ffiMesh.vertData.vertCount = vertCount
-	ffiMesh.vertData.vertices = ffi.new('vector3[?]', vertCount)	
+	ffiMesh.vertCount = vertCount
+	ffiMesh.vertices = ffi.new('vector3[?]', vertCount)	
 	for i = 0, vertCount - 1 do
-		ffiMesh.vertData.vertices[i] = FFIVector3.newVector()
+		ffiMesh.vertices[i] = FFIVector3.newVector()
 	end
-	ffiMesh.vertData.faces = ffi.new('face[?]', faceCount)
-	ffiMesh.vertData.faceCount = faceCount
+	
+	ffiMesh.middles = ffi.new('vector3[?]', faceCount)	
+	ffiMesh.normals = ffi.new('vector3[?]', faceCount)	
+	ffiMesh.faces = ffi.new('face[?]', faceCount)	
+	ffiMesh.faceCount = faceCount		
+	ffiMesh.triangles = {}
 	for i = 0, faceCount - 1 do
-		ffiMesh.vertData.faces[i] = ffi.new('face')		
-	end
-
-	--[[
-	print('ffiMesh', ffiMesh)
-	print('position', ffiMesh.position)
-	print('rotation', ffiMesh.rotation)
-	print('vertData', ffiMesh.vertData)
-	print('vertCount', ffiMesh.vertData.vertCount)	
-	print('vertices', ffiMesh.vertData.vertices)	
-	for i = 0, vertCount - 1 do
-		print('vertices[' .. i .. ']', ffiMesh.vertData.vertices[i])
-	end
-	print('faceCount', ffiMesh.vertData.faceCount)	
-	print('faces   ', ffiMesh.vertData.faces)
-	for i = 0, faceCount - 1 do
-		print('faces[' .. i .. ']', ffiMesh.vertData.faces[i])
-	end
-	]]
+		ffiMesh.faces[i] = ffi.new('face')
+		ffiMesh.normals[i] = FFIVector3.newVector()
+		ffiMesh.middles[i] = FFIVector3.newVector()		
+		ffiMesh.triangles[i] = { FFIVector3.newVector(), FFIVector3.newVector(), FFIVector3.newVector(), true }		
+	end	
 	
 	return ffiMesh
+end
+
+function FFIMesh.calculateMiddlesAndNormals(mesh)
+	for i = 0, mesh.faceCount - 1 do
+		local face = mesh.faces[i]
+		local middle = mesh.middles[i]
+		local v1 = mesh.vertices[face.A]
+		local v2 = mesh.vertices[face.B]
+		local v3 = mesh.vertices[face.C]
+					
+		FFIVector3.addInline(middle, v1, v2)
+		FFIVector3.addInline(middle, middle, v3)
+		FFIVector3.scalarDivideInline(middle, middle, 3)
+	end
+
+	local v2v1 = FFIVector3.newVector()
+	local v3v1 = FFIVector3.newVector()
+		
+	for i = 0, mesh.faceCount - 1 do
+		local face = mesh.faces[i]		
+		local normal = mesh.normals[i]
+		local v1 = mesh.vertices[face.A]
+		local v2 = mesh.vertices[face.B]
+		local v3 = mesh.vertices[face.C]		
+		FFIVector3.subtractInline(v2v1, v2, v1)
+		FFIVector3.subtractInline(v3v1, v3, v1)			
+		FFIVector3.crossInline(normal, v2v1, v3v1)
+		FFIVector3.normalizeInline(normal, normal)		
+		FFIVector3.display(normal)			
+	end
 end
 
 return FFIMesh
