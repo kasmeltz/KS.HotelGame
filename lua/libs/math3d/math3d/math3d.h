@@ -34,9 +34,12 @@ extern "C"
 	typedef struct
 	{
 		uint32_t vertCount;
+		uint32_t faceCount;
 		vector3 position;
 		vector3 rotation;
 		vector3 *vertices;
+		vector3 *normals;
+		vector3 *middles;
 		face *faces;
 	} mesh;
 
@@ -60,6 +63,7 @@ extern "C"
 	DECLDIR void matrix4x4LookAtLH(matrix4x4 *result, vector3 *eye, vector3 *target, vector3 *up);
 	DECLDIR void matrix4x4PerspectiveFovRH(matrix4x4 *result, float fov, float aspect, float znear, float zfar);
 	DECLDIR void matrix4x4Project(vector3 *result, vector3 *v, matrix4x4 *m, float x, float y, float width, float height, float minZ, float maxZ);
+	DECLDIR void matrix4x4TransformNormal(vector3 *result, vector3 *normal, matrix4x4 *transform);
 
 	// QUATERNION	
 	DECLDIR void quaternionRotationYawPitchRoll(quaternion *q, vector3 *v);

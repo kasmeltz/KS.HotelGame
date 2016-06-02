@@ -38,6 +38,7 @@ ffi.cdef[[
 	void matrix4x4LookAtLH(matrix4x4 *resultp, vector3 *eyep, vector3 *targetp, vector3 *upp);
 	void matrix4x4PerspectiveFovRH(matrix4x4 *resultp, float fov, float aspect, float znear, float zfar);
 	void matrix4x4Project(vector3 *resultp, vector3 *vp, matrix4x4 *mp, float x, float y, float width, float height, float minZ, float maxZ);
+	void matrix4x4TransformNormal(vector3 *result, vector3 *normal, matrix4x4 *transform);
 ]]
 
 local math3d = ffi.load 'math3d'
@@ -186,6 +187,16 @@ end
 function FFIMatrix4x4.project(r, v, m, x, y, width, height, minZ, maxZ)
 	math3d.matrix4x4Project(r, v, m, x, y, width, height, minZ, maxZ)	
 end	
+
+function FFIMatrix4x4.transformNormal(n, m)
+	local r = FFIVector3.newVector()
+	math3d.matrix4x4TransformNormal(r, n, m)
+	return r
+end
+
+function FFIMatrix4x4.transformNormalInline(r, n, m)
+	math3d.matrix4x4TransformNormal(r, n, m)
+end
 
 function FFIMatrix4x4.display(m, sep)
 	local sep = sep or ','

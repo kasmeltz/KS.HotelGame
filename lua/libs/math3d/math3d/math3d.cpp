@@ -135,6 +135,7 @@ extern "C"
 		float d14 = value->M21 * b3 + value->M22 * -b1 + value->M23 * b0;
 
 		float det = value->M11 * d11 - value->M12 * d12 + value->M13 * d13 - value->M14 * d14;
+		
 		if (fabs(det) == 0.0f)
 		{
 			matrix4x4Zero(result);
@@ -173,9 +174,6 @@ extern "C"
 
 	DECLDIR void matrix4x4TransformCoordinate(vector3 *result, vector3 *coordinate, matrix4x4 *transform)
 	{
-		//printf("============= matrix4x4TransformCoordinate =============\n");
-		//printf("coordinate: %f,%f,%f\n", coordinate->X, coordinate->Y, coordinate->Z);
-
 		float x = (coordinate->X * transform->M11) + (coordinate->Y * transform->M21) + (coordinate->Z * transform->M31) + transform->M41;
 		float y = (coordinate->X * transform->M12) + (coordinate->Y * transform->M22) + (coordinate->Z * transform->M32) + transform->M42;
 		float z = (coordinate->X * transform->M13) + (coordinate->Y * transform->M23) + (coordinate->Z * transform->M33) + transform->M43;
@@ -184,9 +182,6 @@ extern "C"
 		result->X = x * w;
 		result->Y = y * w;
 		result->Z = z * w;
-
-		//printf("result: %f,%f,%f\n", result->X, result->Y, result->Z);
-		//printf("============= matrix4x4TransformCoordinate =============\n");
 	}
 
 	DECLDIR void matrix4x4Translation(matrix4x4 *result, vector3 *vector)
@@ -230,32 +225,12 @@ extern "C"
 
 	DECLDIR void matrix4x4LookAtLH(matrix4x4 *result, vector3 *eye, vector3 *target, vector3 *up)
 	{	
-		//printf("============= matrix4x4LookAtLH =============\n");
-		//printf("eye: %f,%f,%f\n", eye->X, eye->Y, eye->Z);
-		//printf("target: %f,%f,%f\n", target->X, target->Y, target->Z);
-		//printf("up: %f,%f,%f\n", up->X, up->Y, up->Z);
-
 		vector3 xaxis, yaxis, zaxis;		
-		vector3Subtract(&zaxis, target, eye);
-		
-		//printf("zaxis after subtract: %f,%f,%f\n", zaxis.X, zaxis.Y, zaxis.Z);
-
+		vector3Subtract(&zaxis, target, eye);		
 		vector3Normalize(&zaxis, &zaxis);
-
-		//printf("zaxis after normalize: %f,%f,%f\n", zaxis.X, zaxis.Y, zaxis.Z);
-
 		vector3Cross(&xaxis, up, &zaxis);
-
-		//printf("xaxis after cross: %f,%f,%f\n", xaxis.X, xaxis.Y, xaxis.Z);
-
 		vector3Normalize(&xaxis, &xaxis);
-
-		//printf("xaxis after normalize: %f,%f,%f\n", xaxis.X, xaxis.Y, xaxis.Z);
-
 		vector3Cross(&yaxis, &zaxis, &xaxis);
-
-		//printf("yaxis after cross: %f,%f,%f\n", yaxis.X, yaxis.Y, yaxis.Z);
-		
 		matrix4x4Identity(result);
 
 		result->M11 = xaxis.X; result->M21 = xaxis.Y; result->M31 = xaxis.Z;
@@ -265,24 +240,10 @@ extern "C"
 		result->M41 = -vector3Dot(&xaxis, eye);
 		result->M42 = -vector3Dot(&yaxis, eye);
 		result->M43 = -vector3Dot(&zaxis, eye);		
-
-		//printf("result :\n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n",
-			//result->M11, result->M12, result->M13, result->M14,
-			//result->M21, result->M22, result->M23, result->M24,
-			//result->M31, result->M32, result->M33, result->M34,
-			//result->M41, result->M42, result->M43, result->M44);
-
-		//printf("============= matrix4x4LookAtLH =============\n");
 	}
 
 	DECLDIR void matrix4x4PerspectiveFovRH(matrix4x4 *result, float fov, float aspect, float znear, float zfar)
 	{
-		//printf("============= matrix4x4PerspectiveFovRH =============\n");
-		//printf("fov: %f\n", fov);
-		//printf("aspect: %f\n", aspect);
-		//printf("znear: %f\n", znear);
-		//printf("zfar: %f\n", zfar);
-
 		float yScale = (float)(1.0f / tanf(fov * 0.5f));
 		float q = zfar / (znear - zfar);
 
@@ -291,32 +252,23 @@ extern "C"
 		result->M33 = q;
 		result->M34 = -1.0f;
 		result->M43 = q * znear;
-
-		//printf("result: \n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n%f,%f,%f,%f\n",
-			//result->M11, result->M12, result->M13, result->M14,
-			//result->M21, result->M22, result->M23, result->M24,
-			//result->M31, result->M32, result->M33, result->M34,
-			//result->M41, result->M42, result->M43, result->M44);
-
-		//printf("============= matrix4x4PerspectiveFovRH =============\n");
 	}
 
 	DECLDIR void matrix4x4Project(vector3 *result, vector3 *vin, matrix4x4 *m, float x, float y, float width, float height, float minZ, float maxZ)
 	{	
-		//printf("============= matrix4x4Project =============\n");
-
 		vector3 v;
 		matrix4x4TransformCoordinate(&v, vin, m);
-
-		//printf("v after transform: %f,%f,%f\n", v.X, v.Y, v.Z);
 
 		result->X = ((1.0f + v.X) * 0.5f * width) + x;
 		result->Y = ((1.0f - v.Y) * 0.5f * height) + y;
 		result->Z = (v.Z * (maxZ - minZ)) + minZ;
+	}
 
-		//printf("result: %f,%f,%f\n", result->X, result->Y, result->Z);
-
-		//printf("============= matrix4x4Project =============\n");
+	DECLDIR void matrix4x4TransformNormal(vector3 *result, vector3 *normal, matrix4x4 *transform)
+	{
+		result->X = (normal->X * transform->M11) + (normal->Y * transform->M21) + (normal->Z * transform->M31);
+		result->Y = (normal->X * transform->M12) + (normal->Y * transform->M22) + (normal->Z * transform->M32);
+		result->Z = (normal->X * transform->M13) + (normal->Y * transform->M23) + (normal->Z * transform->M33);
 	}
 
 	// VECTOR3

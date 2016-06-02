@@ -96,7 +96,7 @@ function FFIMesh.calculateMiddlesAndNormals(mesh)
 		FFIVector3.subtractInline(v3v1, v3, v1)			
 		FFIVector3.crossInline(normal, v2v1, v3v1)
 		FFIVector3.normalizeInline(normal, normal)		
-		FFIVector3.display(normal)			
+		FFIVector3.display(normal)
 	end
 end
 

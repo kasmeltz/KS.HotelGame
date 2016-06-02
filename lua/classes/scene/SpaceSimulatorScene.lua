@@ -38,6 +38,7 @@ function SpaceSimulatorScene:init(gameWorld)
 	self.image = love.graphics.newImage('data/images/roof1.jpg')
 
 	self.viewMatrix = FFIMatrix4x4.newMatrix()
+	self.inverseViewMatrix = FFIMatrix4x4.newMatrix()
 	self.projectionMatrix = FFIMatrix4x4.newMatrix()
 	self.rotationMatrix = FFIMatrix4x4.newMatrix()
 	self.tranlsationMatrix = FFIMatrix4x4.newMatrix()	
@@ -46,19 +47,22 @@ function SpaceSimulatorScene:init(gameWorld)
 	self.worldViewProjectionMatrix = FFIMatrix4x4.newMatrix()
 	self.worldVert = FFIVector3.newVector()
 	self.forwardVector = FFIVector3.newVector()
+	self.identityMatrix = FFIMatrix4x4.newMatrix()
 	
 	local meshes = {}
 	
 	local mesh = self:createMesh(0, 0, 0, 0, 0, 0)
 	table.insert(meshes, mesh)
 	
-	for i = 1, 50 do
-		local x= math.random(-5, 5)
-		local y = math.random(-5, 5)
-		local z = math.random(-20, 0)
+	--[[
+	for i = 1, 250 do
+		local x= math.random(-15, 15)
+		local y = math.random(-15, 15)
+		local z = math.random(-30, 0)
 		local mesh = self:createMesh(x, y, z, 0, 0, 0)
 		table.insert(meshes, mesh)
 	end
+	]]
 	
 	self.meshes = meshes	
 end
@@ -184,6 +188,7 @@ function SpaceSimulatorScene:draw(dt)
 	]]
 
 	local viewMatrix = self.viewMatrix
+	local inverseViewMatrix = self.inverseViewMatrix
 	local projectionMatrix = self.projectionMatrix
 	local rotationMatrix = self.rotationMatrix
 	local tranlsationMatrix = self.tranlsationMatrix
@@ -192,29 +197,26 @@ function SpaceSimulatorScene:draw(dt)
 	local worldViewProjectionMatrix = self.worldViewProjectionMatrix	
 	local worldVert = self.worldVert
 	local forwardVector = self.forwardVector
+	local identityMatrix = self.identityMatrix
 	
 	Profiler:start('calculating matrices')	
 	-- once per camera per frame
 	FFIMatrix4x4.lookAtLHInline(viewMatrix, self.cameraPosition, self.cameraTarget, self.up)
+	FFIMatrix4x4.inverseInline(inverseViewMatrix, viewMatrix)
 	FFIMatrix4x4.perspectiveFovRHInline(projectionMatrix, 0.78, 1200 / 900, 0.001, 100)                                                          	
-		
+	Profiler:stop('calculating matrices')
+	
 	love.graphics.setColor(255,255,255)
 	local drawingMesh = self.drawingMesh
 	
 	for _, mesh in ipairs(self.meshes) do
+		Profiler:start('calculating matrices')	
 		-- once per mesh per frame
 		FFIMatrix4x4.rotationYawPitchRollInline(rotationMatrix, mesh.rotation)
 		FFIMatrix4x4.translationInline(tranlsationMatrix, mesh.position)
 		FFIMatrix4x4.multiplyInline(worldMatrix, rotationMatrix, tranlsationMatrix)
 		FFIMatrix4x4.multiplyInline(worldViewMatrix, worldMatrix, viewMatrix)
-		FFIMatrix4x4.multiplyInline(worldViewProjectionMatrix, worldViewMatrix, projectionMatrix)	
-		
-		local forwardVector = self.forwardVector	
-		forwardVector.X = 0
-		forwardVector.Y = 0
-		forwardVector.Z = 1
-		FFIMatrix4x4.transformCoordinateInline(forwardVector, forwardVector, viewMatrix)
-		FFIVector3.normalizeInline(forwardVector, forwardVector)
+		FFIMatrix4x4.multiplyInline(worldViewProjectionMatrix, worldViewMatrix, projectionMatrix)		
 		Profiler:stop('calculating matrices')	
 			
 		Profiler:start('projecting vertices')
@@ -224,16 +226,15 @@ function SpaceSimulatorScene:draw(dt)
 			local normal = mesh.normals[i]
 			local middle = mesh.middles[i]
 			
-			FFIMatrix4x4.transformCoordinateInline(worldVert, normal, rotationMatrix)	
-			FFIVector3.normalizeInline(worldVert, worldVert)			
-			local d = FFIVector3.dot(forwardVector, worldVert)
-			
-			if d > 0 then		
+			FFIMatrix4x4.transformNormalInline(forwardVector, normal, worldMatrix)
+			FFIMatrix4x4.transformCoordinateInline(worldVert, middle, worldMatrix)							
+			FFIVector3.subtractInline(worldVert, worldVert, self.cameraPosition)
+			local dot = FFIVector3.dot(worldVert, forwardVector)			
+			if dot < 0 then
 				FFIMatrix4x4.project(triangle[1], mesh.vertices[face.A], worldViewProjectionMatrix, 0, 0, sw, sh, -10, 10)
 				FFIMatrix4x4.project(triangle[2], mesh.vertices[face.B], worldViewProjectionMatrix, 0, 0, sw, sh, -10, 10)
 				FFIMatrix4x4.project(triangle[3], mesh.vertices[face.C], worldViewProjectionMatrix, 0, 0, sw, sh, -10, 10)
-				FFIMatrix4x4.transformCoordinateInline(worldVert, middle, worldMatrix)	
-				triangle.length = FFIVector3.distanceSquared(worldVert, self.cameraPosition)
+				triangle.length = FFIVector3.lengthSquared(worldVert)
 				trianglesToRender[#trianglesToRender + 1] = triangle
 			end
 		end
@@ -267,10 +268,6 @@ function SpaceSimulatorScene:draw(dt)
 		love.graphics.print(item.average, 0, sy)
 		sy = sy + 15
 	end		
-	
-	local mesh = self.meshes[1]
-	love.graphics.print(mesh.position.Z , 0, sy)
-	sy = sy + 15
 end
 
 function SpaceSimulatorScene:update(dt)
@@ -310,10 +307,20 @@ function SpaceSimulatorScene:update(dt)
 	
 	if love.keyboard.isDown('w') then
 		mesh.position.Z = mesh.position.Z - 5 * dt
+		print(mesh.position.Z)
 	end
 	
 	if love.keyboard.isDown('s') then
 		mesh.position.Z = mesh.position.Z + 5 * dt
+		print(mesh.position.Z)
+	end
+	
+	if love.keyboard.isDown('a') then
+		mesh.position.X = mesh.position.X - 5 * dt
+	end
+	
+	if love.keyboard.isDown('d') then
+		mesh.position.X = mesh.position.X + 5 * dt
 	end
 end
 
