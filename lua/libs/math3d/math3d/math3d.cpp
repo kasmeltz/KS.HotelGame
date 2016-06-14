@@ -380,6 +380,149 @@ extern "C"
 
 	DECLDIR void render(rgba_pixel *buffer, uint32_t width, uint32_t height)
 	{
+		matrix4x4 viewMatrix;
+		matrix4x4 projectionMatrix;
+		matrix4x4 rotationMatrix;
+		matrix4x4 tranlsationMatrix;
+		matrix4x4 worldMatrix;
+		matrix4x4 worldViewMatrix;
+		matrix4x4 worldViewProjectionMatrix;
+		vector3 worldVert;
+		vector3 forwardVector;
+
+		vector3 cameraPosition;
+		vector3 cameraTarget;
+		vector3 up;
+
+		cameraPosition.X = 0;
+		cameraPosition.Y = 0;
+		cameraPosition.Z = 10;
+
+		cameraTarget.X = 0;
+		cameraTarget.Y = 0;
+		cameraTarget.Z = 0;
+
+		up.X = 0;
+		up.Y = 1;
+		up.Z = 0;
+
+		matrix4x4LookAtLH(&viewMatrix, &cameraPosition, &cameraTarget, &up);
+		matrix4x4PerspectiveFovRH(&projectionMatrix, 0.78f, 1200 / 900, 0.001f, 1);
+
+		mesh cube;
+		cube.vertCount = 8;
+		cube.faceCount = 8;
+
+		cube.rotation.X = 0;
+		cube.rotation.Y = 0;
+		cube.rotation.Z = 0;
+
+		cube.position.X = 0;
+		cube.position.Y = 0;
+		cube.position.Z = 0;
+
+		vector3 vertices[8];
+		vertices[0].X = -1;
+		vertices[0].Y = 1;
+		vertices[0].Z = 1;
+		vertices[1].X = 1;
+		vertices[1].Y = 1;
+		vertices[1].Z = 1;
+		vertices[2].X = -1;
+		vertices[2].Y = -1;
+		vertices[2].Z = 1;
+		vertices[3].X = 1;
+		vertices[3].Y = -1;
+		vertices[3].Z = 1;
+		vertices[4].X = 1;
+		vertices[4].Y = -1;
+		vertices[4].Z = -1;
+		vertices[5].X = 1;
+		vertices[5].Y = 1;
+		vertices[5].Z = -1;
+		vertices[6].X = -1;
+		vertices[6].Y = -1;
+		vertices[6].Z = -1;
+		vertices[7].X = -1;
+		vertices[7].Y = 1;
+		vertices[7].Z = -1;
+		cube.vertices = vertices;
+
+		face faces[8];
+		faces[0].A = 1;
+		faces[0].A = 3;
+		faces[0].A = 5;
+		faces[0].r = 255 * 0.85;
+		faces[0].g = 255 * 0.85;
+		faces[0].b = 255 * 0.85;
+
+		/*
+		local mesh = FFIMesh.newMesh(8, 8)
+		
+
+		l
+
+		local f = faces[1]
+		f.A = 3
+		f.B = 4
+		f.C = 5
+		f.r = r * 0.85
+		f.g = g * 0.85
+		f.b = b * 0.85
+
+		local f = faces[2]
+		f.A = 0
+		f.B = 7
+		f.C = 2
+		f.r = r * 0.85
+		f.g = g * 0.85
+		f.b = b * 0.85
+
+		local f = faces[3]
+		f.A = 6
+		f.B = 2
+		f.C = 7
+		f.r = r * 0.85
+		f.g = g * 0.85
+		f.b = b * 0.85
+
+		local f = faces[4]
+		f.A = 1
+		f.B = 7
+		f.C = 0
+		f.r = r * 0.75
+		f.g = g * 0.75
+		f.b = b * 0.75
+
+		local f = faces[5]
+		f.A = 5
+		f.B = 7
+		f.C = 1
+		f.r = r * 0.75
+		f.g = g * 0.75
+		f.b = b * 0.75
+
+		local f = faces[6]
+		f.A = 0
+		f.B = 1
+		f.C = 2
+		f.r = r
+		f.g = g
+		f.b = b
+
+		local f = faces[7]
+		f.A = 1
+		f.B = 2
+		f.C = 3
+		f.r = r
+		f.g = g
+		f.b = b
+
+		FFIMesh.calculateMiddlesAndNormals(mesh)
+
+		return mesh
+		*/
+			/*
 		int idx = 0;
 		for (int y = 0;y < height;y++)
 		{
@@ -389,5 +532,6 @@ extern "C"
 				buffer[idx++].a = 255;
 			}
 		}
+		*/
 	}
 }

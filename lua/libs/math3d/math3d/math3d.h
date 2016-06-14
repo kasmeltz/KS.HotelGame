@@ -29,10 +29,12 @@ extern "C"
 	typedef struct
 	{
 		uint32_t A; uint32_t B; uint32_t C;
+		uint32_t r; uint32_t g; uint32_t b;
 	} face;
 
 	typedef struct
 	{
+		uint32_t index;
 		uint32_t vertCount;
 		uint32_t faceCount;
 		vector3 position;
@@ -42,6 +44,11 @@ extern "C"
 		vector3 *middles;
 		face *faces;
 	} mesh;
+
+	typedef struct
+	{
+		mesh *meshes;
+	} mesh_list;
 
 	typedef struct 
 	{ 

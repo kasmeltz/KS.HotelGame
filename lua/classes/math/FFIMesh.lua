@@ -14,6 +14,7 @@ ffi.cdef[[
 	typedef struct
 	{
 		uint32_t A; uint32_t B; uint32_t C;
+		uint32_t r; uint32_t g; uint32_t b;
 	} face;
 
 	typedef struct
@@ -24,8 +25,13 @@ ffi.cdef[[
 		vector3 *vertices;
 		vector3 *normals;
 		vector3 *middles;
-		face *faces;		
+		face *faces;
 	} mesh;
+	
+	typedef struct
+	{
+		mesh *meshes;
+	} mesh_list;	
 ]]
 
 local math3d = ffi.load 'math3d'
@@ -39,6 +45,7 @@ function FFIMesh.extend()
 end
 
 function FFIMesh:init()	
+	self.meshList = ffi.new('mesh_list');
 end
 
 function FFIMesh:getInstance()
@@ -96,7 +103,6 @@ function FFIMesh.calculateMiddlesAndNormals(mesh)
 		FFIVector3.subtractInline(v3v1, v3, v1)			
 		FFIVector3.crossInline(normal, v2v1, v3v1)
 		FFIVector3.normalizeInline(normal, normal)		
-		FFIVector3.display(normal)
 	end
 end
 

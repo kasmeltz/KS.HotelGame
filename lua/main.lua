@@ -37,6 +37,10 @@ local ShaderDebugScene = require 'classes/scene/ShaderDebugScene'
 local SchmupScene = require 'classes/scene/SchmupScene'
 local ColorMatchScene = require 'classes/scene/ColorMatchScene'
 local SpaceSimulatorScene = require 'classes/scene/SpaceSimulatorScene'
+local TowerDefenseScene = require 'classes/scene/TowerDefenseScene'
+
+local LongTimeScene = require 'classes/scene/LongTimeScene'
+local HoboDefenseTitleScene = require 'classes/scene/HoboDefenseTitleScene'
 	
 local gameWorld
 function love.load()
@@ -57,7 +61,15 @@ function love.load()
 	FontManager:addFont(font, 'Courier16')
 	font = love.graphics.newFont('data/fonts/courbd.ttf', 32)
 	FontManager:addFont(font, 'Courier32')
-
+	font = love.graphics.newFont('data/fonts/courbd.ttf', 64)
+	FontManager:addFont(font, 'Courier64')
+	font = love.graphics.newFont('data/fonts/comicbd.ttf', 48)
+	FontManager:addFont(font, 'ComicBold48')
+	font = love.graphics.newFont('data/fonts/Dirty Fox.ttf', 48)
+	FontManager:addFont(font, 'DirtyFox')
+	font = love.graphics.newFont('data/fonts/arialbd.ttf', 92)
+	FontManager:addFont(font, 'ArialBold92')
+		
 	gameWorld = GameWorld:new()
 	local gameTime = GameTime:new()
 	gameTime:setTime(2016, 2, 1, 7, 55, 0)
@@ -73,7 +85,7 @@ function love.load()
 	--SceneManager:addScene(StoryScene:new(gameWorld), 'story')
 	--SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')	
 	--SceneManager:addScene(ShearTestScene:new(gameWorld), 'shearTest')
-	--SceneManager:addScene(ShaderDebugScene:new(gameWorld), 'shaderDebug')
+	SceneManager:addScene(ShaderDebugScene:new(gameWorld), 'shaderDebug')	
 	--SceneManager:addScene(SchmupScene:new(gameWorld), 'schmup')
 	--SceneManager:addScene(RenderingPipelineTest:new(gameWorld), 'renderingPipelineTest')	
 	--SceneManager:addScene(ColorMatchScene:new(gameWorld), 'colorMatch')	
@@ -81,7 +93,15 @@ function love.load()
 	--SceneManager:addScene(SchmupScene:new(gameWorld), 'schmup')
 	--SceneManager:show('schmup')
 	SceneManager:addScene(SpaceSimulatorScene:new(gameWorld), 'ss')
-	SceneManager:show('ss')	
+	--SceneManager:show('ss')	
+	SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
+	SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')
+	
+	SceneManager:show('longtime')	
+	--SceneManager:show('hobodefensetitle')	
+	--SceneManager:show('ss')		
+	--SceneManager:show('shaderDebug')
+	
 	--SceneManager:show('shearTest')
 	--SceneManager:show('shaderDebug')		
 	--SceneManager:show('renderingPipelineTest')
