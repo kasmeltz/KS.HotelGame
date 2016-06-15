@@ -41,6 +41,7 @@ local TowerDefenseScene = require 'classes/scene/TowerDefenseScene'
 
 local LongTimeScene = require 'classes/scene/LongTimeScene'
 local HoboDefenseTitleScene = require 'classes/scene/HoboDefenseTitleScene'
+local HoboGameScene = require 'classes/scene/HoboGameScene'
 	
 local gameWorld
 function love.load()
@@ -96,6 +97,8 @@ function love.load()
 	--SceneManager:show('ss')	
 	SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
 	SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')
+	SceneManager:addScene(HoboGameScene:new(gameWorld), 'hobogame')
+	
 	
 	SceneManager:show('longtime')	
 	--SceneManager:show('hobodefensetitle')	

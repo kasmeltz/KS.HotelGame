@@ -1,5 +1,7 @@
 local FontManager = require 'classes/scene/FontManager'
 FontManager = FontManager:getInstance()
+local SceneManager = require 'classes/scene/SceneManager'
+SceneManager = SceneManager:getInstance()
 
 local Scene = require 'classes/scene/Scene'
 local HoboDefenseTitleScene = Scene:extend('HoboDefenseTitleScene')
@@ -20,7 +22,7 @@ function HoboDefenseTitleScene:init(gameWorld)
 	self.hoboCanvas = cv
 	love.graphics.setCanvas()	
 	self.titleScale = 20
-	self.decay = 0.999	
+	self.decay = 0.9988
 	self.timer = 0
 	self.beforeStory = 9
 	
@@ -81,6 +83,7 @@ function HoboDefenseTitleScene:init(gameWorld)
 	self.drawingMesh = drawingMesh	
 
 	self.textY = sh
+	self.endTextY = -3400
 end
 
 local story = {
@@ -94,12 +97,34 @@ local story = {
 	'Peñalosa, has decided',
 	'to rid the city of the',	
 	'homeless.',
+	'',
 	'After months of',
 	'struggle Peñalosa has',
 	'ordered a final fatal',
 	'strike against the',
 	'last bastion of the',
-	'hobo civiliation.'
+	'hobo civilization.',
+	'',
+	'High on peyote,',
+	'guided by his belief',
+	'in an ancient hobo',
+	'prophecy, Ganjadore',
+	'speeds across the city',
+	'in his shopping cart',
+	'searching for the',
+	'chosen one that can',
+	'bring honor to his',
+	'people...',
+	'(and maybe some',
+	'wicked crack too!)',
+	'',
+	'En route to the hobo',
+	'base, Ganjadore is',
+	'waylaid by a',
+	'relentless desire',
+	'and is forced to',
+	'stop at a piñata',
+	'orgy.'
 }
 
 function HoboDefenseTitleScene:drawStory()
@@ -127,7 +152,7 @@ function HoboDefenseTitleScene:drawStory()
 	local drawingMesh = self.drawingMesh	
 	drawingMesh:setTexture(self.letterCanvas)
 	love.graphics.draw(drawingMesh)
-	love.graphics.setShader()
+	love.graphics.setShader()	
 end
 
 function HoboDefenseTitleScene:draw()
@@ -150,13 +175,17 @@ end
 
 function HoboDefenseTitleScene:update(dt)
 	self.titleScale = self.titleScale * self.decay
-	self.decay = self.decay + (dt * 0.0001)
+	self.decay = self.decay + (dt * 0.0002)
 	self.decay = math.min(self.decay, 0.9996)
 	
 	self.timer = self.timer + dt
 	
 	if self.timer > self.beforeStory then
 		self.textY = self.textY - dt * 40
+	end
+	
+	if self.textY < self.endTextY then
+		SceneManager:show('hobogame')
 	end
 end
 
