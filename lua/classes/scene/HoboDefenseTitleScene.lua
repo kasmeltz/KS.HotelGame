@@ -174,9 +174,10 @@ function HoboDefenseTitleScene:draw()
 end
 
 function HoboDefenseTitleScene:update(dt)
-	self.titleScale = self.titleScale * self.decay
-	self.decay = self.decay + (dt * 0.0002)
-	self.decay = math.min(self.decay, 0.9996)
+	local dec = self.titleScale * self.decay * dt
+	self.titleScale = self.titleScale - dec
+	self.decay = self.decay - (dt * 0.2)
+	self.decay = math.max(self.decay, 0.25)
 	
 	self.timer = self.timer + dt
 	
