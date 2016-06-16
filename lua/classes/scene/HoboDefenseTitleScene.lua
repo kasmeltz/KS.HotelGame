@@ -114,7 +114,7 @@ local story = {
 	'searching for the',
 	'chosen one that can',
 	'bring honor to his',
-	'people...',
+	'people.',
 	'(and maybe some',
 	'wicked crack too!)',
 	'',
@@ -123,8 +123,7 @@ local story = {
 	'waylaid by a',
 	'relentless desire',
 	'and is forced to',
-	'stop at a piñata',
-	'orgy.'
+	'stop at a piñata orgy...'
 }
 
 function HoboDefenseTitleScene:drawStory()
@@ -182,7 +181,7 @@ function HoboDefenseTitleScene:update(dt)
 	self.timer = self.timer + dt
 	
 	if self.timer > self.beforeStory then
-		self.textY = self.textY - dt * 40
+		self.textY = self.textY - dt * 50
 	end
 	
 	if self.textY < self.endTextY then
