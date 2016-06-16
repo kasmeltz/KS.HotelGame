@@ -21,7 +21,7 @@ local enemies =
 
 local towers = 
 {
-	{ 650, 400, 100, 0, 0.5, 300 }
+	{ 650, 400, 100, 0, 0.25, 250 }
 }
 
 local bullets = 
@@ -73,10 +73,12 @@ function HoboGameScene:draw()
 		local tower = towers[i]
 		love.graphics.circle('fill', tower[1], tower[2], 10)
 		
+		--[[
 		if tower.targeted then
 			love.graphics.setColor(255, 255, 255)
 			love.graphics.circle('line', tower.targeted[1], tower.targeted[2], 15)
 		end
+		]]
 	end
 	
 	love.graphics.setColor(0,255,255)
@@ -84,6 +86,8 @@ function HoboGameScene:draw()
 		local bullet = bullets[i]
 		love.graphics.circle('fill', bullet[1], bullet[2], 2)
 	end
+	
+	love.graphics.print(#bullets, 0, 50)
 end
 
 function HoboGameScene:putOnPath(enemy, index)
@@ -116,7 +120,16 @@ function HoboGameScene:length(x1, y1, x2, y2)
 	return math.sqrt(dx * dx + dy * dy)
 end
 
+local bulletsToRemove = {}
+
 function HoboGameScene:update(dt)
+	local sw = self.screenWidth
+	local sh = self.screenHeight
+	
+	for i = 1, #bulletsToRemove do
+		bulletsToRemove[i] = nil
+	end
+	
 	self.enemyTimer = self.enemyTimer + dt
 	if self.enemyTimer > 1 then
 		self.enemyTimer = self.enemyTimer - 1		
@@ -204,7 +217,7 @@ function HoboGameScene:update(dt)
 				local t2 = p + q;
 				local t;
 
-				if (t1 > t2 and t2 > 0) then
+				if t1 > t2 and t2 > 0 then
 					t = t2;
 				else
 					t = t1;
@@ -224,11 +237,38 @@ function HoboGameScene:update(dt)
 			end
 		end
 	end
-	
+		
+	local bulletSize = 5
+	local enemySize = 10
 	for i = 1, #bullets do
 		local bullet = bullets[i]
 		bullet[1] = bullet[1] + bullet[3] * dt * bullet[5]
 		bullet[2] = bullet[2] + bullet[4] * dt * bullet[5]
+		
+		if 	bullet[1] < -bulletSize or 
+			bullet[1] > sw + bulletSize or 
+			bullet[2] < -bulletSize or 
+			bullet[2] > sh + bulletSize then
+			
+			bulletsToRemove[#bulletsToRemove + 1] = i
+		else
+			local fx, fy = bullet[1], bullet[2]
+			
+			for j = 1, #enemies do
+				local enemy = enemies[j]			
+				local tx, ty = enemy[1], enemy[2]
+				local d = self:length(fx, fy, tx, ty)
+				if d < bulletSize + enemySize then
+					bulletsToRemove[#bulletsToRemove + 1] = i
+					break
+				end
+			end						
+		end
+	end	
+	
+	for i = #bulletsToRemove, 1, -1 do
+		local idx = bulletsToRemove[i]
+		table.remove(bullets, idx)
 	end
 end
 
