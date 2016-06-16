@@ -19,3 +19,25 @@ Different drugs bring you to different games
 It looks like the matrix when you take a drug and go to a games
 
 We can have famous scenes from films but with a hobo touch
+
+
+Different game types
+
+Adventure
+2D RPG / Zelda
+Dating game
+Tower defense
+Street fighter / 2d fighting game
+Simulation / Sim City / Defender of the crown (one of)
+Vertical SCHMUP
+
+The main game will be either an adventure or an old schol RPG
+When you take a drug you play one of the other games
+A cut scene shows at the beginning of each game type
+A cut scene shows at the end of each game type
+There will be multiple cut scenes for each game type so that it isn't repetitive
+Cut scenes shown at end might depend on outcome of game (i.e. successfully complete or die on a level)
+
+Cut scenes
+
+Vertical SCHMUP - The hobo jumps in his shopping cart and starts flying down a hill while pretending to shoot things

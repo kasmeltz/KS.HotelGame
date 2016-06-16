@@ -25,6 +25,7 @@ end
 ]]
 
 local GameTime = require 'classes/simulation/GameTime'
+local Dialogue = require 'classes/simulation/Dialogue'
 local GameWorld = require 'classes/simulation/GameWorld'
 local HotelScene = require 'classes/scene/HotelScene'
 local BankScene = require 'classes/scene/BankScene'
@@ -77,14 +78,12 @@ function love.load()
 	gameTime:setSpeed(5)
 	gameWorld.gameTime = gameTime
 		
-	local hero = Character:new(gameWorld)
-	hero.name = 'Kevin'
-	gameWorld.hero = hero
+	
 				
 	--SceneManager:addScene(BankScene:new(gameWorld), 'bank')
 	--SceneManager:addScene(HotelScene:new(gameWorld), 'hotel')
 	--SceneManager:addScene(StoryScene:new(gameWorld), 'story')
-	--SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')	
+	
 	--SceneManager:addScene(ShearTestScene:new(gameWorld), 'shearTest')
 	--SceneManager:addScene(ShaderDebugScene:new(gameWorld), 'shaderDebug')	
 	--SceneManager:addScene(SchmupScene:new(gameWorld), 'schmup')
@@ -98,8 +97,20 @@ function love.load()
 	--SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
 	--SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')
 	SceneManager:addScene(HoboGameScene:new(gameWorld), 'hobogame')
+	--SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')	
 		
+	--[[
+	local hero = Character:new(gameWorld)
+	hero.name = 'Kevin'
+	gameWorld.hero = hero		
+	
+	local other = Character:new(gameWorld)
+	other.name = 'Edna'
+		
+	local dialogue = Dialogue:new('gameIntro', 'start', gameWorld, hero, other)
+	]]
 	SceneManager:show('hobogame')	
+	--SceneManager:show('dialogue', dialogue)	
 	--SceneManager:show('longtime')	
 	--SceneManager:show('hobodefensetitle')	
 	--SceneManager:show('ss')		
