@@ -271,6 +271,78 @@ extern "C"
 		result->Z = (normal->X * transform->M13) + (normal->Y * transform->M23) + (normal->Z * transform->M33);
 	}
 
+	// VECTOR2
+	DECLDIR void vector2ScalarAdd(vector2 *result, vector2 *v1, float v)
+	{
+		result->X = v1->X + v;
+		result->Y = v1->Y + v;
+	}
+
+	DECLDIR void vector2Add(vector2 *result, vector2 *v1, vector2 *v2)
+	{
+		result->X = v1->X + v2->X;
+		result->Y = v1->Y + v2->Y;
+	}
+
+	DECLDIR void vector2ScalarSubtract(vector2 *result, vector2 *v1, float v)
+	{
+		result->X = v1->X - v;
+		result->Y = v1->Y - v;
+	}
+
+	DECLDIR void vector2Subtract(vector2 *result, vector2 *v1, vector2 *v2)
+	{
+		result->X = v1->X - v2->X;
+		result->Y = v1->Y - v2->Y;
+	}
+
+	DECLDIR void vector2ScalarMultiply(vector2 *result, vector2 *v1, float v)
+	{
+		result->X = v1->X * v;
+		result->Y = v1->Y * v;
+	}
+
+	DECLDIR void vector2ScalarDivide(vector2 *result, vector2 *v1, float v)
+	{
+		result->X = v1->X / v;
+		result->Y = v1->Y / v;
+	}
+
+	DECLDIR float vector2Dot(vector2 *v1, vector2 *v2)
+	{
+		return v1->X * v2->X + v1->Y * v2->Y;
+	}
+
+	DECLDIR float vector2LengthSquared(vector2 *v1)
+	{
+		return v1->X * v1->X + v1->Y * v1->Y;
+	}
+
+	DECLDIR float vector2Length(vector2 *v1)
+	{
+		return sqrtf(vector2LengthSquared(v1));
+	}
+
+	DECLDIR float vector2DistanceSquared(vector2 *v1, vector2 *v2)
+	{
+		float dx = v1->X - v2->X;
+		float dy = v1->Y - v2->Y;
+
+		return dx * dx + dy * dy;
+	}
+
+	DECLDIR float vector2Distance(vector2 *v1, vector2 *v2)
+	{
+		return sqrtf(vector2DistanceSquared(v1, v2));
+	}
+
+	DECLDIR void vector2Normalize(vector2 *result, vector2 *v1)
+	{
+		float l = vector2Length(v1);
+		result->X = v1->X / l;
+		result->Y = v1->Y / l;
+	}
+
 	// VECTOR3
 	DECLDIR void vector3ScalarAdd(vector3 *result, vector3 *v1, float v)
 	{

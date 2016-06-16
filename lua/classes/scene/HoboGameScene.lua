@@ -1,84 +1,100 @@
+local Scene = require 'classes/scene/Scene'
+local HoboGameScene = Scene:extend('HoboGameScene')
+
 local SceneManager = require 'classes/scene/SceneManager'
 SceneManager = SceneManager:getInstance()
 local Profiler = require 'classes/Profiler'
 Profiler = Profiler:getInstance()
+local FFIVector2 = require 'classes/math/FFIVector2'
+FFIVector2 = FFIVector2:getInstance()
 
-local Scene = require 'classes/scene/Scene'
-local HoboGameScene = Scene:extend('HoboGameScene')
-
-local path = 
-{
-	{ 600, -100, 0, 1 },
-	{ 600, 450, 1, 1 },
-	{ 900, 450, 1, 1 },
-	{ 900, 600, 1, 1 },
-	{ 0, 600, 1, 1 },
-}
-	
-local enemies = 
-{	
-}
-
-local towers = 
-{
-	{ 650, 400, 100, 0, 0.5, 200 },
-	{ 550, 450, 100, 0, 0.5, 200 },
-	{ 650, 500, 100, 0, 0.5, 200 }
-}
-
-local bullets = 
-{
-}
-
-function HoboGameScene:createBullet(x, y, dx, dy, s)
-	return { x, y, dx, dy, s }
-end
-
-function HoboGameScene:createEnemy()
-	return { 0, 0, 100, -1, 0, 0 }
-end
+local TDEnemy = require 'classes/towerdefense/TDEnemy'
+local TDTower = require 'classes/towerdefense/TDTower'
+local TDBullet = require 'classes/towerdefense/TDBullet'
+local TDPath = require 'classes/towerdefense/TDPath'
 
 function HoboGameScene:init()
 	HoboGameScene.super.init(self, gameWorld)
 	
 	self.enemyTimer = 0
+	
+	self.paths = {}
+	self.paths[#self.paths + 1] = TDPath:new(self.gameWorld, 600, -100)
+	self.paths[#self.paths + 1] = TDPath:new(self.gameWorld, 600, 450)
+	self.paths[#self.paths + 1] = TDPath:new(self.gameWorld, 900, 450)
+	self.paths[#self.paths + 1] = TDPath:new(self.gameWorld, 900, 600)
+	self.paths[#self.paths + 1] = TDPath:new(self.gameWorld, 0, 600)
+	
+	self.towers = {}
+	self.towers[#self.towers + 1] = TDTower:new(self.gameWorld, 650, 400, 100, 0.5, 200, 20)
+	self.towers[#self.towers + 1] = TDTower:new(self.gameWorld, 550, 450, 100, 0.5, 200, 20)
+	self.towers[#self.towers + 1] = TDTower:new(self.gameWorld, 650, 500, 100, 0.5, 200, 20)
+			
+	self.bullets = {}
+	
+	self.enemies = {}
+	
+	self.bulletsToRemove = {}
+	self.enemiesToRemove = {}
+	
+	self.pathNormal = FFIVector2.newVector()
+	self.vector1 = FFIVector2.newVector()
+	self.vector2 = FFIVector2.newVector()
 end
 
 function HoboGameScene:draw()
+	local paths = self.paths
+	local enemies = self.enemies	
+	local towers = self.towers
+	local bullets = self.bullets
+	
+	local pathNormal = self.pathNormal
+	
 	love.graphics.setColor(200,200,200)
-	
-	local fx, fy = path[1][1], path[1][2]
-	local tx, ty = nil, nil
-	for i = 2, #path do
-		tx, ty = path[i][1], path[i][2]
-
-		local dx = tx - fx
-		local dy = ty - fy
 		
-		local length = math.sqrt(dx * dx + dy * dy)
-		local ny = (dx / length) * 15
-		local nx = (dy / length) * 15
-				
-		love.graphics.line(fx - nx, fy - ny, tx - nx, ty - ny)
-		love.graphics.line(fx + nx, fy + ny, tx + nx, ty + ny)
-		fx, fy = path[i][1], path[i][2]
+	local from = paths[1].position
+	local to = nil
+	for i = 2, #paths do
+		local path = paths[i]
+		to = path.position		
+		FFIVector2.subtractInline(pathNormal, to, from)
+		FFIVector2.normalizeInline(pathNormal, pathNormal)
+		local x = pathNormal.X
+		pathNormal.X = pathNormal.Y
+		pathNormal.Y = x
+		FFIVector2.scalarMultiplyInline(pathNormal, pathNormal, 15)			
+		love.graphics.line(from.X - pathNormal.X, from.Y - pathNormal.Y, to.X - pathNormal.X, to.Y - pathNormal.Y)
+		love.graphics.line(from.X + pathNormal.X, from.Y + pathNormal.Y, to.X + pathNormal.X, to.Y + pathNormal.Y)
+		from = path.position
 	end
-	
-	love.graphics.setColor(255, 0, 255)
+		
+	local barWidth = 30
+	local barWidth2 = barWidth / 2
+	local innerBarWidth = barWidth - 2
+	local innerBarWidth2 = barWidth2 - 1
+
 	for i = 1, #enemies do
 		local enemy = enemies[i]
-		love.graphics.circle('fill', enemy[1], enemy[2], 10)
+		
+		love.graphics.setColor(255, 0, 255)
+		love.graphics.circle('fill', enemy.position.X, enemy.position.Y, 10)
+		
+		local ratio = enemy.health / enemy.maxHealth
+		love.graphics.setColor(0,255,0)
+		love.graphics.rectangle('line', enemy.position.X - barWidth2, enemy.position.Y - 17, barWidth, 5)
+		love.graphics.setColor(0,128,0)
+		love.graphics.rectangle('fill', enemy.position.X - innerBarWidth2, enemy.position.Y - 17, ratio * innerBarWidth, 5)
 	end
 		
 	for i = 1, #towers do
 		love.graphics.setColor(255, 255, 0)
 		local tower = towers[i]
-		love.graphics.circle('fill', tower[1], tower[2], 10)
+		love.graphics.circle('fill', tower.position.X, tower.position.Y, 10)
 		
 		--[[
 		if tower.targeted then
 			love.graphics.setColor(255, 255, 255)
-			love.graphics.circle('line', tower.targeted[1], tower.targeted[2], 15)
+			love.graphics.circle('line', tower.targeted.position.X, tower.targeted.position.Y, 15)
 		end
 		]]
 	end
@@ -86,45 +102,49 @@ function HoboGameScene:draw()
 	love.graphics.setColor(0,255,255)
 	for i = 1, #bullets do
 		local bullet = bullets[i]
-		love.graphics.circle('fill', bullet[1], bullet[2], 2)
+		love.graphics.circle('fill', bullet.position.X, bullet.position.Y, 2)
 	end
-	
-	love.graphics.print(#bullets, 0, 50)
 end
 
 function HoboGameScene:putOnPath(enemy, index)
-	local currentPathNode = path[index]
-	enemy[1] = currentPathNode[1]
-	enemy[2] = currentPathNode[2]
-	enemy[4] = index
-	local nextPathNode = path[index + 1]
+	local paths = self.paths
+	local pathNormal = self.pathNormal
+	local currentPathNode = paths[index]
+	enemy.position = FFIVector2.copyInline(enemy.position, currentPathNode.position)
+	enemy.currentPath = index
+	local nextPathNode = paths[index + 1]
 	
-	if nextPathNode then		
-		local fx, fy = currentPathNode[1], currentPathNode[2]
-		local tx, ty = nextPathNode[1], nextPathNode[2]
-		local dx = tx - fx
-		local dy = ty - fy
-		local length = math.sqrt(dx * dx + dy * dy)
-		local nx = (dx / length)
-		local ny = (dy / length)		
+	if nextPathNode then	
+		local from = currentPathNode.position
+		local to = nextPathNode.position
+		FFIVector2.subtractInline(pathNormal, to, from)
+		FFIVector2.normalizeInline(pathNormal, pathNormal)
 		
-		enemy[5] = nx
-		enemy[6] = ny
+		enemy.velocity = FFIVector2.copyInline(enemy.velocity, pathNormal)
 	else
-		enemy[5] = nil
-		enemy[6] = nil
+		enemy.velocity.X = 0
+		enemy.velocity.Y = 0
 	end
 end
 
-function HoboGameScene:length(x1, y1, x2, y2)
-	local dx = x1 - x2
-	local dy = y1 - y2
-	return math.sqrt(dx * dx + dy * dy)
+function HoboGameScene:hitEnemy(enemy, bullet)
+	enemy.health = enemy.health - bullet.damage
+	if enemy.health <= 0 then 
+		return true
+	end
 end
-
-local bulletsToRemove = {}
-
+					
 function HoboGameScene:update(dt)
+	local enemies = self.enemies
+	local paths = self.paths
+	local towers = self.towers
+	local bullets = self.bullets
+	local bulletsToRemove = self.bulletsToRemove
+	local enemiesToRemove = self.enemiesToRemove
+	
+	local vector1 = self.vector1
+	local vector2 = self.vector2
+
 	local sw = self.screenWidth
 	local sh = self.screenHeight
 	
@@ -132,45 +152,43 @@ function HoboGameScene:update(dt)
 		bulletsToRemove[i] = nil
 	end
 	
+	for i = 1, #enemiesToRemove do
+		enemiesToRemove[i] = nil
+	end
+	
 	self.enemyTimer = self.enemyTimer + dt
 	if self.enemyTimer > 1 then
 		self.enemyTimer = self.enemyTimer - 1		
-
-		local enemy = self:createEnemy()
+		local enemy = TDEnemy:new(self.gameWorld, 0, -100, 100, 100, -1)
 		enemies[#enemies + 1] = enemy
 	end
 
 	for i = 1, #enemies do
 		local enemy = enemies[i]
-		local currentPathIndex = enemy[4]
+		local currentPathIndex = enemy.currentPath
 		
 		if currentPathIndex == -1 then
 			currentPathIndex = 1
 			self:putOnPath(enemy, 1)
 		end
 
-		local currentPathNode = path[currentPathIndex]
-		local nextPathNode = path[currentPathIndex + 1]
+		local currentPathNode = paths[currentPathIndex]
+		local nextPathNode = paths[currentPathIndex + 1]
 		
 		local lengthBefore = 0
 		if nextPathNode then	
-			local fx, fy = enemy[1], enemy[2]
-			local tx, ty = nextPathNode[1], nextPathNode[2]	
-			lengthBefore = self:length(fx, fy, tx, ty)
+			lengthBefore = FFIVector2.distanceSquared(enemy.position, nextPathNode.position)
 		end
 		
-		if enemy[5] then
-			enemy[1] = enemy[1] + enemy[5] * dt * enemy[3]
-			enemy[2] = enemy[2] + enemy[6] * dt * enemy[3]
-		end	
-	
+		FFIVector2.scalarMultiplyInline(vector1, enemy.velocity, enemy.speed)
+		FFIVector2.scalarMultiplyInline(vector1, vector1, dt)
+		FFIVector2.addInline(enemy.position, enemy.position, vector1)
+
 		local lengthAfter = 0
 		if nextPathNode then	
-			local fx, fy = enemy[1], enemy[2]
-			local tx, ty = nextPathNode[1], nextPathNode[2]	
-			lengthAfter = self:length(fx, fy, tx, ty)
+			lengthAfter = FFIVector2.distanceSquared(enemy.position, nextPathNode.position)
 		end
-		
+					
 		if lengthAfter > lengthBefore then
 			self:putOnPath(enemy, currentPathIndex + 1)
 		end
@@ -178,17 +196,16 @@ function HoboGameScene:update(dt)
 	
 	for i = 1, #towers do
 		local tower = towers[i]
-		tower[4] = tower[4] + dt
-		if tower[4] > tower[5] then
+		tower.firingTimer = tower.firingTimer + dt
+		if tower.firingTimer > tower.firingRate then
 			local minDistance = 9999
 			local closest = nil
 			
-			local radius = tower[3]
+			local radius = tower.radius
 			
 			for j = 1, #enemies do
 				local enemy = enemies[j]
-				
-				local d = self:length(enemy[1], enemy[2], tower[1], tower[2])
+				local d = FFIVector2.distance(enemy.position, tower.position)
 				if d < minDistance then 
 					minDistance = d
 					closest = enemy
@@ -196,21 +213,19 @@ function HoboGameScene:update(dt)
 			end	
 			
 			if closest and minDistance <= radius then
-				tower[4] = 0
-				local bulletSpeed = tower[6]
+				tower.firingTimer = 0
+				local bulletSpeed = tower.bulletSpeed
 				
 				tower.targeted = closest
 				
-				local fx, fy = tower[1], tower[2]
-				local tx, ty = closest[1], closest[2]
-				local dx = tx - fx
-				local dy = ty - fy
-				local tvx = closest[5] * closest[3]
-				local tvy = closest[6] * closest[3]
+				local from = tower.position
+				local to = closest.position
+				FFIVector2.subtractInline(vector1, to, from)
+				FFIVector2.scalarMultiplyInline(vector2, closest.velocity, closest.speed)
 							
-				local a = (tvx * tvx + tvy * tvy) - (bulletSpeed * bulletSpeed)
-				local b = 2 * (dx * tvx + dy * tvy)
-				local c = dx * dx + dy * dy
+				local a = FFIVector2.dot(vector2, vector2) - (bulletSpeed * bulletSpeed)
+				local b = 2 * FFIVector2.dot(vector1, vector2)
+				local c = FFIVector2.dot(vector1, vector1)
 				
 				local p = -b / (2 * a);
 				local q = math.sqrt((b * b) - 4 * a * c) / (2 * a);
@@ -224,53 +239,55 @@ function HoboGameScene:update(dt)
 				else
 					t = t1;
 				end
-
-				local ax = tx + tvx * t
-				local ay = ty + tvy * t
 				
-				local px = ax - fx;
-				local py = ay - fy;				
-				local d = self:length(fx, fy, ax, ay)
-				local nx = px / d
-				local ny = py / d
-				
-				local bullet = self:createBullet(fx, fy, nx, ny, bulletSpeed)
-				bullets[#bullets + 1] = bullet	
+				FFIVector2.scalarMultiplyInline(vector2, vector2, t)
+				FFIVector2.addInline(vector1, vector2, to)
+				FFIVector2.subtractInline(vector1, vector1, from)
+				FFIVector2.normalizeInline(vector1, vector1)
+		
+				local bullet = TDBullet:new(self.gameWorld, from.X, from.Y, vector1.X, vector1.Y, bulletSpeed, tower.damage)
+				bullets[#bullets + 1] = bullet					
 			end
 		end
 	end
 		
 	local bulletSize = 5
-	local enemySize = 10
+	local hitSize = 15
 	for i = 1, #bullets do
 		local bullet = bullets[i]
-		bullet[1] = bullet[1] + bullet[3] * dt * bullet[5]
-		bullet[2] = bullet[2] + bullet[4] * dt * bullet[5]
+		FFIVector2.scalarMultiplyInline(vector1, bullet.velocity, bullet.speed)
+		FFIVector2.scalarMultiplyInline(vector1, vector1, dt)
+		FFIVector2.addInline(bullet.position, bullet.position, vector1)
 		
-		if 	bullet[1] < -bulletSize or 
-			bullet[1] > sw + bulletSize or 
-			bullet[2] < -bulletSize or 
-			bullet[2] > sh + bulletSize then
+		if 	bullet.position.X < -bulletSize or 
+			bullet.position.X > sw + bulletSize or 
+			bullet.position.Y < -bulletSize or 
+			bullet.position.Y > sh + bulletSize then
 			
 			bulletsToRemove[#bulletsToRemove + 1] = i
 		else
-			local fx, fy = bullet[1], bullet[2]
-			
 			for j = 1, #enemies do
 				local enemy = enemies[j]			
-				local tx, ty = enemy[1], enemy[2]
-				local d = self:length(fx, fy, tx, ty)
-				if d < bulletSize + enemySize then
+				local d = FFIVector2.distance(enemy.position, bullet.position)
+				if d < hitSize then
 					bulletsToRemove[#bulletsToRemove + 1] = i
+					if self:hitEnemy(enemy, bullet) then
+						enemiesToRemove[#enemiesToRemove + 1] = j
+					end
 					break
 				end
-			end						
+			end		
 		end
 	end	
 	
 	for i = #bulletsToRemove, 1, -1 do
 		local idx = bulletsToRemove[i]
 		table.remove(bullets, idx)
+	end
+	
+	for i = #enemiesToRemove, 1, -1 do
+		local idx = enemiesToRemove[i]
+		table.remove(enemies, idx)
 	end
 end
 

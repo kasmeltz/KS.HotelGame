@@ -15,6 +15,11 @@ extern "C"
 
 	typedef struct
 	{
+		float X; float Y;
+	} vector2;
+
+	typedef struct
+	{
 		float X; float Y; float Z;
 	} vector3;
 
@@ -74,6 +79,21 @@ extern "C"
 
 	// QUATERNION	
 	DECLDIR void quaternionRotationYawPitchRoll(quaternion *q, vector3 *v);
+
+	// VECTOR2
+	DECLDIR void vector2ScalarAdd(vector2 *result, vector2 *v1, float v);
+	DECLDIR void vector2Add(vector2 *result, vector2 *v1, vector2 *v2);
+	DECLDIR void vector2ScalarSubtract(vector2 *result, vector2 *v1, float v);
+	DECLDIR void vector2Subtract(vector2 *result, vector2 *v1, vector2 *v2);
+	DECLDIR void vector2ScalarMultiply(vector2 *result, vector2 *v1, float v);
+	DECLDIR void vector2ScalarDivide(vector2 *result, vector2 *v1, float v);
+	DECLDIR float vector2Dot(vector2 *v1, vector2 *v2);
+	DECLDIR void vector2Cross(vector2 *result, vector2 *v1, vector2 *v2);
+	DECLDIR float vector2LengthSquared(vector2 *v1);
+	DECLDIR float vector2Length(vector2 *v1);
+	DECLDIR float vector2DistanceSquared(vector2 *v1, vector2 *v2);
+	DECLDIR float vector2Distance(vector2 *v1, vector2 *v2);
+	DECLDIR void vector2Normalize(vector2 *result, vector2 *v1);
 
 	// VECTOR3
 	DECLDIR void vector3ScalarAdd(vector3 *result, vector3 *v1, float v);
