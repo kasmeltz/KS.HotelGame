@@ -39,6 +39,7 @@ local SchmupScene = require 'classes/scene/SchmupScene'
 local ColorMatchScene = require 'classes/scene/ColorMatchScene'
 local SpaceSimulatorScene = require 'classes/scene/SpaceSimulatorScene'
 local TowerDefenseScene = require 'classes/scene/TowerDefenseScene'
+local BeatEmUpGameScene = require 'classes/scene/BeatEmUpGameScene'
 
 local LongTimeScene = require 'classes/scene/LongTimeScene'
 local HoboDefenseTitleScene = require 'classes/scene/HoboDefenseTitleScene'
@@ -98,7 +99,12 @@ function love.load()
 	SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
 	SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')	
 	SceneManager:addScene(HoboGameScene:new(gameWorld), 'hobogame')	
+	
+	SceneManager:addScene(BeatEmUpGameScene:new(gameWorld), 'beatemup')	
+	
 	--SceneManager:show('hobogame')	
+	SceneManager:show('beatemup')	
+	
 		
 	--[[
 	local hero = Character:new(gameWorld)
@@ -111,9 +117,9 @@ function love.load()
 	local dialogue = Dialogue:new('gameIntro', 'start', gameWorld, hero, other)
 	SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')		
 	SceneManager:show('dialogue', dialogue)
-	]]	
+	]]
 	
-	SceneManager:show('longtime')	
+	--SceneManager:show('longtime')	
 	--SceneManager:show('hobodefensetitle')	
 	--SceneManager:show('ss')		
 	--SceneManager:show('shaderDebug')
