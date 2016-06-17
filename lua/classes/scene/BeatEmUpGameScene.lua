@@ -34,7 +34,7 @@ function BeatEmUpGameScene:init()
 	local sy = 0
 	
 	for _, frame in ipairs(frames) do	
-		frame[3] = love.graphics.newQuad(sx, sy, frame[1], frame[2], width, height, 0, 1, 1, 0.5, 1)
+		frame[3] = love.graphics.newQuad(sx, sy, frame[1], frame[2], width, height)
 		sx = sx + frame[1] + 2
 	end
 	
@@ -42,7 +42,7 @@ function BeatEmUpGameScene:init()
 	self.frameIndex = 1
 	
 	self.frameTimeCount = 0
-	self.frameDelay = 0.08
+	self.frameDelay = 0.05
 	
 	self.charX = 0
 end
@@ -51,7 +51,7 @@ function BeatEmUpGameScene:draw()
 	local frames = self.frames
 	
 	local frame = frames[self.frameIndex]
-	love.graphics.draw(self.spriteSheet, frame[3], self.charX, 50)
+	love.graphics.draw(self.spriteSheet, frame[3], self.charX + 65 - frame[1], 50)
 end
 					
 function BeatEmUpGameScene:update(dt)
@@ -64,7 +64,7 @@ function BeatEmUpGameScene:update(dt)
 		end
 	end
 	
-	self.charX = self.charX + 40 * dt
+	self.charX = self.charX + 50 * dt
 end
 
 return BeatEmUpGameScene

@@ -40,6 +40,8 @@ local ColorMatchScene = require 'classes/scene/ColorMatchScene'
 local SpaceSimulatorScene = require 'classes/scene/SpaceSimulatorScene'
 local TowerDefenseScene = require 'classes/scene/TowerDefenseScene'
 local BeatEmUpGameScene = require 'classes/scene/BeatEmUpGameScene'
+local OperationGameScene = require 'classes/scene/OperationGameScene'
+
 
 local LongTimeScene = require 'classes/scene/LongTimeScene'
 local HoboDefenseTitleScene = require 'classes/scene/HoboDefenseTitleScene'
@@ -101,9 +103,11 @@ function love.load()
 	SceneManager:addScene(HoboGameScene:new(gameWorld), 'hobogame')	
 	
 	SceneManager:addScene(BeatEmUpGameScene:new(gameWorld), 'beatemup')	
+	SceneManager:addScene(OperationGameScene:new(gameWorld), 'operationgame')	
 	
+	SceneManager:show('operationgame')	
 	--SceneManager:show('hobogame')	
-	SceneManager:show('beatemup')	
+	--SceneManager:show('beatemup')	
 	
 		
 	--[[
