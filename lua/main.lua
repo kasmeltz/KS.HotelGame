@@ -32,20 +32,22 @@ local BankScene = require 'classes/scene/BankScene'
 local StoryScene = require 'classes/scene/StoryScene'
 local DialogueScene = require 'classes/scene/DialogueScene'
 local Character = require 'classes/simulation/Character'
-local ShearTestScene = require 'classes/scene/ShearTestScene'
-local RenderingPipelineTest = require 'classes/scene/RenderingPipelineTest'
-local ShaderDebugScene = require 'classes/scene/ShaderDebugScene'
-local SchmupScene = require 'classes/scene/SchmupScene'
-local ColorMatchScene = require 'classes/scene/ColorMatchScene'
+
+--local ShearTestScene = require 'classes/scene/ShearTestScene'
+--local RenderingPipelineTest = require 'classes/scene/RenderingPipelineTest'
+--local ShaderDebugScene = require 'classes/scene/ShaderDebugScene'
+--local SchmupScene = require 'classes/scene/SchmupScene'
+
+local LongTimeScene = require 'classes/scene/LongTimeScene'
+local HoboDefenseTitleScene = require 'classes/scene/HoboDefenseTitleScene'
 local SpaceSimulatorScene = require 'classes/scene/SpaceSimulatorScene'
 local TowerDefenseScene = require 'classes/scene/TowerDefenseScene'
 local BeatEmUpGameScene = require 'classes/scene/BeatEmUpGameScene'
 local OperationGameScene = require 'classes/scene/OperationGameScene'
+local TradingCardGameScene = require 'classes/scene/TradingCardGameScene'
 
 
-local LongTimeScene = require 'classes/scene/LongTimeScene'
-local HoboDefenseTitleScene = require 'classes/scene/HoboDefenseTitleScene'
-local HoboGameScene = require 'classes/scene/HoboGameScene'
+
 	
 local gameWorld
 function love.load()
@@ -85,7 +87,7 @@ function love.load()
 				
 	--SceneManager:addScene(BankScene:new(gameWorld), 'bank')
 	--SceneManager:addScene(HotelScene:new(gameWorld), 'hotel')
-	--SceneManager:addScene(StoryScene:new(gameWorld), 'story')
+	SceneManager:addScene(StoryScene:new(gameWorld), 'story')
 	
 	--SceneManager:addScene(ShearTestScene:new(gameWorld), 'shearTest')
 	--SceneManager:addScene(ShaderDebugScene:new(gameWorld), 'shaderDebug')	
@@ -96,20 +98,18 @@ function love.load()
 	--SceneManager:addScene(SchmupScene:new(gameWorld), 'schmup')
 	--SceneManager:show('schmup')
 	--SceneManager:addScene(SpaceSimulatorScene:new(gameWorld), 'ss')
-	--SceneManager:show('ss')	
-	
-	SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
+	--SceneManager:show('ss')		
+	--SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
 	SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')	
-	SceneManager:addScene(HoboGameScene:new(gameWorld), 'hobogame')	
+	SceneManager:addScene(TowerDefenseScene:new(gameWorld), 'towerdefense')		
+	--SceneManager:addScene(BeatEmUpGameScene:new(gameWorld), 'beatemup')	
+	--SceneManager:addScene(OperationGameScene:new(gameWorld), 'operationgame')	
+	--SceneManager:addScene(TradingCardGameScene:new(gameWorld), 'tradingcardgame')		
+	--SceneManager:show('operationgame')	
+	SceneManager:show('hobodefensetitle')	
+	--SceneManager:show('tradingcardgame')	
+	--SceneManager:show('story', StoryFactory:createStory('begin', gameWorld))
 	
-	SceneManager:addScene(BeatEmUpGameScene:new(gameWorld), 'beatemup')	
-	SceneManager:addScene(OperationGameScene:new(gameWorld), 'operationgame')	
-	
-	SceneManager:show('operationgame')	
-	--SceneManager:show('hobogame')	
-	--SceneManager:show('beatemup')	
-	
-		
 	--[[
 	local hero = Character:new(gameWorld)
 	hero.name = 'Kevin'
@@ -123,16 +123,7 @@ function love.load()
 	SceneManager:show('dialogue', dialogue)
 	]]
 	
-	--SceneManager:show('longtime')	
-	--SceneManager:show('hobodefensetitle')	
-	--SceneManager:show('ss')		
-	--SceneManager:show('shaderDebug')
 	
-	--SceneManager:show('shearTest')
-	--SceneManager:show('shaderDebug')		
-	--SceneManager:show('renderingPipelineTest')
-	--SceneManager:show('bank')
-	--SceneManager:show('story', StoryFactory:createStory('begin', gameWorld))
 end
 
 function love.update(dt)

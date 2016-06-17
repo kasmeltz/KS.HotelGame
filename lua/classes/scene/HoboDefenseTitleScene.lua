@@ -14,11 +14,12 @@ function HoboDefenseTitleScene:init(gameWorld)
 	
 	local cv = love.graphics.newCanvas(300,100)
 	love.graphics.setCanvas(cv)
+	love.graphics.clear(0,0,0,0)
 	local dirtyFox = FontManager:getFont('DirtyFox')
 	love.graphics.setFont(dirtyFox)
 	love.graphics.setColor(255, 255, 0)
 	love.graphics.printf('Hobo', 0, 0, 300, 'center')
-	love.graphics.printf('Wars', 0, 35, 300, 'center')
+	love.graphics.printf('Tales', 0, 35, 300, 'center')
 	self.hoboCanvas = cv
 	love.graphics.setCanvas()	
 	self.titleScale = 20
@@ -83,7 +84,21 @@ function HoboDefenseTitleScene:init(gameWorld)
 	self.drawingMesh = drawingMesh	
 
 	self.textY = sh
-	self.endTextY = -3400
+	self.endTextY = -3000
+	
+	local starCount = 200
+	local stars = {}
+	for i = 1, starCount do
+		local star = 
+		{		
+			math.random(0, sw), math.random(0, sh * 1.5), 
+			math.random(1,2), 
+			math.random(200, 255), math.random(200, 255), math.random(200, 255)
+		}
+		stars[#stars + 1] = star
+	end
+	
+	self.stars = stars
 end
 
 local story = {
@@ -114,16 +129,12 @@ local story = {
 	'searching for the',
 	'chosen one that can',
 	'bring honor to his',
-	'people.',
-	'(and maybe some',
-	'wicked crack too!)',
+	'people...',
 	'',
-	'En route to the hobo',
-	'base, Ganjadore is',
-	'waylaid by a',
-	'relentless desire',
-	'and is forced to',
-	'stop at a piñata orgy...'
+	'',
+	'',
+	'And hopefully some',
+	'wicked crack too...',
 }
 
 function HoboDefenseTitleScene:drawStory()
@@ -158,6 +169,12 @@ function HoboDefenseTitleScene:draw()
 	local sw = self.screenWidth
 	local sh = self.screenHeight
 		
+	local stars = self.stars
+	for _, star in ipairs(stars) do
+		love.graphics.setColor(star[4], star[5], star[6])
+		love.graphics.circle('fill', star[1], star[2], star[3])
+	end
+	
 	if self.timer > self.beforeStory then
 		self:drawStory()
 	end
@@ -185,7 +202,7 @@ function HoboDefenseTitleScene:update(dt)
 	end
 	
 	if self.textY < self.endTextY then
-		SceneManager:show('hobogame')
+		SceneManager:show('towerdefense')
 	end
 end
 
