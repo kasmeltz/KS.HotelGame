@@ -94,10 +94,11 @@ function love.load()
 	--SceneManager:show('schmup')
 	--SceneManager:addScene(SpaceSimulatorScene:new(gameWorld), 'ss')
 	--SceneManager:show('ss')	
-	--SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
-	--SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')
-	SceneManager:addScene(HoboGameScene:new(gameWorld), 'hobogame')
-	--SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')	
+	
+	SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
+	SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')	
+	SceneManager:addScene(HoboGameScene:new(gameWorld), 'hobogame')	
+	--SceneManager:show('hobogame')	
 		
 	--[[
 	local hero = Character:new(gameWorld)
@@ -108,10 +109,11 @@ function love.load()
 	other.name = 'Edna'
 		
 	local dialogue = Dialogue:new('gameIntro', 'start', gameWorld, hero, other)
-	]]
-	SceneManager:show('hobogame')	
-	--SceneManager:show('dialogue', dialogue)	
-	--SceneManager:show('longtime')	
+	SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')		
+	SceneManager:show('dialogue', dialogue)
+	]]	
+	
+	SceneManager:show('longtime')	
 	--SceneManager:show('hobodefensetitle')	
 	--SceneManager:show('ss')		
 	--SceneManager:show('shaderDebug')

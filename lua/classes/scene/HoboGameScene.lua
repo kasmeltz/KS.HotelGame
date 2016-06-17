@@ -26,9 +26,9 @@ function HoboGameScene:init()
 	self.paths[#self.paths + 1] = TDPath:new(self.gameWorld, 0, 600)
 	
 	self.towers = {}
-	self.towers[#self.towers + 1] = TDTower:new(self.gameWorld, 650, 400, 100, 0.5, 200, 20)
-	self.towers[#self.towers + 1] = TDTower:new(self.gameWorld, 550, 450, 100, 0.5, 200, 20)
-	self.towers[#self.towers + 1] = TDTower:new(self.gameWorld, 650, 500, 100, 0.5, 200, 20)
+	self.towers[#self.towers + 1] = TDTower:new(self.gameWorld, 650, 400, 100, 0.3, 200, 15)
+	self.towers[#self.towers + 1] = TDTower:new(self.gameWorld, 550, 450, 100, 0.3, 200, 15)
+	self.towers[#self.towers + 1] = TDTower:new(self.gameWorld, 650, 500, 100, 0.3, 200, 15)
 			
 	self.bullets = {}
 	
@@ -267,7 +267,7 @@ function HoboGameScene:update(dt)
 			bulletsToRemove[#bulletsToRemove + 1] = i
 		else
 			for j = 1, #enemies do
-				local enemy = enemies[j]			
+				local enemy = enemies[j]	
 				local d = FFIVector2.distance(enemy.position, bullet.position)
 				if d < hitSize then
 					bulletsToRemove[#bulletsToRemove + 1] = i

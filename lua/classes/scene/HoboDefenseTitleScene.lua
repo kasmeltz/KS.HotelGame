@@ -48,9 +48,9 @@ function HoboDefenseTitleScene:init(gameWorld)
 		number px = screen_coords.x;
 		number py = screen_coords.y;
 		
-		number py2 = pow(py, 0.0001);
-		number y12 = pow(y1, 0.0001);
-		number y22 = pow(y2, 0.0001);
+		number py2 = log(py);
+		number y12 = log(y1);
+		number y22 = log(y2);
 		
 		number ty = (py2 - y12) / (y22 - y12);
 		

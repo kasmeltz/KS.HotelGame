@@ -9,7 +9,7 @@ function CharacterPortrait:init(character)
 	self.character = character
 	self.image = nil
 	
-	self.image = love.graphics.newImage('data/images/banker.png')
+	self.image = love.graphics.newImage('data/images/thai.png')
 end
 
 function CharacterPortrait:draw() 
