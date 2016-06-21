@@ -4,7 +4,7 @@ local Drawable = class('Drawable')
 function Drawable:draw() end
 
 function Drawable:init() 
-	self.screenWidth, self.screenHeight = love.graphics.getDimensions( )
+	self.screenWidth, self.screenHeight = love.graphics.getDimensions()
 end
 
 return Drawable

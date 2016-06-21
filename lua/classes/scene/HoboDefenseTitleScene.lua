@@ -86,14 +86,14 @@ function HoboDefenseTitleScene:init(gameWorld)
 	self.textY = sh
 	self.endTextY = -3000
 	
-	local starCount = 200
+	local starCount = 250
 	local stars = {}
 	for i = 1, starCount do
 		local star = 
 		{		
-			math.random(0, sw), math.random(0, sh * 1.5), 
-			math.random(1,2), 
-			math.random(200, 255), math.random(200, 255), math.random(200, 255)
+			love.math.random(0, sw), love.math.random(0, sh * 2), 
+			love.math.random(1,2), 
+			love.math.random(200, 255), love.math.random(200, 255), love.math.random(200, 255)
 		}
 		stars[#stars + 1] = star
 	end

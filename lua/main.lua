@@ -1,4 +1,5 @@
 local luabins = require 'luabins'
+local sti = require 'libs/sti'
 
 print()
 print('----------------------------------------------------------------------')
@@ -32,12 +33,6 @@ local BankScene = require 'classes/scene/BankScene'
 local StoryScene = require 'classes/scene/StoryScene'
 local DialogueScene = require 'classes/scene/DialogueScene'
 local Character = require 'classes/simulation/Character'
-
---local ShearTestScene = require 'classes/scene/ShearTestScene'
---local RenderingPipelineTest = require 'classes/scene/RenderingPipelineTest'
---local ShaderDebugScene = require 'classes/scene/ShaderDebugScene'
---local SchmupScene = require 'classes/scene/SchmupScene'
-
 local LongTimeScene = require 'classes/scene/LongTimeScene'
 local HoboDefenseTitleScene = require 'classes/scene/HoboDefenseTitleScene'
 local SpaceSimulatorScene = require 'classes/scene/SpaceSimulatorScene'
@@ -45,9 +40,6 @@ local TowerDefenseScene = require 'classes/scene/TowerDefenseScene'
 local BeatEmUpGameScene = require 'classes/scene/BeatEmUpGameScene'
 local OperationGameScene = require 'classes/scene/OperationGameScene'
 local TradingCardGameScene = require 'classes/scene/TradingCardGameScene'
-
-
-
 	
 local gameWorld
 function love.load()
@@ -83,31 +75,21 @@ function love.load()
 	gameTime:setSpeed(5)
 	gameWorld.gameTime = gameTime
 		
-	
 				
-	--SceneManager:addScene(BankScene:new(gameWorld), 'bank')
-	--SceneManager:addScene(HotelScene:new(gameWorld), 'hotel')
-	SceneManager:addScene(StoryScene:new(gameWorld), 'story')
-	
-	--SceneManager:addScene(ShearTestScene:new(gameWorld), 'shearTest')
-	--SceneManager:addScene(ShaderDebugScene:new(gameWorld), 'shaderDebug')	
-	--SceneManager:addScene(SchmupScene:new(gameWorld), 'schmup')
-	--SceneManager:addScene(RenderingPipelineTest:new(gameWorld), 'renderingPipelineTest')	
-	--SceneManager:addScene(ColorMatchScene:new(gameWorld), 'colorMatch')	
-	--SceneManager:show('colorMatch')
-	--SceneManager:addScene(SchmupScene:new(gameWorld), 'schmup')
-	--SceneManager:show('schmup')
-	--SceneManager:addScene(SpaceSimulatorScene:new(gameWorld), 'ss')
-	--SceneManager:show('ss')		
+	--SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')		
+	--SceneManager:addScene(StoryScene:new(gameWorld), 'story')	
 	--SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
-	SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')	
-	SceneManager:addScene(TowerDefenseScene:new(gameWorld), 'towerdefense')		
-	--SceneManager:addScene(BeatEmUpGameScene:new(gameWorld), 'beatemup')	
+	--SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')	
+	--SceneManager:addScene(TowerDefenseScene:new(gameWorld), 'towerdefense')		
+	
+	SceneManager:addScene(BeatEmUpGameScene:new(gameWorld), 'beatemup')	
 	--SceneManager:addScene(OperationGameScene:new(gameWorld), 'operationgame')	
-	--SceneManager:addScene(TradingCardGameScene:new(gameWorld), 'tradingcardgame')		
+	SceneManager:addScene(TradingCardGameScene:new(gameWorld), 'tradingcardgame')		
+	
 	--SceneManager:show('operationgame')	
-	SceneManager:show('hobodefensetitle')	
+	--SceneManager:show('hobodefensetitle')	
 	--SceneManager:show('tradingcardgame')	
+	SceneManager:show('beatemup')	
 	--SceneManager:show('story', StoryFactory:createStory('begin', gameWorld))
 	
 	--[[
@@ -118,8 +100,7 @@ function love.load()
 	local other = Character:new(gameWorld)
 	other.name = 'Edna'
 		
-	local dialogue = Dialogue:new('gameIntro', 'start', gameWorld, hero, other)
-	SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')		
+	local dialogue = Dialogue:new('gameIntro', 'start', gameWorld, hero, other)	
 	SceneManager:show('dialogue', dialogue)
 	]]
 	
@@ -218,3 +199,78 @@ end
 function love.threaderror(thread, errorstr)
   print("Thread error!\n"..errorstr)
 end
+
+--[[
+--STI DEMO
+function love.load()
+    -- Grab window size
+    windowWidth  = love.graphics.getWidth()
+    windowHeight = love.graphics.getHeight()
+
+    -- Set world meter size (in pixels)
+    love.physics.setMeter(32)
+
+    -- Load a map exported to Lua from Tiled
+    map = sti.new("assets/maps/map01.lua", { "box2d" })
+
+    -- Prepare physics world with horizontal and vertical gravity
+    world = love.physics.newWorld(0, 0)
+
+    -- Prepare collision objects
+    map:box2d_init(world)
+
+    -- Create a Custom Layer
+    map:addCustomLayer("Sprite Layer", 3)
+
+    -- Add data to Custom Layer
+    local spriteLayer = map.layers["Sprite Layer"]
+    spriteLayer.sprites = {
+        player = {
+            image = love.graphics.newImage("assets/sprites/player.png"),
+            x = 64,
+            y = 64,
+            r = 0,
+        }
+    }
+
+    -- Update callback for Custom Layer
+    function spriteLayer:update(dt)
+        for _, sprite in pairs(self.sprites) do
+            sprite.r = sprite.r + math.rad(90 * dt)
+        end
+    end
+
+    -- Draw callback for Custom Layer
+    function spriteLayer:draw()
+        for _, sprite in pairs(self.sprites) do
+            local x = math.floor(sprite.x)
+            local y = math.floor(sprite.y)
+            local r = sprite.r
+            love.graphics.draw(sprite.image, x, y, r)
+        end
+    end
+end
+
+function love.update(dt)
+    map:update(dt)
+end
+
+function love.draw()
+    -- Translation would normally be based on a player's x/y
+    local translateX = 0
+    local translateY = 0
+
+    -- Draw Range culls unnecessary tiles
+    map:setDrawRange(-translateX, -translateY, windowWidth, windowHeight)
+
+    -- Draw the map and all objects within
+    map:draw()
+
+    -- Draw Collision Map (useful for debugging)
+    love.graphics.setColor(255, 0, 0, 255)
+    map:box2d_draw()
+
+    -- Reset color
+    love.graphics.setColor(255, 255, 255, 255)
+end
+]]
