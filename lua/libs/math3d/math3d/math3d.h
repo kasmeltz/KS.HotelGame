@@ -94,6 +94,7 @@ extern "C"
 	DECLDIR float vector2DistanceSquared(vector2 *v1, vector2 *v2);
 	DECLDIR float vector2Distance(vector2 *v1, vector2 *v2);
 	DECLDIR void vector2Normalize(vector2 *result, vector2 *v1);
+	DECLDIR void vector2Intersect(vector2 *result, vector2 *l1start, vector2 *l1end, vector2 *l2start, vector2 *l2end);
 
 	// VECTOR3
 	DECLDIR void vector3ScalarAdd(vector3 *result, vector3 *v1, float v);

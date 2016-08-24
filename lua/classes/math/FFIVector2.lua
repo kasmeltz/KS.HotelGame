@@ -22,6 +22,7 @@ ffi.cdef[[
 	float vector2DistanceSquared(vector2 *v1, vector2 *v2);
 	float vector2Distance(vector2 *v1, vector2 *v2);
 	void vector2Normalize(vector2 *result, vector2 *v1);
+	void vector2Intersect(vector2 *result, vector2 *l1start, vector2 *l1end, vector2 *l2start, vector2 *l2end);
 ]]
 
 local math3d = ffi.load 'math3d'
@@ -144,6 +145,16 @@ end
 
 function FFIVector2.normalizeInline(r, v1)
 	math3d.vector2Normalize(r, v1)
+end
+
+function FFIVector2.intersect(l1s, l1e, l2s, l2e)
+	local r = FFIVector2.newVector()
+	math3d.vector2Intersect(r, l1s, l1e, l2s, l2e)
+	return r
+end
+
+function FFIVector2.intersectInline(r, l1s, l1e, l2s, l2e)
+	math3d.vector2Intersect(r, l1s, l1e, l2s, l2e)
 end
 
 function FFIVector2.display(v, sep)

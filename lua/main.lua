@@ -1,5 +1,5 @@
-local luabins = require 'luabins'
-local sti = require 'libs/sti'
+--local luabins = require 'luabins'
+--local sti = require 'libs/sti'
 
 print()
 print('----------------------------------------------------------------------')
@@ -40,6 +40,7 @@ local TowerDefenseScene = require 'classes/scene/TowerDefenseScene'
 local BeatEmUpGameScene = require 'classes/scene/BeatEmUpGameScene'
 local OperationGameScene = require 'classes/scene/OperationGameScene'
 local TradingCardGameScene = require 'classes/scene/TradingCardGameScene'
+local PlatformerGameScene = require 'classes/scene/PlatformerGameScene'
 	
 local gameWorld
 function love.load()
@@ -78,18 +79,21 @@ function love.load()
 				
 	--SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')		
 	--SceneManager:addScene(StoryScene:new(gameWorld), 'story')	
-	--SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
-	--SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')	
-	--SceneManager:addScene(TowerDefenseScene:new(gameWorld), 'towerdefense')		
+	SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
+	SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')	
+	SceneManager:addScene(TowerDefenseScene:new(gameWorld), 'towerdefense')		
 	
-	SceneManager:addScene(BeatEmUpGameScene:new(gameWorld), 'beatemup')	
+	--SceneManager:addScene(BeatEmUpGameScene:new(gameWorld), 'beatemup')	
 	--SceneManager:addScene(OperationGameScene:new(gameWorld), 'operationgame')	
 	SceneManager:addScene(TradingCardGameScene:new(gameWorld), 'tradingcardgame')		
+	SceneManager:addScene(PlatformerGameScene:new(gameWorld), 'platformergame')		
 	
 	--SceneManager:show('operationgame')	
 	--SceneManager:show('hobodefensetitle')	
-	--SceneManager:show('tradingcardgame')	
-	SceneManager:show('beatemup')	
+	SceneManager:show('tradingcardgame')	
+	--SceneManager:show('longtime')	
+	SceneManager:show('platformergame')	
+	
 	--SceneManager:show('story', StoryFactory:createStory('begin', gameWorld))
 	
 	--[[
@@ -142,6 +146,19 @@ function love.draw()
 	love.graphics.print(date, 900, 0)
 	love.graphics.print('speed: ' ..  gameTime.speedTexts[gameTime.currentSpeed], 900, 15)
 	]]
+end
+
+function love.keypressed(key, scancode)
+	local vs = SceneManager.visibleScenes
+	for i = #vs, 1, -1 do
+		local vScene = vs[i]	
+		if vScene.keypressed then		
+			vScene:keypressed(key, scancode)
+		end
+		if vScene.isBlocking then
+			break
+		end
+	end		
 end
 
 function love.keyreleased(key, scancode)

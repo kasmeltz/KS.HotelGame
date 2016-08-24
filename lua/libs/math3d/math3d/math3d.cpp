@@ -17,26 +17,26 @@ extern "C"
 	DECLDIR void matrix4x4Identity(matrix4x4 *m)
 	{
 		m->M11 = m->M22 = m->M33 = m->M44 = 1;
-		m->M12 = m->M13 = m->M14 = m->M21 = m->M23 = m->M24 = m->M31 = m->M32 = m->M34 = m->M41 = m->M42 = m->M43 = 0;			
+		m->M12 = m->M13 = m->M14 = m->M21 = m->M23 = m->M24 = m->M31 = m->M32 = m->M34 = m->M41 = m->M42 = m->M43 = 0;
 	}
 
 	DECLDIR void matrix4x4Transpose(matrix4x4 *result, matrix4x4 *m)
 	{
-		result->M11 = m->M11; 
-		result->M12 = m->M21; 
-		result->M13 = m->M31; 
+		result->M11 = m->M11;
+		result->M12 = m->M21;
+		result->M13 = m->M31;
 		result->M14 = m->M41;
-		result->M21 = m->M12; 
-		result->M22 = m->M22; 
-		result->M23 = m->M32; 
+		result->M21 = m->M12;
+		result->M22 = m->M22;
+		result->M23 = m->M32;
 		result->M24 = m->M42;
-		result->M31 = m->M13; 
-		result->M32 = m->M23; 
-		result->M33 = m->M33; 
+		result->M31 = m->M13;
+		result->M32 = m->M23;
+		result->M33 = m->M33;
 		result->M34 = m->M43;
-		result->M41 = m->M14; 
-		result->M42 = m->M24; 
-		result->M43 = m->M34; 
+		result->M41 = m->M14;
+		result->M42 = m->M24;
+		result->M43 = m->M34;
 		result->M44 = m->M44;
 	}
 
@@ -78,7 +78,7 @@ extern "C"
 		result->M42 = (left->M41 * right->M12) + (left->M42 * right->M22) + (left->M43 * right->M32) + (left->M44 * right->M42);
 		result->M43 = (left->M41 * right->M13) + (left->M42 * right->M23) + (left->M43 * right->M33) + (left->M44 * right->M43);
 		result->M44 = (left->M41 * right->M14) + (left->M42 * right->M24) + (left->M43 * right->M34) + (left->M44 * right->M44);
-	}	
+	}
 
 	DECLDIR void matrix4x4Add(matrix4x4 *result, matrix4x4 *left, matrix4x4 *right)
 	{
@@ -135,7 +135,7 @@ extern "C"
 		float d14 = value->M21 * b3 + value->M22 * -b1 + value->M23 * b0;
 
 		float det = value->M11 * d11 - value->M12 * d12 + value->M13 * d13 - value->M14 * d14;
-		
+
 		if (fabs(det) == 0.0f)
 		{
 			matrix4x4Zero(result);
@@ -169,7 +169,7 @@ extern "C"
 		result->M11 = +d11 * det; result->M12 = -d21 * det; result->M13 = +d31 * det; result->M14 = -d41 * det;
 		result->M21 = -d12 * det; result->M22 = +d22 * det; result->M23 = -d32 * det; result->M24 = +d42 * det;
 		result->M31 = +d13 * det; result->M32 = -d23 * det; result->M33 = +d33 * det; result->M34 = -d43 * det;
-		result->M41 = -d14 * det; result->M42 = +d24 * det; result->M43 = -d34 * det; result->M44 = +d44 * det;		
+		result->M41 = -d14 * det; result->M42 = +d24 * det; result->M43 = -d34 * det; result->M44 = +d44 * det;
 	}
 
 	DECLDIR void matrix4x4TransformCoordinate(vector3 *result, vector3 *coordinate, matrix4x4 *transform)
@@ -224,9 +224,9 @@ extern "C"
 	}
 
 	DECLDIR void matrix4x4LookAtLH(matrix4x4 *result, vector3 *eye, vector3 *target, vector3 *up)
-	{	
-		vector3 xaxis, yaxis, zaxis;		
-		vector3Subtract(&zaxis, target, eye);		
+	{
+		vector3 xaxis, yaxis, zaxis;
+		vector3Subtract(&zaxis, target, eye);
 		vector3Normalize(&zaxis, &zaxis);
 		vector3Cross(&xaxis, up, &zaxis);
 		vector3Normalize(&xaxis, &xaxis);
@@ -239,7 +239,7 @@ extern "C"
 
 		result->M41 = -vector3Dot(&xaxis, eye);
 		result->M42 = -vector3Dot(&yaxis, eye);
-		result->M43 = -vector3Dot(&zaxis, eye);		
+		result->M43 = -vector3Dot(&zaxis, eye);
 	}
 
 	DECLDIR void matrix4x4PerspectiveFovRH(matrix4x4 *result, float fov, float aspect, float znear, float zfar)
@@ -255,7 +255,7 @@ extern "C"
 	}
 
 	DECLDIR void matrix4x4Project(vector3 *result, vector3 *vin, matrix4x4 *m, float x, float y, float width, float height, float minZ, float maxZ)
-	{	
+	{
 		vector3 v;
 		matrix4x4TransformCoordinate(&v, vin, m);
 
@@ -343,12 +343,56 @@ extern "C"
 		result->Y = v1->Y / l;
 	}
 
+	DECLDIR void vector2Intersect(vector2 *result, vector2 *l1start, vector2 *l1end, vector2 *l2start, vector2 *l2end)
+	{
+		result->X = -1;
+		result->Y = -1;
+
+		//printf("li1start: %f %f line1end: %f %f line2start: %f %f line2end: %f %f \n",
+			//l1start->X, l1start->Y,
+			//l1end->X, l1end->Y,
+			//l2start->X, l2start->Y,
+			//l2end->X, l2end->Y);
+
+		float denominator = ((l2end->Y - l2start->Y) * (l1end->X - l1start->X)) -
+			((l2end->X - l2start->X) * (l1end->Y - l1start->Y));
+
+		if (denominator == 0) {
+			return;
+		}
+
+		float a = l1start->Y - l2start->Y;
+		float b = l1start->X - l2start->X;
+		float numerator1 = ((l2end->X - l2start->X) * a) - ((l2end->Y - l2start->Y) * b);
+		float numerator2 = ((l1end->X - l1start->X) * a) - ((l1end->Y - l1start->Y) * b);
+		a = numerator1 / denominator;
+		b = numerator2 / denominator;
+
+		bool ol1 = false;
+		bool ol2 = false;
+		// if line1 is a segment and line2 is infinite, they intersect if:
+		if (a > 0 && a < 1) {
+			ol1 = true;
+		}
+		// if line2 is a segment and line1 is infinite, they intersect if:
+		if (b > 0 && b < 1) {
+			ol2 = true;
+		}
+
+		if (ol1 && ol2) {
+			// if we cast these lines infinitely in both directions, they intersect here:
+			result->X = l1start->X + (a * (l1end->X - l1start->X));
+			result->Y = l1start->Y + (a * (l1end->Y - l1start->Y));
+		}
+	}
+
+
 	// VECTOR3
 	DECLDIR void vector3ScalarAdd(vector3 *result, vector3 *v1, float v)
 	{
 		result->X = v1->X + v;
 		result->Y = v1->Y + v;
-		result->Z = v1->Z + v;		
+		result->Z = v1->Z + v;
 	}
 
 	DECLDIR void vector3Add(vector3 *result, vector3 *v1, vector3 *v2)
@@ -397,7 +441,7 @@ extern "C"
 		result->Y = v1->Z * v2->X - v1->X * v2->Z;
 		result->Z = v1->X * v2->Y - v1->Y * v2->X;
 	}
-	
+
 	DECLDIR float vector3LengthSquared(vector3 *v1)
 	{
 		return v1->X * v1->X + v1->Y * v1->Y + v1->Z * v1->Z;
@@ -435,7 +479,7 @@ extern "C"
 	{
 		float halfYaw = v->X * 0.5f;
 		float halfPitch = v->Y * 0.5f;
-		float halfRoll = v->Z * 0.5f;			
+		float halfRoll = v->Z * 0.5f;
 
 		float sinRoll = sinf(halfRoll);
 		float cosRoll = cosf(halfRoll);
@@ -530,7 +574,7 @@ extern "C"
 
 		/*
 		local mesh = FFIMesh.newMesh(8, 8)
-		
+
 
 		l
 
@@ -594,16 +638,16 @@ extern "C"
 
 		return mesh
 		*/
-			/*
-		int idx = 0;
-		for (int y = 0;y < height;y++)
+		/*
+	int idx = 0;
+	for (int y = 0;y < height;y++)
+	{
+		for (int x = 0;x < width;x++)
 		{
-			for (int x = 0;x < width;x++)
-			{
-				buffer[idx].r = 255;
-				buffer[idx++].a = 255;
-			}
+			buffer[idx].r = 255;
+			buffer[idx++].a = 255;
 		}
-		*/
+	}
+	*/
 	}
 }
