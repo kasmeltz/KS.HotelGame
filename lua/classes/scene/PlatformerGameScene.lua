@@ -25,6 +25,12 @@ function PlatformerGameScene:createPlatform(x1, y1, x2, y2)
 	return p
 end
 
+function PlatformerGameScene:createHero()
+	local hero = PFEntity:new(self.gameWorld, 300, 100, 10)
+	hero.state = PFEntity.FALLING_STATE
+	self.hero = hero	
+end
+
 function PlatformerGameScene:init(gameWorld)
 	PlatformerGameScene.super.init(self, gameWorld)	
 
@@ -33,13 +39,15 @@ function PlatformerGameScene:init(gameWorld)
 	local platforms = 
 	{
 		self:createPlatform(200, 300, 400, 300), 
-		self:createPlatform(600, 300, 900, 300)
+		self:createPlatform(475, 300, 700, 300),
+		self:createPlatform(200, 400, 400, 500), 
+		self:createPlatform(475, 400, 700, 500),
+		self:createPlatform(200, 550, 400, 800), 
+		self:createPlatform(475, 550, 700, 800)
 	}
 	self.platforms = platforms
-
-	local hero = PFEntity:new(gameWorld, 300, 100, 10)
-	hero.state = PFEntity.FALLING_STATE
-	self.hero = hero
+	
+	self:createHero()
 	
 	self.workVector = FFIVector2.newVector()
 	self.downVector = FFIVector2.newVector()
@@ -80,9 +88,12 @@ function PlatformerGameScene:update(dt)
 	hero:update(dt)
 	
 	if hero.state == PFEntity.FALLING_STATE then
+		downVector.X = hero.position.X
+		downVector.Y = hero.position.Y + hero.radius + 1
+
 		local platforms = self.platforms	
 		for _, platform in ipairs(platforms) do
-			FFIVector2.intersectInline(workVector, hero.oldPosition, hero.position, platform[1], platform[2])
+			FFIVector2.intersectInline(workVector, hero.oldPosition, downVector, platform[1], platform[2])
 			if (workVector.X ~= -1 and workVector.Y ~= -1) then
 				hero:changeState(PFEntity.ON_PLATFORM_STATE)
 				hero.position.Y = workVector.Y - hero.radius
@@ -100,6 +111,7 @@ function PlatformerGameScene:update(dt)
 			FFIVector2.intersectInline(workVector, hero.position, downVector, platform[1], platform[2])
 			if (workVector.X ~= -1 and workVector.Y ~= -1) then
 				isStillOn = true
+				hero.position.Y = workVector.Y - hero.radius
 			end			
 		end
 		
@@ -112,6 +124,10 @@ end
 function PlatformerGameScene:keypressed(key) 
 	if key == 'lctrl' then
 		self.hero:changeState(PFEntity.JUMPING_STATE)	
+	end
+	
+	if key == 'f1' then
+		self:createHero()
 	end
 end
 
