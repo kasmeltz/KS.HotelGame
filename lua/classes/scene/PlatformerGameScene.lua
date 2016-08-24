@@ -43,7 +43,9 @@ function PlatformerGameScene:init(gameWorld)
 		self:createPlatform(200, 400, 400, 500), 
 		self:createPlatform(475, 400, 700, 500),
 		self:createPlatform(200, 550, 400, 800), 
-		self:createPlatform(475, 550, 700, 800)
+		self:createPlatform(475, 550, 700, 800),
+		self:createPlatform(800, 850, 1000, 600)
+
 	}
 	self.platforms = platforms
 	
@@ -69,11 +71,50 @@ function PlatformerGameScene:draw()
 	love.graphics.setColor(200, 200, 100)
 	love.graphics.circle('fill', hero.position.X, hero.position.Y, hero.radius)
 end
+
+function PlatformerGameScene:checkEntityIsOnPlatform(entity, platform)
+	local workVector = self.workVector
+	local downVector = self.downVector
+	local minY = 10000
+
+	--if entity.velocity.X == 0 then
+		downVector.X = entity.position.X 
+		downVector.Y = entity.position.Y + (entity.radius * 2)
+		FFIVector2.intersectInline(workVector, entity.oldPosition, downVector, platform[1], platform[2])
+		if (workVector.X ~= -1 and workVector.Y ~= -1) then
+			if workVector.Y < minY then
+				minY = workVector.Y
+			end
+		end
+	--elseif entity.velocity.X < 0 then	
+		downVector.X = entity.position.X - entity.radius
+		downVector.Y = entity.position.Y + (entity.radius * 2)
+		FFIVector2.intersectInline(workVector, entity.oldPosition, downVector, platform[1], platform[2])
+		if (workVector.X ~= -1 and workVector.Y ~= -1) then
+			if workVector.Y < minY then
+				minY = workVector.Y
+			end
+		end
+--	elseif entity.velocity.X > 0 then	
+		downVector.X = entity.position.X + entity.radius
+		downVector.Y = entity.position.Y + (entity.radius * 2)
+		FFIVector2.intersectInline(workVector, entity.oldPosition, downVector, platform[1], platform[2])
+		if (workVector.X ~= -1 and workVector.Y ~= -1) then
+			if workVector.Y < minY then
+				minY = workVector.Y
+			end	
+		end
+	--end
+	
+	if minY < 10000 then
+		return minY
+	else
+		return nil
+	end
+end
 					
 function PlatformerGameScene:update(dt)
 	local hero = self.hero
-	local workVector = self.workVector
-	local downVector = self.downVector
 
 	hero.velocity.X = 0
 	
@@ -87,32 +128,26 @@ function PlatformerGameScene:update(dt)
 	
 	hero:update(dt)
 	
-	if hero.state == PFEntity.FALLING_STATE then
-		downVector.X = hero.position.X
-		downVector.Y = hero.position.Y + hero.radius + 1
-
+	if hero.state == PFEntity.FALLING_STATE then		
 		local platforms = self.platforms	
 		for _, platform in ipairs(platforms) do
-			FFIVector2.intersectInline(workVector, hero.oldPosition, downVector, platform[1], platform[2])
-			if (workVector.X ~= -1 and workVector.Y ~= -1) then
+			local yIntersect = self:checkEntityIsOnPlatform(hero, platform)
+			if yIntersect then
 				hero:changeState(PFEntity.ON_PLATFORM_STATE)
-				hero.position.Y = workVector.Y - hero.radius
-			end			
+				hero.position.Y = yIntersect - hero.radius
+			end
 		end
 	end
 	
-	if hero.state == PFEntity.ON_PLATFORM_STATE then
-		downVector.X = hero.position.X
-		downVector.Y = hero.position.Y + hero.radius + 1
-		
+	if hero.state == PFEntity.ON_PLATFORM_STATE then		
 		local isStillOn = false
 		local platforms = self.platforms	
 		for _, platform in ipairs(platforms) do
-			FFIVector2.intersectInline(workVector, hero.position, downVector, platform[1], platform[2])
-			if (workVector.X ~= -1 and workVector.Y ~= -1) then
+			local yIntersect = self:checkEntityIsOnPlatform(hero, platform)
+			if yIntersect then
 				isStillOn = true
-				hero.position.Y = workVector.Y - hero.radius
-			end			
+				hero.position.Y = yIntersect - hero.radius
+			end
 		end
 		
 		if not isStillOn then
