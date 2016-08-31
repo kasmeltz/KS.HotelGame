@@ -43,7 +43,7 @@ function PFEntity:changeState(state)
 	
 	if state == PFEntity.JUMPING_STATE then
 		if currentState == PFEntity.ON_PLATFORM_STATE then
-			self.velocity.Y = -650
+			self.velocity.Y = -self.jumpForce
 			self.state = PFEntity.JUMPING_STATE
 		end
 	end
@@ -60,11 +60,11 @@ function PFEntity:update(dt)
 	
 	-- FALLING
 	if self.state == PFEntity.FALLING_STATE then
-		vel.Y = vel.Y + gravity
+		vel.Y = vel.Y + gravity * dt
 	end
 	
 	if self.state == PFEntity.JUMPING_STATE then
-		vel.Y = vel.Y + gravity
+		vel.Y = vel.Y + gravity * dt
 		if vel.Y > 0 then
 			self:changeState(PFEntity.FALLING_STATE)
 		end

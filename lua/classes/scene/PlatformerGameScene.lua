@@ -28,23 +28,24 @@ end
 function PlatformerGameScene:createHero()
 	local hero = PFEntity:new(self.gameWorld, 300, 100, 10)
 	hero.state = PFEntity.FALLING_STATE
+	hero.jumpForce = 650
 	self.hero = hero	
 end
 
 function PlatformerGameScene:init(gameWorld)
 	PlatformerGameScene.super.init(self, gameWorld)	
 
-	gameWorld.gravityCoefficient = 8
+	gameWorld.gravityCoefficient = 1300
 	
 	local platforms = 
 	{
-		self:createPlatform(200, 300, 400, 300), 
-		self:createPlatform(475, 300, 700, 300),
-		self:createPlatform(200, 400, 400, 500), 
-		self:createPlatform(475, 400, 700, 500),
-		self:createPlatform(200, 550, 400, 800), 
-		self:createPlatform(475, 550, 700, 800),
-		self:createPlatform(800, 850, 1000, 600)
+		self:createPlatform(200, 200, 400, 250), 
+		self:createPlatform(475, 200, 700, 250),
+		self:createPlatform(200, 300, 400, 450), 
+		self:createPlatform(475, 300, 700, 450),
+		self:createPlatform(200, 450, 400, 750), 
+		self:createPlatform(475, 450, 700, 750),
+		self:createPlatform(800, 750, 1000, 550)
 
 	}
 	self.platforms = platforms
@@ -53,9 +54,17 @@ function PlatformerGameScene:init(gameWorld)
 	
 	self.workVector = FFIVector2.newVector()
 	self.downVector = FFIVector2.newVector()
+	
+	self.spriteSheet = love.graphics.newImage('data/images/fighter.png')
+	local width = self.spriteSheet:getWidth()
+	local height = self.spriteSheet:getHeight()
+	self.tile = love.graphics.newQuad(0, 0, 65, 74, width, height)
 end
 
 function PlatformerGameScene:draw()	
+	local sw = self.screenWidth
+	local sh = self.screenHeight
+	
 	local platforms = self.platforms
 	
 	for _, platform in ipairs(platforms) do
@@ -70,41 +79,39 @@ function PlatformerGameScene:draw()
 	local hero = self.hero
 	love.graphics.setColor(200, 200, 100)
 	love.graphics.circle('fill', hero.position.X, hero.position.Y, hero.radius)
+	love.graphics.draw(self.spriteSheet, self.tile, hero.position.X - 37, hero.position.Y - 68)
 end
 
 function PlatformerGameScene:checkEntityIsOnPlatform(entity, platform)
 	local workVector = self.workVector
 	local downVector = self.downVector
 	local minY = 10000
-
-	--if entity.velocity.X == 0 then
-		downVector.X = entity.position.X 
-		downVector.Y = entity.position.Y + (entity.radius * 2)
-		FFIVector2.intersectInline(workVector, entity.oldPosition, downVector, platform[1], platform[2])
-		if (workVector.X ~= -1 and workVector.Y ~= -1) then
-			if workVector.Y < minY then
-				minY = workVector.Y
-			end
+	local distanceDown = entity.radius + 0.5
+	
+	downVector.X = entity.position.X 
+	downVector.Y = entity.position.Y + distanceDown
+	FFIVector2.intersectInline(workVector, entity.oldPosition, downVector, platform[1], platform[2])
+	if (workVector.X ~= -1 and workVector.Y ~= -1) then
+		if workVector.Y < minY then
+			minY = workVector.Y
 		end
-	--elseif entity.velocity.X < 0 then	
-		downVector.X = entity.position.X - entity.radius
-		downVector.Y = entity.position.Y + (entity.radius * 2)
-		FFIVector2.intersectInline(workVector, entity.oldPosition, downVector, platform[1], platform[2])
-		if (workVector.X ~= -1 and workVector.Y ~= -1) then
-			if workVector.Y < minY then
-				minY = workVector.Y
-			end
+	end
+	downVector.X = entity.position.X - entity.radius
+	downVector.Y = entity.position.Y + distanceDown
+	FFIVector2.intersectInline(workVector, entity.oldPosition, downVector, platform[1], platform[2])
+	if (workVector.X ~= -1 and workVector.Y ~= -1) then
+		if workVector.Y < minY then
+			minY = workVector.Y
 		end
---	elseif entity.velocity.X > 0 then	
-		downVector.X = entity.position.X + entity.radius
-		downVector.Y = entity.position.Y + (entity.radius * 2)
-		FFIVector2.intersectInline(workVector, entity.oldPosition, downVector, platform[1], platform[2])
-		if (workVector.X ~= -1 and workVector.Y ~= -1) then
-			if workVector.Y < minY then
-				minY = workVector.Y
-			end	
-		end
-	--end
+	end
+	downVector.X = entity.position.X + entity.radius
+	downVector.Y = entity.position.Y + distanceDown
+	FFIVector2.intersectInline(workVector, entity.oldPosition, downVector, platform[1], platform[2])
+	if (workVector.X ~= -1 and workVector.Y ~= -1) then
+		if workVector.Y < minY then
+			minY = workVector.Y
+		end	
+	end
 	
 	if minY < 10000 then
 		return minY
@@ -126,34 +133,39 @@ function PlatformerGameScene:update(dt)
 		hero.velocity.X = 150
 	end
 	
-	hero:update(dt)
+	local steps = 25
+	local stepDt = dt / steps
 	
-	if hero.state == PFEntity.FALLING_STATE then		
-		local platforms = self.platforms	
-		for _, platform in ipairs(platforms) do
-			local yIntersect = self:checkEntityIsOnPlatform(hero, platform)
-			if yIntersect then
-				hero:changeState(PFEntity.ON_PLATFORM_STATE)
-				hero.position.Y = yIntersect - hero.radius
-			end
-		end
-	end
-	
-	if hero.state == PFEntity.ON_PLATFORM_STATE then		
-		local isStillOn = false
-		local platforms = self.platforms	
-		for _, platform in ipairs(platforms) do
-			local yIntersect = self:checkEntityIsOnPlatform(hero, platform)
-			if yIntersect then
-				isStillOn = true
-				hero.position.Y = yIntersect - hero.radius
+	for i = 1, steps do 
+		hero:update(stepDt)
+		
+		if hero.state == PFEntity.FALLING_STATE then		
+			local platforms = self.platforms	
+			for _, platform in ipairs(platforms) do
+				local yIntersect = self:checkEntityIsOnPlatform(hero, platform)
+				if yIntersect then
+					hero:changeState(PFEntity.ON_PLATFORM_STATE)
+					hero.position.Y = yIntersect - hero.radius
+				end
 			end
 		end
 		
-		if not isStillOn then
-			hero:changeState(PFEntity.FALLING_STATE)
-		end
-	end	
+		if hero.state == PFEntity.ON_PLATFORM_STATE then		
+			local isStillOn = false
+			local platforms = self.platforms	
+			for _, platform in ipairs(platforms) do
+				local yIntersect = self:checkEntityIsOnPlatform(hero, platform)
+				if yIntersect then
+					isStillOn = true
+					hero.position.Y = yIntersect - hero.radius
+				end
+			end
+			
+			if not isStillOn then
+				hero:changeState(PFEntity.FALLING_STATE)
+			end
+		end	
+	end
 end
 
 function PlatformerGameScene:keypressed(key) 

@@ -25,7 +25,7 @@ for _, file in ipairs(love.filesystem.getDirectoryItems('classes/scene')) do
 end
 ]]
 
-local GameTime = require 'classes/simulation/GameTime'
+
 local Dialogue = require 'classes/simulation/Dialogue'
 local GameWorld = require 'classes/simulation/GameWorld'
 local HotelScene = require 'classes/scene/HotelScene'
@@ -41,6 +41,8 @@ local BeatEmUpGameScene = require 'classes/scene/BeatEmUpGameScene'
 local OperationGameScene = require 'classes/scene/OperationGameScene'
 local TradingCardGameScene = require 'classes/scene/TradingCardGameScene'
 local PlatformerGameScene = require 'classes/scene/PlatformerGameScene'
+local SkillTreeScene = require 'classes/scene/SkillTreeScene'
+local RPGSimulationScene = require 'classes/scene/RPGSimulationScene'
 	
 local gameWorld
 function love.load()
@@ -71,10 +73,6 @@ function love.load()
 	FontManager:addFont(font, 'ArialBold92')
 		
 	gameWorld = GameWorld:new()
-	local gameTime = GameTime:new()
-	gameTime:setTime(2016, 2, 1, 7, 55, 0)
-	gameTime:setSpeed(5)
-	gameWorld.gameTime = gameTime
 		
 				
 	--SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')		
@@ -87,12 +85,16 @@ function love.load()
 	--SceneManager:addScene(OperationGameScene:new(gameWorld), 'operationgame')	
 	SceneManager:addScene(TradingCardGameScene:new(gameWorld), 'tradingcardgame')		
 	SceneManager:addScene(PlatformerGameScene:new(gameWorld), 'platformergame')		
+	SceneManager:addScene(SkillTreeScene:new(gameWorld), 'skilltree')	
+	SceneManager:addScene(RPGSimulationScene:new(gameWorld), 'rpgsimulation')
 	
 	--SceneManager:show('operationgame')	
 	--SceneManager:show('hobodefensetitle')	
-	SceneManager:show('tradingcardgame')	
+	--SceneManager:show('tradingcardgame')	
 	--SceneManager:show('longtime')	
-	SceneManager:show('platformergame')	
+	--SceneManager:show('platformergame')	
+	--SceneManager:show('skilltree')	
+	SceneManager:show('rpgsimulation')	
 	
 	--SceneManager:show('story', StoryFactory:createStory('begin', gameWorld))
 	
