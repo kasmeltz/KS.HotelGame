@@ -6,6 +6,8 @@ SceneManager = SceneManager:getInstance()
 local Scene = require 'classes/scene/Scene'
 local RPGSimulationScene = Scene:extend('RPGSimulationScene')
 
+RPGSimulationScene.BATTLE_TAB = 0
+
 local questObjectives = 
 {
 	'Defeat the dragon',
@@ -43,6 +45,8 @@ local nameTypes =
 function RPGSimulationScene:init(gameWorld)
 	RPGSimulationScene.super.init(self, gameWorld)
 	
+	math.randomseed(os.time())
+	
 	self.terrainStripTypes = 
 	{
 		love.graphics.newImage('data/images/forest1.png'),
@@ -61,16 +65,16 @@ function RPGSimulationScene:init(gameWorld)
 		love.graphics.newImage('data/images/skeleton.png')
 	}
 	
-	self.walkingSpeed = 150
+	self.walkingSpeed = 200
 	self.isInCombat = false
 	self.monsterFightX = 400
 	self.monsterMinDistance = 300
+	self.activeTab = RPGSimulationScene.BATTLE_TAB
+	self.battleActionPoints = 100
 end
 
 function RPGSimulationScene:generateQuest()
 	local quest = {}
-	
-	math.randomseed(os.time())
 	
 	local idx = math.random(1, #questObjectives)
 	
@@ -106,7 +110,83 @@ function RPGSimulationScene:createTerrain()
 	return terrainStrips	
 end
 
-function RPGSimulationScene:show()
+local heroClasses = 
+{
+	'Knight',
+	'Mage',
+	'Barbarian',
+	'Cleric',
+	'Druid',
+	'Thief',
+	'Necromancer',
+	'Ranger',
+}
+
+local heroRaces =
+{
+	'Human',
+	'Dwarf', 
+	'Elf', 
+	'Gnome',
+	'Orc',
+}
+
+local heroFirstNames =  
+{
+	'Paul', 
+	'George',
+	'John',
+	'Ringo'
+}
+
+local heroLastNames =
+{
+	'McCartney',
+	'Lennon',
+	'Harrison',
+	'Starr'
+}
+
+function RPGSimulationScene:createHero() 
+	local hero = {}
+	local idx
+	
+	idx = math.random(1, #heroFirstNames)
+	hero.fname = heroFirstNames[idx]
+
+	idx = math.random(1, #heroLastNames)
+	hero.lname = heroLastNames[idx]
+	
+	idx = math.random(1, #heroClasses)
+	hero.class = heroClasses[idx]
+	
+	idx = math.random(1, #heroRaces)
+	hero.race = heroRaces[idx]
+	
+	hero.level = math.random(1, 3)
+	
+	hero.physicalDamage = hero.level * math.random(2, 5)
+	hero.physicalDefense = hero.level * math.random(2, 5)
+	hero.magicSkill = hero.level * math.random(2, 5)
+	
+	hero.hitPoints = hero.level * math.random(10, 40)
+	hero.maxHitPoints = hero.hitPoints	
+	
+	hero.actionPoints = 0
+	
+	return hero
+end
+
+function RPGSimulationScene:show(heroes)
+	if not heroes then
+		heroes = {}
+		for i = 1, 4 do
+			heroes[#heroes + 1] = self:createHero()	
+		end
+	end
+	
+	self.heroes = heroes
+	
 	self.quest = self:generateQuest()
 	
 	self.terrainStrips = self:createTerrain()
@@ -117,16 +197,33 @@ function RPGSimulationScene:show()
 	gameTime:setSpeed(9)
 end
 
-function RPGSimulationScene:draw()
+local tabWidth = 150
+function RPGSimulationScene:drawTab(text, idx, sy)
+	local sx = idx * tabWidth
+
+	love.graphics.setColor(100, 100, 250)
+	love.graphics.rectangle('fill', sx, sy, tabWidth, 30)
+	love.graphics.setColor(70, 70, 150)
+	love.graphics.rectangle('line', sx, sy, tabWidth, 30)
+	love.graphics.setColor(0, 0, 0)
+
+	local font = FontManager:getFont('Courier16')
+	love.graphics.setFont(font)		
+	love.graphics.setColor(0,0,0)
+	local tw = font:getWidth(text)
+	local th = font:getHeight(text)
+	
+	love.graphics.print(text, sx + 75 - (tw / 2), sy + 15 - (th / 2))
+end
+
+function RPGSimulationScene:drawTopStrip()
 	local sw = self.screenWidth
 	local sh = self.screenHeight	
 	
+	local heroes = self.heroes
 	local monsters = self.monsters
 	local quest = self.quest
 	
-	local font = FontManager:getFont('Courier16')
-	love.graphics.setFont(font)
-		
 	love.graphics.setColor(255,255,255)
 	
 	for _, terrainStrip in ipairs(self.terrainStrips) do		
@@ -137,23 +234,26 @@ function RPGSimulationScene:draw()
 		love.graphics.draw(self.terrainStripTypes[idx], sx, sy)
 	end	
 	
-	local characterImg = self.heroTypes[1]
-	love.graphics.draw(characterImg, 300, 100)
-	love.graphics.draw(characterImg, 300, 130)
-	love.graphics.draw(characterImg, 250, 100)
-	love.graphics.draw(characterImg, 250, 130)
+	self:drawHero(heroes[1], 150, 100)	
+	self:drawHero(heroes[2], 200, 130)
+	self:drawHero(heroes[3], 250, 100)
+	self:drawHero(heroes[4], 300, 130)
+	
+	love.graphics.setColor(255,255,255)
 	
 	for _, monsterGroup in ipairs(monsters) do
 		for _, monster in ipairs(monsterGroup) do
-			local sx = monster[1]
-			local sy = monster[2]
-			local idx = monster[3]		
-			love.graphics.draw(self.monsterTypes[idx], sx, sy)
+			self:drawMonster(monster)
 		end
 	end
 		
+	love.graphics.setColor(255,255,255)
+	
 	local gameTime = self.gameWorld.gameTime
 	local timeText = gameTime:getDateString('%d, %B, %Y %H:%M:%S')
+	
+	local font = FontManager:getFont('Courier16')
+	love.graphics.setFont(font)		
 	local tw = font:getWidth(timeText)	
 	love.graphics.print(timeText, sw - tw - 10, 0)
 	
@@ -164,20 +264,175 @@ function RPGSimulationScene:draw()
 	love.graphics.print(quest.objective .. ' in the ' .. quest.name .. ' ' .. quest.terrain, 10, 0)	
 end
 
+function RPGSimulationScene:drawBattleTab()
+	local sw = self.screenWidth
+	local sh = self.screenHeight	
+	
+	local battle = self.battle
+	
+	if not battle then 
+		return
+	end
+	
+	local font = FontManager:getFont('Courier12')
+	love.graphics.setFont(font)		
+	love.graphics.setColor(255,255,255)
+	
+	local sy = 210
+	local heroes = self.heroes
+	for _, hero in ipairs(heroes) do
+		if battle.currentActor == hero then
+			love.graphics.setColor(255,255,0)
+		else
+			love.graphics.setColor(255,255,255)
+		end
+		love.graphics.print('L'.. hero.level .. ' ' .. hero.fname .. ' ' .. hero.lname, 10, sy)		
+		self:drawBar(10, sy + 30, 100, self.battleActionPoints, hero.actionPoints, 150, 100, 100, 100, 50, 50)
+		sy = sy + 40
+	end
+		
+	love.graphics.setColor(255,255,255)
+	
+	local battle = self.battle
+	local monsters = battle.monsters
+	local sy = 210
+	for _, monster in ipairs(monsters) do
+		if battle.currentActor == monster then
+			love.graphics.setColor(255,255,0)
+		else
+			love.graphics.setColor(255,255,255)
+		end
+		love.graphics.print('L' .. monster.level .. ' ' ..monster.name, 400, sy)
+		self:drawBar(400, sy + 30, 100, self.battleActionPoints, monster.actionPoints, 150, 100, 100, 100, 50, 50)
+		sy = sy + 40
+	end
+end
+
+function RPGSimulationScene:draw()
+	local sw = self.screenWidth
+	local sh = self.screenHeight	
+
+	self:drawTopStrip()
+	
+	if self.activeTab ==  RPGSimulationScene.BATTLE_TAB then
+		self:drawBattleTab()
+	end
+	
+	self:drawTab('Battle',  RPGSimulationScene.BATTLE_TAB, sh - 30)
+	self:drawTab('Party', 1, sh - 30)
+	self:drawTab('Items', 2, sh - 30)
+	self:drawTab('Craft', 3, sh - 30)
+	self:drawTab('Guild', 4, sh - 30)
+	self:drawTab('Quests', 5, sh - 30)
+	self:drawTab('History', 6, sh - 30)
+end
+
+function RPGSimulationScene:drawBar(sx, sy, width, max, current, fr, fg, fb, br, bg, bb, showText)
+	local showText = showText or true
+	
+	local max = math.floor(max)
+	local max = math.floor(max)
+	local current = math.floor(current)
+
+	local font = FontManager:getFont('Courier12')
+	love.graphics.setFont(font)		
+	love.graphics.setColor(0,0,0)
+	local text = current .. '/' .. max
+	local tw = font:getWidth(text)
+	local th = font:getHeight(text)
+	
+	local ratio = current / max
+	
+	love.graphics.setColor(fr, fg, fb)
+	love.graphics.rectangle('fill', sx, sy - th, width * ratio, th)
+	love.graphics.setColor(br, bg, bb)
+	love.graphics.rectangle('line', sx, sy - th, width, th)
+
+	if showText then
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.print(text, sx + (width / 2) - (tw / 2), sy - th)
+	end
+end
+
+function RPGSimulationScene:drawHero(hero, sx, sy)
+	local hpBarWidth = 50
+	
+	love.graphics.setColor(255,255,255)
+	local characterImg = self.heroTypes[1]
+	love.graphics.draw(characterImg, sx, sy)
+		
+	self:drawBar(sx + 10, sy, 70, hero.maxHitPoints, hero.hitPoints, 100, 200, 100, 80, 150, 80)
+end
+
+function RPGSimulationScene:drawMonster(monster)
+	local sx = monster[1]
+	local sy = monster[2]
+	local idx = monster[3]		
+	
+	love.graphics.setColor(255,255,255)
+	love.graphics.draw(self.monsterTypes[idx], sx, sy)
+	
+	self:drawBar(sx - 5, sy, 70, monster.maxHitPoints, monster.hitPoints, 100, 200, 100, 80, 150, 80)
+end
+
 function RPGSimulationScene:startBattle()
 	local gameTime = self.gameWorld.gameTime
+	local heroes = self.heroes
 	local monsters = self.monsters	
 	local monsterFightX = self.monsterFightX
+	local battleActionPoints = self.battleActionPoints
 	
 	self.walkingSpeed = 0
 	self.isInCombat = true
 	gameTime:setSpeed(5)
+
+	for _, hero in ipairs(heroes) do
+		hero.actionPoints = math.random(0, battleActionPoints / 2)
+	end	
 	
 	-- position monsters properly
 	local firstGroup = monsters[1]
 	for _, monster in ipairs(firstGroup) do
-		
+		monster.actionPoints = math.random(0, battleActionPoints / 2)
 	end
+	
+	self.battle = self:createBattle()
+end
+
+function RPGSimulationScene:createMonsterGroup()
+	local monsters = self.monsters
+	local sw = self.screenWidth
+	
+	local monsterGroup = {}
+	local monsterCount = math.random(1, 4)
+	local msx = sw + 50
+	local msy = 110
+	local odd = 0
+	for i = 1, monsterCount do
+		local monster = { msx, msy, 1 }
+		
+		monster.name = 'Skeleton'
+		monster.level = math.random(1, 3)
+	
+		monster.physicalDamage = monster.level * math.random(2, 5)	
+		monster.physicalDefense = monster.level * math.random(2, 5)
+		monster.magicSkill = monster.level * math.random(2, 5)	
+		monster.hitPoints = monster.level * math.random(10, 40)
+		monster.maxHitPoints = monster.hitPoints	
+		
+		monster.actionPoints = 0
+		
+		monsterGroup[#monsterGroup +1] = monster
+		
+		odd = 1 - odd
+		if odd == 0 then
+			msy = 110
+		else
+			msy = 130
+		end
+		msx = msx + 50
+	end
+	monsters[#monsters +1] = monsterGroup
 end
 
 function RPGSimulationScene:updateWalking(dt)
@@ -244,29 +499,53 @@ function RPGSimulationScene:updateWalking(dt)
 	if canAddMonster then
 		local shouldAdd = math.random(1, 1000)
 		if shouldAdd < 5 then
-			local newMonsterGroup = {}
-			local monsterCount = math.random(1, 6)
-			local msx = sw + 50
-			local msy = 120
-			local odd = 0
-			for i = 1, monsterCount do
-				local newMonster = { msx, msy, 1 }
-				newMonsterGroup[#newMonsterGroup +1] = newMonster
-				
-				odd = 1 - odd
-				if odd == 0 then
-					msx = msx + 50
-					msy = 120
-				else
-					msy = 135
-				end
-			end
-			monsters[#monsters +1] = newMonsterGroup
+			self:createMonsterGroup()
 		end
 	end	
 end
 
+function RPGSimulationScene:createBattle()
+	local battle = {}
+	
+	local monsterGroup = self.monsters[1]
+	battle.monsters = monsterGroup	
+	
+	return battle	
+end
+
+function RPGSimulationScene:setBattleActor(actor)
+	local battle = self.battle
+	battle.currentActor = actor
+end
+
 function RPGSimulationScene:updateCombat(dt)
+	local battle = self.battle
+	local heroes = self.heroes
+	local monsters = battle.monsters
+	local battleActionPoints = self.battleActionPoints
+	
+	-- someone is taking a turn
+	if battle.currentActor then
+	
+	else	
+		for _, hero in ipairs(heroes) do
+			hero.actionPoints = hero.actionPoints + (dt * 100)
+			if (hero.actionPoints > battleActionPoints) then
+				self:setBattleActor(hero)
+				hero.actionPoints = battleActionPoints
+				return
+			end
+		end
+
+		for _, monster in ipairs(monsters) do
+			monster.actionPoints = monster.actionPoints + (dt * 100)
+			if (monster.actionPoints > battleActionPoints) then
+				self:setBattleActor(monster)
+				monster.actionPoints = battleActionPoints
+				return
+			end
+		end
+	end	
 end
 
 function RPGSimulationScene:update(dt)
