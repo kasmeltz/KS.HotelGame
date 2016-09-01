@@ -12,7 +12,7 @@ local questObjectives =
 	'Rescue the princess',
 	'Recover the stolen orb',
 	'Deliver a package',
-	'Investigate',
+	'Investigate rumours',
 	'Kill the evil wizard'
 }
 
@@ -61,7 +61,7 @@ function RPGSimulationScene:init(gameWorld)
 		love.graphics.newImage('data/images/skeleton.png')
 	}
 	
-	self.walkingSpeed = 100
+	self.walkingSpeed = 150
 	self.isInCombat = false
 	self.monsterFightX = 400
 	self.monsterMinDistance = 300
@@ -127,8 +127,7 @@ function RPGSimulationScene:draw()
 	local font = FontManager:getFont('Courier16')
 	love.graphics.setFont(font)
 		
-	love.graphics.print(quest.objective .. ' in the ' .. quest.name .. ' ' .. quest.terrain, 10, 350)	
-	love.graphics.print(quest.difficulty, 10, 380)
+	love.graphics.setColor(255,255,255)
 	
 	for _, terrainStrip in ipairs(self.terrainStrips) do		
 		local sx = terrainStrip[1]
@@ -154,13 +153,35 @@ function RPGSimulationScene:draw()
 	end
 		
 	local gameTime = self.gameWorld.gameTime
-	love.graphics.print(gameTime:getDateString('%d %B %Y'), sw - 200, 0)
-	love.graphics.print(gameTime:getDateString('%H:%M:%S'), sw - 200, 20)
+	local timeText = gameTime:getDateString('%d, %B, %Y %H:%M:%S')
+	local tw = font:getWidth(timeText)	
+	love.graphics.print(timeText, sw - tw - 10, 0)
+	
+	local locationText = quest.name .. ' ' .. quest.terrain
+	local tw = font:getWidth(locationText)
+	love.graphics.print(locationText, sw - tw - 10, 20)	
+	
+	love.graphics.print(quest.objective .. ' in the ' .. quest.name .. ' ' .. quest.terrain, 10, 0)	
+end
+
+function RPGSimulationScene:startBattle()
+	local gameTime = self.gameWorld.gameTime
+	local monsters = self.monsters	
+	local monsterFightX = self.monsterFightX
+	
+	self.walkingSpeed = 0
+	self.isInCombat = true
+	gameTime:setSpeed(5)
+	
+	-- position monsters properly
+	local firstGroup = monsters[1]
+	for _, monster in ipairs(firstGroup) do
+		
+	end
 end
 
 function RPGSimulationScene:updateWalking(dt)
 	local sw = self.screenWidth
-	local gameTime = self.gameWorld.gameTime
 	
 	local terrainStrips = self.terrainStrips
 	local terrainStripTypes = self.terrainStripTypes
@@ -179,9 +200,7 @@ function RPGSimulationScene:updateWalking(dt)
 			monster[1] = sx - (self.walkingSpeed * dt)
 			
 			if monster[1] < monsterFightX then
-				self.walkingSpeed = 0
-				self.isInCombat = true
-				gameTime:setSpeed(5)
+				self:startBattle()
 			end			
 		end
 	end
@@ -247,8 +266,12 @@ function RPGSimulationScene:updateWalking(dt)
 	end	
 end
 
+function RPGSimulationScene:updateCombat(dt)
+end
+
 function RPGSimulationScene:update(dt)
 	if self.isInCombat then
+		self:updateCombat(dt)
 	else
 		self:updateWalking(dt)
 	end

@@ -77,15 +77,15 @@ function love.load()
 				
 	--SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')		
 	--SceneManager:addScene(StoryScene:new(gameWorld), 'story')	
-	SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
-	SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')	
-	SceneManager:addScene(TowerDefenseScene:new(gameWorld), 'towerdefense')		
+	--SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
+	--SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')	
+	--SceneManager:addScene(TowerDefenseScene:new(gameWorld), 'towerdefense')		
 	
 	--SceneManager:addScene(BeatEmUpGameScene:new(gameWorld), 'beatemup')	
 	--SceneManager:addScene(OperationGameScene:new(gameWorld), 'operationgame')	
-	SceneManager:addScene(TradingCardGameScene:new(gameWorld), 'tradingcardgame')		
-	SceneManager:addScene(PlatformerGameScene:new(gameWorld), 'platformergame')		
-	SceneManager:addScene(SkillTreeScene:new(gameWorld), 'skilltree')	
+	--SceneManager:addScene(TradingCardGameScene:new(gameWorld), 'tradingcardgame')		
+	--SceneManager:addScene(PlatformerGameScene:new(gameWorld), 'platformergame')		
+	--SceneManager:addScene(SkillTreeScene:new(gameWorld), 'skilltree')	
 	SceneManager:addScene(RPGSimulationScene:new(gameWorld), 'rpgsimulation')
 	
 	--SceneManager:show('operationgame')	
@@ -138,9 +138,9 @@ function love.draw()
 		vScene:draw()
 	end		
 
-	love.graphics.setFont(FontManager:getFont('Courier12'))	
-	love.graphics.setColor(255,255,255)
-	love.graphics.print('FPS: ' .. love.timer.getFPS(), 0, 0)
+	--love.graphics.setFont(FontManager:getFont('Courier12'))	
+	--love.graphics.setColor(255,255,255)
+	--love.graphics.print('FPS: ' .. love.timer.getFPS(), 0, 0)
 
 --[[	
 	local gameTime = gameWorld.gameTime
