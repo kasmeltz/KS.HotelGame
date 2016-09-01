@@ -197,7 +197,7 @@ function RPGSimulationScene:show(heroes)
 	gameTime:setSpeed(9)
 end
 
-local tabWidth = 150
+local tabWidth = 50
 function RPGSimulationScene:drawTab(text, idx, sy)
 	local sx = idx * tabWidth
 
@@ -213,7 +213,7 @@ function RPGSimulationScene:drawTab(text, idx, sy)
 	local tw = font:getWidth(text)
 	local th = font:getHeight(text)
 	
-	love.graphics.print(text, sx + 75 - (tw / 2), sy + 15 - (th / 2))
+	love.graphics.print(text, sx + (tabWidth / 2) - (tw / 2), sy + 15 - (th / 2))
 end
 
 function RPGSimulationScene:drawTopStrip()
@@ -306,6 +306,17 @@ function RPGSimulationScene:drawBattleTab()
 		self:drawBar(400, sy + 30, 100, self.battleActionPoints, monster.actionPoints, 150, 100, 100, 100, 50, 50)
 		sy = sy + 40
 	end
+	
+	if battle.currentActor then	
+		self:drawBattleInput()
+	end
+end
+
+function RPGSimulationScene:drawBattleInput()
+	love.graphics.setColor(200,200,200)
+	love.graphics.rectangle('line', 10, 380, 500, 330)
+	
+	
 end
 
 function RPGSimulationScene:draw()
@@ -318,13 +329,13 @@ function RPGSimulationScene:draw()
 		self:drawBattleTab()
 	end
 	
-	self:drawTab('Battle',  RPGSimulationScene.BATTLE_TAB, sh - 30)
-	self:drawTab('Party', 1, sh - 30)
-	self:drawTab('Items', 2, sh - 30)
-	self:drawTab('Craft', 3, sh - 30)
-	self:drawTab('Guild', 4, sh - 30)
-	self:drawTab('Quests', 5, sh - 30)
-	self:drawTab('History', 6, sh - 30)
+	self:drawTab('B',  RPGSimulationScene.BATTLE_TAB, sh - 30)
+	self:drawTab('P', 1, sh - 30)
+	self:drawTab('I', 2, sh - 30)
+	self:drawTab('C', 3, sh - 30)
+	self:drawTab('G', 4, sh - 30)
+	self:drawTab('Q', 5, sh - 30)
+	self:drawTab('H', 6, sh - 30)
 end
 
 function RPGSimulationScene:drawBar(sx, sy, width, max, current, fr, fg, fb, br, bg, bb, showText)
