@@ -47,7 +47,8 @@ function RPGSimulationScene:init(gameWorld)
 	{
 		love.graphics.newImage('data/images/forest1.png'),
 		love.graphics.newImage('data/images/forest2.png'),
-		love.graphics.newImage('data/images/forest3.png')
+		love.graphics.newImage('data/images/forest3.png'),
+		love.graphics.newImage('data/images/forest4.png')
 	}
 	
 	self.heroTypes =
@@ -90,34 +91,44 @@ function RPGSimulationScene:generateQuest()
 	return quest
 end
 
+function RPGSimulationScene:createTerrain()
+	local terrainStrips = {}
+	
+	local sx = 0
+	for i = 1, 4 do
+		local idx = math.random(1, #self.terrainStripTypes)
+		local strip = { sx, 0, 1 }
+		sx = sx + 300
+		
+		terrainStrips[#terrainStrips + 1] = strip
+	end
+	
+	return terrainStrips	
+end
+
 function RPGSimulationScene:show()
 	self.quest = self:generateQuest()
 	
-	self.terrainStrips = 
-	{
-		{ 0, 0, 1 }, 
-		{ 300, 0, 2 },
-		{ 600, 0, 3 },
-		{ 900, 0, 2 },
-		{ 1200, 0, 1 }
-	}
+	self.terrainStrips = self:createTerrain()
 	
 	self.monsters = {}
+	
+	local gameTime = self.gameWorld.gameTime
+	gameTime:setSpeed(9)
 end
 
 function RPGSimulationScene:draw()
 	local sw = self.screenWidth
-	local sh = self.screenHeight
+	local sh = self.screenHeight	
 	
 	local monsters = self.monsters
 	local quest = self.quest
 	
-	local font = FontManager:getFont('ComicBold48')
+	local font = FontManager:getFont('Courier16')
 	love.graphics.setFont(font)
 		
-	love.graphics.print(quest.objective, 10, 350)	
-	love.graphics.print(quest.name .. ' ' .. quest.terrain , 10, 400)
-	love.graphics.print(quest.difficulty, 10, 450)
+	love.graphics.print(quest.objective .. ' in the ' .. quest.name .. ' ' .. quest.terrain, 10, 350)	
+	love.graphics.print(quest.difficulty, 10, 380)
 	
 	for _, terrainStrip in ipairs(self.terrainStrips) do		
 		local sx = terrainStrip[1]
@@ -141,10 +152,15 @@ function RPGSimulationScene:draw()
 			love.graphics.draw(self.monsterTypes[idx], sx, sy)
 		end
 	end
+		
+	local gameTime = self.gameWorld.gameTime
+	love.graphics.print(gameTime:getDateString('%d %B %Y'), sw - 200, 0)
+	love.graphics.print(gameTime:getDateString('%H:%M:%S'), sw - 200, 20)
 end
 
 function RPGSimulationScene:updateWalking(dt)
 	local sw = self.screenWidth
+	local gameTime = self.gameWorld.gameTime
 	
 	local terrainStrips = self.terrainStrips
 	local terrainStripTypes = self.terrainStripTypes
@@ -165,6 +181,7 @@ function RPGSimulationScene:updateWalking(dt)
 			if monster[1] < monsterFightX then
 				self.walkingSpeed = 0
 				self.isInCombat = true
+				gameTime:setSpeed(5)
 			end			
 		end
 	end
