@@ -24,14 +24,14 @@ function NameManager:initialize()
 end
 
 function NameManager:loadMaleFirstNames()
-	self.maleFirstNames = {}
+	self.firstNamesM = {}
 	for line in love.filesystem.lines('data/firstNamesM.dat') do
 		table.insert(self.firstNamesM, line)
 	end		
 end
 
 function NameManager:loadFemaleFirstNames()
-	self.maleFirstNames = {}
+	self.firstNamesF = {}
 	for line in love.filesystem.lines('data/firstNamesF.dat') do
 		table.insert(self.firstNamesF, line)
 	end		

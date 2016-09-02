@@ -21,7 +21,6 @@ function ObjectiveTypeManager:initialize()
 	self:loadObjectiveTypes()
 	self:loadObjectiveRelationships()
 	self:loadObjectiveItems()
-	self:loadObjectiveLocations()
 end
 
 function ObjectiveTypeManager:loadObjectiveTypes()
@@ -39,17 +38,20 @@ function ObjectiveTypeManager:loadObjectiveTypes()
 				table.insert(self.objectiveTypes, objectiveType) 
 				
 				print(objectiveType.title)
-				print(objectiveType.wordTypes)
+				for i = 1, #wordTypes do
+					print(wordTypes[i])
+				end
 				for i = 1, #descriptions do
 					print(descriptions[i])
 				end
 			end
 			objectiveType = {}
 			descriptions = {}
+			wordTypes = {}
 			lineCount = 0
 		elseif line:sub(1,2) == '**' then
 			line = line:gsub('**', '')
-			wordTypes = line
+			wordTypes[#wordTypes + 1] = line
 		else
 			if lineCount == 0 then
 				objectiveType.title = line			
@@ -72,13 +74,6 @@ function ObjectiveTypeManager:loadObjectiveItems()
 	self.items = {}
 	for line in love.filesystem.lines('data/objectiveItems.dat') do
 		table.insert(self.items, line)
-	end		
-end
-
-function ObjectiveTypeManager:loadObjectiveLocations()
-	self.locations = {}
-	for line in love.filesystem.lines('data/objectiveLocations.dat') do
-		table.insert(self.locations, line)
 	end		
 end
 
