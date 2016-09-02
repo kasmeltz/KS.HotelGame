@@ -1,5 +1,4 @@
 --local luabins = require 'luabins'
---local sti = require 'libs/sti'
 
 print()
 print('----------------------------------------------------------------------')
@@ -16,32 +15,15 @@ local SceneManager = require 'classes/scene/SceneManager'
 SceneManager = SceneManager:getInstance()
 local FontManager = require 'classes/scene/FontManager'
 FontManager = FontManager:getInstance()
-local StoryFactory = require 'classes/factories/StoryFactory'
-StoryFactory = StoryFactory:getInstance()
+local TerrainTypeManager = require 'classes/managers/TerrainTypeManager'
+TerrainTypeManager = TerrainTypeManager:getInstance()
+local TerrainStripTypeManager = require 'classes/managers/TerrainTypeManager'
+TerrainStripTypeManager = TerrainStripTypeManager:getInstance()
 
---[[
-for _, file in ipairs(love.filesystem.getDirectoryItems('classes/scene')) do
-	local scene = require ('classes/scene/' .. file:gsub('.lua', ''))
-end
-]]
-
-
-local Dialogue = require 'classes/simulation/Dialogue'
 local GameWorld = require 'classes/simulation/GameWorld'
-local HotelScene = require 'classes/scene/HotelScene'
-local BankScene = require 'classes/scene/BankScene'
-local StoryScene = require 'classes/scene/StoryScene'
-local DialogueScene = require 'classes/scene/DialogueScene'
-local Character = require 'classes/simulation/Character'
-local LongTimeScene = require 'classes/scene/LongTimeScene'
-local HoboDefenseTitleScene = require 'classes/scene/HoboDefenseTitleScene'
-local SpaceSimulatorScene = require 'classes/scene/SpaceSimulatorScene'
-local TowerDefenseScene = require 'classes/scene/TowerDefenseScene'
-local BeatEmUpGameScene = require 'classes/scene/BeatEmUpGameScene'
-local OperationGameScene = require 'classes/scene/OperationGameScene'
-local TradingCardGameScene = require 'classes/scene/TradingCardGameScene'
-local PlatformerGameScene = require 'classes/scene/PlatformerGameScene'
-local SkillTreeScene = require 'classes/scene/SkillTreeScene'
+--local Dialogue = require 'classes/simulation/Dialogue'
+--local StoryScene = require 'classes/scene/StoryScene'
+--local DialogueScene = require 'classes/scene/DialogueScene'
 local RPGSimulationScene = require 'classes/scene/RPGSimulationScene'
 	
 local gameWorld
@@ -54,8 +36,7 @@ function love.load()
 		print(k,v)
 	end
 	
-	--local thread = love.thread.newThread('threads/world.lua')
-	--thread:start()
+	TerrainTypeManager:initialize()
 	
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 12)
 	FontManager:addFont(font, 'Courier12')
@@ -73,27 +54,8 @@ function love.load()
 	FontManager:addFont(font, 'ArialBold92')
 		
 	gameWorld = GameWorld:new()
-		
-				
-	--SceneManager:addScene(DialogueScene:new(gameWorld), 'dialogue')		
-	--SceneManager:addScene(StoryScene:new(gameWorld), 'story')	
-	--SceneManager:addScene(LongTimeScene:new(gameWorld), 'longtime')
-	--SceneManager:addScene(HoboDefenseTitleScene:new(gameWorld), 'hobodefensetitle')	
-	--SceneManager:addScene(TowerDefenseScene:new(gameWorld), 'towerdefense')		
-	
-	--SceneManager:addScene(BeatEmUpGameScene:new(gameWorld), 'beatemup')	
-	--SceneManager:addScene(OperationGameScene:new(gameWorld), 'operationgame')	
-	--SceneManager:addScene(TradingCardGameScene:new(gameWorld), 'tradingcardgame')		
-	--SceneManager:addScene(PlatformerGameScene:new(gameWorld), 'platformergame')		
-	--SceneManager:addScene(SkillTreeScene:new(gameWorld), 'skilltree')	
+
 	SceneManager:addScene(RPGSimulationScene:new(gameWorld), 'rpgsimulation')
-	
-	--SceneManager:show('operationgame')	
-	--SceneManager:show('hobodefensetitle')	
-	--SceneManager:show('tradingcardgame')	
-	--SceneManager:show('longtime')	
-	--SceneManager:show('platformergame')	
-	--SceneManager:show('skilltree')	
 	SceneManager:show('rpgsimulation')	
 	
 	--SceneManager:show('story', StoryFactory:createStory('begin', gameWorld))
@@ -218,78 +180,3 @@ end
 function love.threaderror(thread, errorstr)
   print("Thread error!\n"..errorstr)
 end
-
---[[
---STI DEMO
-function love.load()
-    -- Grab window size
-    windowWidth  = love.graphics.getWidth()
-    windowHeight = love.graphics.getHeight()
-
-    -- Set world meter size (in pixels)
-    love.physics.setMeter(32)
-
-    -- Load a map exported to Lua from Tiled
-    map = sti.new("assets/maps/map01.lua", { "box2d" })
-
-    -- Prepare physics world with horizontal and vertical gravity
-    world = love.physics.newWorld(0, 0)
-
-    -- Prepare collision objects
-    map:box2d_init(world)
-
-    -- Create a Custom Layer
-    map:addCustomLayer("Sprite Layer", 3)
-
-    -- Add data to Custom Layer
-    local spriteLayer = map.layers["Sprite Layer"]
-    spriteLayer.sprites = {
-        player = {
-            image = love.graphics.newImage("assets/sprites/player.png"),
-            x = 64,
-            y = 64,
-            r = 0,
-        }
-    }
-
-    -- Update callback for Custom Layer
-    function spriteLayer:update(dt)
-        for _, sprite in pairs(self.sprites) do
-            sprite.r = sprite.r + math.rad(90 * dt)
-        end
-    end
-
-    -- Draw callback for Custom Layer
-    function spriteLayer:draw()
-        for _, sprite in pairs(self.sprites) do
-            local x = math.floor(sprite.x)
-            local y = math.floor(sprite.y)
-            local r = sprite.r
-            love.graphics.draw(sprite.image, x, y, r)
-        end
-    end
-end
-
-function love.update(dt)
-    map:update(dt)
-end
-
-function love.draw()
-    -- Translation would normally be based on a player's x/y
-    local translateX = 0
-    local translateY = 0
-
-    -- Draw Range culls unnecessary tiles
-    map:setDrawRange(-translateX, -translateY, windowWidth, windowHeight)
-
-    -- Draw the map and all objects within
-    map:draw()
-
-    -- Draw Collision Map (useful for debugging)
-    love.graphics.setColor(255, 0, 0, 255)
-    map:box2d_draw()
-
-    -- Reset color
-    love.graphics.setColor(255, 255, 255, 255)
-end
-]]

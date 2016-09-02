@@ -17,6 +17,13 @@ function TerrainStripTypeManager:getInstance()
   return instance
 end
 
+function TerrainStripTypeManager:initialize()
+	self:loadTerrainStripTypes()
+end
+
+function TerrainStripTypeManager:loadTerrainStripTypes()
+end
+
 function TerrainStripTypeManager:addTerrainStripType(strip, terrainName)
 	if not self.strips[terrainName] then 
 		self.strip[terrainName] = {}
