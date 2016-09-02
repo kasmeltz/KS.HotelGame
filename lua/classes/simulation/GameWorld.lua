@@ -6,6 +6,7 @@ local GameTime = require 'classes/simulation/GameTime'
 local class = require 'libs/30log/30log'
 local GameWorld = class('GameWorld')
 
+-- create a brand new game world
 function GameWorld:init()
 	local gameTime = GameTime:new()
 	gameTime:setTime(2000, 2, 1, 7, 55, 0)
@@ -13,7 +14,24 @@ function GameWorld:init()
 	self.gameTime = gameTime
 	self.locationsPerDirection = 20
 	self.columnsPerRow = 4
+end
+
+function GameWorld:generateNewWorld()
 	self:createWorldLocations()
+	self:createInitialQuests()
+end
+
+function GameWorld:createInitialQuests()
+	self.activeQuests = {}
+	
+	local q = self:createQuest(1, 1, 1, 1)
+	table.insert(self.activeQuests, q)
+	local q = self:createQuest(1, 1, 1, 1)
+	table.insert(self.activeQuests, q)
+	local q = self:createQuest(1, 2, 1, 1)	
+	table.insert(self.activeQuests, q)
+	local q = self:createQuest(2, 3, 1, 2)	
+	table.insert(self.activeQuests, q)
 end
 
 function GameWorld:createWorldLocations()
@@ -41,14 +59,13 @@ function GameWorld:createWorldLocations()
 	
 	local difficulty = 1
 	
-	for cuadrant = 1, 8 do
+	for quadrant = 1, 8 do
 		local row = 1
 		local column = 1
 		for i = 1, self.locationsPerDirection do
 			local worldLocation = Location:new(self)
 			local terrainIdx = math.random(1, #terrainTypes)
 			worldLocation.terrainType = terrainTypes[terrainIdx]
-			worldLocation.cuadrant = cuadrant
 			
 			local availableTable = nil
 			local nameTable = nil
@@ -82,9 +99,9 @@ function GameWorld:createWorldLocations()
 			local pidx = availableTable[idx]
 			table.remove(availableTable, idx)				
 			worldLocation.name = nameTable[pidx]
-			worldLocation.row = row
-			worldLocation.column = column				
 			worldLocation.difficulty = difficulty
+			
+			worldLocation:setQuadrantRowColumn(quadrant, row, column)
 					
 			table.insert(self.worldLocations, worldLocation)
 			
@@ -96,11 +113,13 @@ function GameWorld:createWorldLocations()
 			
 			difficulty = difficulty + 1
 			
-			print('=============================')
-			print(worldLocation.cuadrant, worldLocation.row, worldLocation.column, worldLocation.difficulty)
-			print(worldLocation:fullName())
+			print(worldLocation:fullName(), worldLocation.quadrant, worldLocation.row, worldLocation.column, worldLocation.difficulty, worldLocation.cartesianX, worldLocation.cartesianY)
 		end		
 	end
+end
+
+function GameWorld:createQuest(minDifficulty, maxDifficulty, minLocations, maxLocations)
+	
 end
 
 function GameWorld:update(dt)

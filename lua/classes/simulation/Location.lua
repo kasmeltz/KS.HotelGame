@@ -4,9 +4,10 @@ local Location = SimulationItem:extend('Location')
 -- name
 -- nameType
 -- terrainType
--- cuadrant
+-- quadrant
 -- row
 -- column
+-- cartesian location
 -- monster difficulty
 
 function Location:init(gameWorld)
@@ -21,6 +22,36 @@ function Location:fullName()
 	elseif self.nameType == 3 then
 		return self.name .. ' ' .. self.terrainType
 	end		
+end
+
+function Location:setQuadrantRowColumn(quadrant, row, column)
+	self.quadrant = quadrant
+	self.row = row	
+	self.column = column
+	
+	local angle = (quadrant - 1) * 45 + ((column - 1) * 11.25)	
+	radians = angle * math.pi / 180
+	local radius = row / 2
+		
+	-- center point of map
+	local cx = 0
+	local cy = 0	
+	
+	self.cartesianX = cx + radius * math.cos(radians)
+	self.cartesianY = cy + radius * math.sin(radians)
+	
+	local maximumVariance = 0.4
+	local halfVariance = 0.2
+	local variance = (math.random() * maximumVariance - halfVariance) * radius
+	self.cartesianX = self.cartesianX + variance
+	local variance = (math.random() * maximumVariance - halfVariance) * radius
+	self.cartesianY = self.cartesianY + variance
+end
+
+function Location:distance(otherLocation)
+	local dx = self.cartesianX - other.cartesianX
+	local dy = self.cartesianY - other.cartesianY
+	return math.sqrt(dx * dx + dy * dy)
 end
 
 return Location

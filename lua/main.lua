@@ -17,7 +17,7 @@ local FontManager = require 'classes/scene/FontManager'
 FontManager = FontManager:getInstance()
 local TerrainTypeManager = require 'classes/managers/TerrainTypeManager'
 TerrainTypeManager = TerrainTypeManager:getInstance()
-local TerrainStripTypeManager = require 'classes/managers/TerrainTypeManager'
+local TerrainStripTypeManager = require 'classes/managers/TerrainStripTypeManager'
 TerrainStripTypeManager = TerrainStripTypeManager:getInstance()
 
 local GameWorld = require 'classes/simulation/GameWorld'
@@ -39,6 +39,7 @@ function love.load()
 	math.randomseed(os.time())	
 
 	TerrainTypeManager:initialize()
+	TerrainStripTypeManager:initialize()
 	
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 12)
 	FontManager:addFont(font, 'Courier12')
@@ -56,6 +57,8 @@ function love.load()
 	FontManager:addFont(font, 'ArialBold92')
 		
 	gameWorld = GameWorld:new()
+	gameWorld:generateNewWorld()
+
 
 	SceneManager:addScene(RPGSimulationScene:new(gameWorld), 'rpgsimulation')
 	SceneManager:show('rpgsimulation')	

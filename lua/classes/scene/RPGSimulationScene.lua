@@ -318,44 +318,32 @@ end
 function RPGSimulationScene:drawMap()
 	local sw = self.screenWidth
 	local sh = self.screenHeight	
+	
+	local worldLocations = self.gameWorld.worldLocations
 
 	love.graphics.setColor(100,255,100)
 	love.graphics.rectangle('fill', 10, 10, sw - 20, sh - 20)
 	
 	love.graphics.setColor(0,0,0)
-	love.graphics.line(sw / 2, 10, sw / 2, sh - 10)
-	love.graphics.line(10, sh / 2, sw - 10, sh / 2)
-	
-	local xStep = (sw - 20) / 8
-	for x = 10, sw - 10, xStep do
-		love.graphics.line(x, 10, sw / 2, sh / 2)
-		love.graphics.line(x, sh - 10, sw / 2, sh / 2)
-	end
-	
-	local yStep = (sh - 20) / 8
-	for y = 10, sh - 10, yStep do
-		love.graphics.line(10, y, sw / 2, sh / 2)
-		love.graphics.line(sw - 10, y, sw / 2, sh / 2)
-	end	
-	
-	love.graphics.circle('line', sw / 2, sh / 2, 75)
-	love.graphics.circle('line', sw / 2, sh / 2, 150)
-	love.graphics.circle('line', sw / 2, sh / 2, 225)
-	love.graphics.circle('line', sw / 2, sh / 2, 300)
-	
 	love.graphics.setLineWidth(400)
 	love.graphics.circle('line', sw / 2, sh / 2, 600)	
 	love.graphics.setLineWidth(1)
+		
+	love.graphics.setColor(0,0,255)
+	for _, location in ipairs(worldLocations) do
+		local sx = sw / 2 + (location.cartesianX * 120)
+		local sy = sh / 2 + (location.cartesianY * 120)
+		love.graphics.circle('fill', sx, sy, 3)
+	end
 end
 
 function RPGSimulationScene:draw()
 	local sw = self.screenWidth
 	local sh = self.screenHeight	
 	
-	--[[self:drawMap()
+	self:drawMap()
 	local j = 1
 	if j == 1 then return end
-	]]
 	
 	self:drawTopStrip()
 	

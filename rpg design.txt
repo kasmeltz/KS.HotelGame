@@ -87,3 +87,9 @@ Press buttons to perform skills in combat / actions
 Game world is broken up into rings of the eight directions with columns and rows of locations. The locations get much more difficult as you go to the outer rows. The difficulty of areas within a row will also vary.
 
 Quest difficulty will be represented by the % chance that you will get killed
+
+How long does it take to travel from one area to another
+
+Locations will have cartesian coordinates and we can come up with a system to calculate distances
+
+Travel time can be decreased if you get certain items (cars)
