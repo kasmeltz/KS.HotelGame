@@ -11,7 +11,8 @@ function GameWorld:init()
 	gameTime:setTime(2000, 2, 1, 7, 55, 0)
 	gameTime:setSpeed(5)
 	self.gameTime = gameTime
-	self.locationsPerDirection = 10
+	self.locationsPerDirection = 20
+	self.columnsPerRow = 4
 	self:createWorldLocations()
 end
 
@@ -41,6 +42,8 @@ function GameWorld:createWorldLocations()
 	end
 	
 	for _, direction in ipairs(directions) do
+		local row = 1
+		local column = 1
 		for i = 1, self.locationsPerDirection do
 			local worldLocation = Location:new(self)
 			local terrainIdx = math.random(1, #terrainTypes)
@@ -63,15 +66,35 @@ function GameWorld:createWorldLocations()
 				nameTable = nouns
 			end
 			
+			if #availableTable == 0 then
+				availableTable = availablePrefixes
+			end
+
+			if #availableTable == 0 then
+				availableTable = availableSuffixes
+			end
+
+			if #availableTable == 0 then
+				availableTable = availableNouns
+			end
+			
 			local idx = math.random(1, #availableTable)
 			local pidx = availableTable[idx]
 			table.remove(availableTable, idx)				
 			worldLocation.name = nameTable[pidx]
+			worldLocation.row = row
+			worldLocation.column = column				
 					
 			table.insert(self.worldLocations, worldLocation)
 			
+			column = column + 1
+			if column > self.columnsPerRow then
+				column = 1
+				row = row + 1
+			end
+			
 			print('=============================')
-			print(worldLocation.area)
+			print(worldLocation.area, worldLocation.row, worldLocation.column)
 			print(worldLocation:fullName())
 		end		
 	end

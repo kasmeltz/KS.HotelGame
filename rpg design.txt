@@ -1,0 +1,89 @@
+Rpg simulation
+
+Side scrolling terrain with small 8 bit characters
+
+Game date will advance in real time when you are out questing
+
+Terrain can be made of small repeatable mixable patches of graphics
+
+Could have parallax or a background and foreground layer
+
+Could have outdoor and indoor environments
+
+Quests are randomly generated and given to you by the king / whoever you are working for
+
+Quests will pass through different areas of the world and have different objectives with different monsters encountered and different rewards
+
+There could be multiple quests to choose from.
+
+If a quest is not competed by the due date it is no longer available
+
+Time limit on quests
+
+Stopping to camp allows you to craft but wastes time
+
+Crafting system will use items dropped by monsters to create weapons etc
+
+Items can have huge stats epic etc
+
+Need to figure out how player will learn new crafting recipes
+
+Monsters drop items to use for crafting
+
+World is generated randomly at the start of the game.   Zones names bosses etc
+
+Characters can die in combat and need to be replaced
+
+Different character classes
+
+Party of four
+
+More than four classes
+
+Each class had different skills to level up
+
+Player has to choose how to mix and match to make the best party
+
+Player has to interact with battles just by pressing buttons
+
+Some choices to make might be what formation to use, what skills to use for every character etc
+
+Future version could have graphical map of world that player can look at while they are on a quest
+
+Future version could have dialogue interacting with different  choices
+
+Future versions could have an overarching story sweep that develops through the random quests.
+
+Or multiple story sweeps that just keep going as long as the player keeps playing
+
+The difficulty of the game should build as long as possible with procedurally generated crafting recipes, monsters, bosses etc
+
+Future version the quests that are not completed might also affect story
+
+Need ideas for how player interacts with game especially in battles
+
+Some kind of mini games to perform skills? Or just press buttons to make choices? Mini game during adventures could be very cool
+
+Different races
+
+Characters age
+
+Characters in party of same class will level up other characters faster (teaching them tricks)
+
+Characters will die of old age or be unable to continue
+
+Future version tells a story over hundreds of years with many Heros and the player can look at a book of history that writes about what the characters have accomplished (major story events)
+
+The future version game is about building the history of a nation through the actions of a few brave adventurers
+
+Future version maybe technology will advance or new techniques will be learned
+
+Mentalist type
+
+Side effect of skills if not performed correctly
+
+Press buttons to perform skills in combat / actions
+
+Game world is broken up into rings of the eight directions with columns and rows of locations. The locations get much more difficult as you go to the outer rows. The difficulty of areas within a row will also vary.
+
+Quest difficulty will be represented by the % chance that you will get killed

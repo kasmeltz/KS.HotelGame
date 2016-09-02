@@ -45,8 +45,6 @@ local nameTypes =
 function RPGSimulationScene:init(gameWorld)
 	RPGSimulationScene.super.init(self, gameWorld)
 	
-	math.randomseed(os.time())
-	
 	self.terrainStripTypes = 
 	{
 		love.graphics.newImage('data/images/forest1.png'),

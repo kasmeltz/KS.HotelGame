@@ -36,6 +36,8 @@ function love.load()
 		print(k,v)
 	end
 	
+	math.randomseed(os.time())	
+
 	TerrainTypeManager:initialize()
 	
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 12)

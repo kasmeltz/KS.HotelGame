@@ -5,6 +5,8 @@ local Location = SimulationItem:extend('Location')
 -- nameType
 -- terrainType
 -- area
+-- row
+-- column
 -- monster difficulty
 
 function Location:init(gameWorld)
