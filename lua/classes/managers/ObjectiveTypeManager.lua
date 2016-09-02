@@ -19,8 +19,7 @@ end
 
 function ObjectiveTypeManager:initialize()
 	self:loadObjectiveTypes()
-	self:loadObjectiveRelationships()
-	self:loadObjectiveItems()
+	self:loadObjectiveNouns()
 end
 
 function ObjectiveTypeManager:loadObjectiveTypes()
@@ -63,18 +62,23 @@ function ObjectiveTypeManager:loadObjectiveTypes()
 	end		
 end
 
-function ObjectiveTypeManager:loadObjectiveRelationships()
-	self.relationships = {}
-	for line in love.filesystem.lines('data/objectiveRelationships.dat') do
-		table.insert(self.relationships, line)
-	end		
-end
-
-function ObjectiveTypeManager:loadObjectiveItems()
-	self.items = {}
-	for line in love.filesystem.lines('data/objectiveItems.dat') do
-		table.insert(self.items, line)
-	end		
+function ObjectiveTypeManager:loadObjectiveNouns()
+	self.nouns = {}	
+	for line in love.filesystem.lines('data/objectiveNouns.dat') do
+		if line:sub(1,2) == '==' then
+			if noun then
+				table.insert(self.nouns, noun)				
+							
+				print(noun.type)
+				print(noun.text)
+			end
+			
+			noun = {}
+			noun.type = line:sub(3,3)
+		else
+			noun.text = line
+		end		
+	end
 end
 
 return ObjectiveTypeManager
