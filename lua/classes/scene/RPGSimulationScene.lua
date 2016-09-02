@@ -317,6 +317,7 @@ function RPGSimulationScene:drawBattleInput()
 	love.graphics.rectangle('line', 10, 380, 500, 330)
 	
 	
+	
 end
 
 function RPGSimulationScene:draw()
