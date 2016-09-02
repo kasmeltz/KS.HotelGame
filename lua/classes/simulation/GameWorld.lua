@@ -1,6 +1,7 @@
 local TerrainTypeManager = require 'classes/managers/TerrainTypeManager'
 TerrainTypeManager = TerrainTypeManager:getInstance()
 local Location = require 'classes/simulation/Location'
+local Quest = require 'classes/simulation/Quest'
 local GameTime = require 'classes/simulation/GameTime'
 
 local class = require 'libs/30log/30log'
@@ -28,7 +29,9 @@ function GameWorld:createInitialQuests()
 	table.insert(self.activeQuests, q)
 	local q = self:createQuest(1, 1, 1, 1)
 	table.insert(self.activeQuests, q)
-	local q = self:createQuest(1, 2, 1, 1)	
+	local q = self:createQuest(1, 1, 1, 1)
+	table.insert(self.activeQuests, q)
+	local q = self:createQuest(1, 3, 1, 1)	
 	table.insert(self.activeQuests, q)
 	local q = self:createQuest(2, 3, 1, 2)	
 	table.insert(self.activeQuests, q)
@@ -112,14 +115,29 @@ function GameWorld:createWorldLocations()
 			end
 			
 			difficulty = difficulty + 1
-			
-			print(worldLocation:fullName(), worldLocation.quadrant, worldLocation.row, worldLocation.column, worldLocation.difficulty, worldLocation.cartesianX, worldLocation.cartesianY)
 		end		
 	end
 end
 
 function GameWorld:createQuest(minDifficulty, maxDifficulty, minLocations, maxLocations)
+	local locationCount = math.random(minLocations, maxLocations)	
+	local quest = Quest:new()
+
+	for i = 1, locationCount do
+		local difficulty = math.random(minDifficulty, maxDifficulty)
+
+		local selectedLocation = nil
+		for _, location in ipairs(self.worldLocations) do
+			if location.difficulty == difficulty then			
+				selectedLocation = location
+				break
+			end
+		end
+		
+		quest:addLocation(location)
+	end	
 	
+	return quest
 end
 
 function GameWorld:update(dt)

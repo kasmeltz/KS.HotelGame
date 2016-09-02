@@ -1,5 +1,5 @@
 local class = require 'libs/30log/30log'
-local TerrainTypeManager = class('TerrainTypeManager', { terrainTypes = {} } )
+local TerrainTypeManager = class('TerrainTypeManager', {} )
 local instance = TerrainTypeManager()
 
 function TerrainTypeManager.new() 

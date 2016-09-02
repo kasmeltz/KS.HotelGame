@@ -47,10 +47,10 @@ function RPGSimulationScene:init(gameWorld)
 	
 	self.terrainStripTypes = 
 	{
-		love.graphics.newImage('data/images/forest1.png'),
-		love.graphics.newImage('data/images/forest2.png'),
-		love.graphics.newImage('data/images/forest3.png'),
-		love.graphics.newImage('data/images/forest4.png')
+		love.graphics.newImage('data/images/terrainstrips/forest_1.png'),
+		love.graphics.newImage('data/images/terrainstrips/forest_2.png'),
+		love.graphics.newImage('data/images/terrainstrips/forest_3.png'),
+		love.graphics.newImage('data/images/terrainstrips/forest_4.png'),		
 	}
 	
 	self.heroTypes =
@@ -321,19 +321,27 @@ function RPGSimulationScene:drawMap()
 	
 	local worldLocations = self.gameWorld.worldLocations
 
-	love.graphics.setColor(100,255,100)
+	love.graphics.setColor(180, 180, 180)
 	love.graphics.rectangle('fill', 10, 10, sw - 20, sh - 20)
 	
 	love.graphics.setColor(0,0,0)
 	love.graphics.setLineWidth(400)
 	love.graphics.circle('line', sw / 2, sh / 2, 600)	
 	love.graphics.setLineWidth(1)
+
+	local font = FontManager:getFont('Courier12')	
+	love.graphics.setFont(font)
 		
-	love.graphics.setColor(0,0,255)
 	for _, location in ipairs(worldLocations) do
 		local sx = sw / 2 + (location.cartesianX * 120)
 		local sy = sh / 2 + (location.cartesianY * 120)
+		love.graphics.setColor(255,255,0)
 		love.graphics.circle('fill', sx, sy, 3)
+		
+		local locationText = location:fullName()
+		local tw = font:getWidth(locationText)
+		love.graphics.setColor(0, 10, 0)
+		love.graphics.print(locationText, sx - tw / 2, sy)
 	end
 end
 

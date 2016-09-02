@@ -19,6 +19,10 @@ local TerrainTypeManager = require 'classes/managers/TerrainTypeManager'
 TerrainTypeManager = TerrainTypeManager:getInstance()
 local TerrainStripTypeManager = require 'classes/managers/TerrainStripTypeManager'
 TerrainStripTypeManager = TerrainStripTypeManager:getInstance()
+local ObjectiveTypeManager = require 'classes/managers/ObjectiveTypeManager'
+ObjectiveTypeManager = ObjectiveTypeManager:getInstance()
+local NameManager =  require 'classes/managers/NameManager'
+NameManager = NameManager:getInstance()
 
 local GameWorld = require 'classes/simulation/GameWorld'
 --local Dialogue = require 'classes/simulation/Dialogue'
@@ -38,9 +42,13 @@ function love.load()
 	
 	math.randomseed(os.time())	
 
+	NameManager:initialize()
 	TerrainTypeManager:initialize()
 	TerrainStripTypeManager:initialize()
-	
+	ObjectiveTypeManager:initialize()
+
+	local font = love.graphics.newFont('data/fonts/courbd.ttf', 10)
+	FontManager:addFont(font, 'Courier8')	
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 12)
 	FontManager:addFont(font, 'Courier12')
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 16)
