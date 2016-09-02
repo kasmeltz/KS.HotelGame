@@ -4,7 +4,7 @@ local Location = SimulationItem:extend('Location')
 -- name
 -- nameType
 -- terrainType
--- area
+-- cuadrant
 -- row
 -- column
 -- monster difficulty

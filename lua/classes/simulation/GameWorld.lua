@@ -19,8 +19,6 @@ end
 function GameWorld:createWorldLocations()
 	self.worldLocations = {}
 	
-	local directions = { 'North', 'North East', 'East', 'South East', 'South', 'South West', 'West', 'North West' }
-	
 	local availablePrefixes = {}
 	local availableSuffixes = {}
 	local availableNouns = {}
@@ -41,14 +39,16 @@ function GameWorld:createWorldLocations()
 		availableNouns[i] = i
 	end
 	
-	for _, direction in ipairs(directions) do
+	local difficulty = 1
+	
+	for cuadrant = 1, 8 do
 		local row = 1
 		local column = 1
 		for i = 1, self.locationsPerDirection do
 			local worldLocation = Location:new(self)
 			local terrainIdx = math.random(1, #terrainTypes)
 			worldLocation.terrainType = terrainTypes[terrainIdx]
-			worldLocation.area = direction
+			worldLocation.cuadrant = cuadrant
 			
 			local availableTable = nil
 			local nameTable = nil
@@ -84,6 +84,7 @@ function GameWorld:createWorldLocations()
 			worldLocation.name = nameTable[pidx]
 			worldLocation.row = row
 			worldLocation.column = column				
+			worldLocation.difficulty = difficulty
 					
 			table.insert(self.worldLocations, worldLocation)
 			
@@ -93,8 +94,10 @@ function GameWorld:createWorldLocations()
 				row = row + 1
 			end
 			
+			difficulty = difficulty + 1
+			
 			print('=============================')
-			print(worldLocation.area, worldLocation.row, worldLocation.column)
+			print(worldLocation.cuadrant, worldLocation.row, worldLocation.column, worldLocation.difficulty)
 			print(worldLocation:fullName())
 		end		
 	end
