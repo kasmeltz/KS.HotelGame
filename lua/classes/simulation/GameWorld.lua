@@ -11,7 +11,7 @@ function GameWorld:init()
 	gameTime:setTime(2000, 2, 1, 7, 55, 0)
 	gameTime:setSpeed(5)
 	self.gameTime = gameTime
-	self.locationsPerDirection = 5
+	self.locationsPerDirection = 10
 	self:createWorldLocations()
 end
 
@@ -66,15 +66,13 @@ function GameWorld:createWorldLocations()
 			local idx = math.random(1, #availableTable)
 			local pidx = availableTable[idx]
 			table.remove(availableTable, idx)				
-			worldLocation.name = nameTable[pidx]				
-			
+			worldLocation.name = nameTable[pidx]
+					
 			table.insert(self.worldLocations, worldLocation)
 			
 			print('=============================')
 			print(worldLocation.area)
-			print(worldLocation.terrainType)
-			print(worldLocation.nameType)
-			print(worldLocation.name)
+			print(worldLocation:fullName())
 		end		
 	end
 end
