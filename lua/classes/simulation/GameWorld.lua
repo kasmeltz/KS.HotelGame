@@ -13,17 +13,18 @@ local GameTime = require 'classes/simulation/GameTime'
 local class = require 'libs/30log/30log'
 local GameWorld = class('GameWorld')
 
--- create a brand new game world
 function GameWorld:init()
 	local gameTime = GameTime:new()
 	gameTime:setTime(2000, 2, 1, 7, 55, 0)
 	gameTime:setSpeed(5)
 	self.gameTime = gameTime
-	self.locationsPerDirection = 20
+	self.locationsPerDirection = 30
 	self.columnsPerRow = 4
 end
 
+-- create a brand new game world
 function GameWorld:generateNewWorld()
+	self.generatedObjectives = {}
 	self:createWorldLocations()
 	self:createInitialQuests()
 end
@@ -125,11 +126,13 @@ function GameWorld:createWorldLocations()
 	end
 end
 
-function GameWorld:chooseObjectiveNoun(wordType)
+function GameWorld:chooseObjectiveNoun(wordType, location)
 	local availableNouns = ObjectiveTypeManager.nouns[wordType]
 	local firstNamesM = NameManager.firstNamesM
 	local firstNamesF = NameManager.firstNamesF
 	local lastNames = NameManager.lastNames
+	
+	print(wordType)
 	
 	if wordType == 'nm' then
 		local fidx = math.random(1, #firstNamesM)
@@ -141,6 +144,8 @@ function GameWorld:chooseObjectiveNoun(wordType)
 		local lidx = math.random(1, #lastNames)
 		
 		return firstNamesF[fidx] .. ' ' .. lastNames[lidx]
+	elseif wordType == 'l' then
+		return location:fullName()
 	else
 		local idx = math.random(1, #availableNouns)
 		return availableNouns[idx]
@@ -157,8 +162,12 @@ end
 
 function GameWorld:createQuest(minDifficulty, maxDifficulty, minLocations, maxLocations)
 	local locationCount = math.random(minLocations, maxLocations)	
-	local quest = Quest:new()
 	local objectiveTypes = ObjectiveTypeManager.objectiveTypes
+		
+	local quest = Quest:new()		
+	local date = self.gameTime:date()
+	quest.dueDate = GameTime:new()
+	quest.dueDate:setTime(date.year, date.month, date.day + locationCount, date.hours, date.min, date.sec)
 	
 	for i = 1, locationCount do
 		local difficulty = math.random(minDifficulty, maxDifficulty)
@@ -171,33 +180,50 @@ function GameWorld:createQuest(minDifficulty, maxDifficulty, minLocations, maxLo
 			end
 		end
 		
-		quest:addLocation(location)
+		quest:addLocation(selectedLocation)
 		
-		local objective = Objective:new()
-		
-		local oidx = math.random(1, #objectiveTypes)
-		local objectiveType = objectiveTypes[oidx]
-		local chosenNouns = {}
-		
-		for j = 1, #objectiveType.wordTypes do
-			local noun = self:chooseObjectiveNoun(objectiveType.wordTypes[j])
-			chosenNouns[#chosenNouns + 1] = noun
-		end
+		local objectiveChosen = false		
+		while objectiveChosen == false do
+			local objective = Objective:new()
+			
+			local oidx = math.random(1, #objectiveTypes)
+			local objectiveType = objectiveTypes[oidx]
+			local chosenNouns = {}
+			
+			for j = 1, #objectiveType.wordTypes do
+				local noun = self:chooseObjectiveNoun(objectiveType.wordTypes[j], selectedLocation)
+				chosenNouns[#chosenNouns + 1] = noun
+			end
 
-		objective.title = self:replaceNouns(objectiveType.title, chosenNouns)
+			objective.title = self:replaceNouns(objectiveType.title, chosenNouns)
+			
+			if not self:isObjectiveDuplicate(objective) then
+				self:rememberObjective(objective)
+				local didx = math.random(1, #objectiveType.descriptions)
+				local description = objectiveType.descriptions[didx]			
+				objective.description = self:replaceNouns(description, chosenNouns)			
+				objectiveChosen = objective
+								
+				print(objective.title)
+				print(objective.description)
+				
+				-- to do
+				-- generate reward for quest
+			end
+		end
 		
-		local didx = math.random(1, #objectiveType.descriptions)
-		local description = objectiveType.descriptions[didx]
-		
-		objective.description = self:replaceNouns(description, chosenNouns)
-		
-		print(objective.title)
-		print(objective.description)
-		
-		quest:addObjective(objective)		
+		quest:addObjective(objectiveChosen)		
 	end	
 	
 	return quest
+end
+
+function GameWorld:rememberObjective(objective)
+	self.generatedObjectives[objective.title] = true
+end
+
+function GameWorld:isObjectiveDuplicate(objective)
+	return self.generatedObjectives[objective.title]
 end
 
 function GameWorld:update(dt)

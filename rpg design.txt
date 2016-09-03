@@ -1,95 +1,79 @@
-Rpg simulation
+--=Rpg Simulation=--
 
+--Overview--
 Side scrolling terrain with small 8 bit characters
-
-Game date will advance in real time when you are out questing
-
-Terrain can be made of small repeatable mixable patches of graphics
-
-Could have parallax or a background and foreground layer
-
-Could have outdoor and indoor environments
-
-Quests are randomly generated and given to you by the king / whoever you are working for
-
-Quests will pass through different areas of the world and have different objectives with different monsters encountered and different rewards
-
-There could be multiple quests to choose from.
-
-If a quest is not competed by the due date it is no longer available
-
-Time limit on quests
-
-Stopping to camp allows you to craft but wastes time
-
-Crafting system will use items dropped by monsters to create weapons etc
-
-Items can have huge stats epic etc
-
-Need to figure out how player will learn new crafting recipes
-
-Monsters drop items to use for crafting
-
-World is generated randomly at the start of the game.   Zones names bosses etc
-
-Characters can die in combat and need to be replaced
-
-Different character classes
-
-Party of four
-
-More than four classes
-
-Each class had different skills to level up
-
-Player has to choose how to mix and match to make the best party
-
-Player has to interact with battles just by pressing buttons
-
-Some choices to make might be what formation to use, what skills to use for every character etc
-
-Future version could have graphical map of world that player can look at while they are on a quest
-
-Future version could have dialogue interacting with different  choices
-
-Future versions could have an overarching story sweep that develops through the random quests.
-
-Or multiple story sweeps that just keep going as long as the player keeps playing
-
+Game date will always advance in real time 
+Time may move faster depending on the current game state
 The difficulty of the game should build as long as possible with procedurally generated crafting recipes, monsters, bosses etc
 
-Future version the quests that are not completed might also affect story
+--Locations--
+Outdoor and indoor environments
+World is generated randomly at the start of the game. 
+Game world is broken up into rings of the eight directions with columns and rows of locations. The locations get much more difficult as you go to the outer rows. The difficulty of areas within a row will also vary.
+Locations will have cartesian coordinates and we can come up with a system to calculate distances
+Graphical view of map players can see the world, zoom in and out, and see their parties current location
 
-Need ideas for how player interacts with game especially in battles
+--Quests--
+Quests are randomly generated and given to you by the king / whoever you are working for
+Quests will pass through different areas of the world and have different objectives with different monsters encountered and different rewards
+There will be multiple quests to choose from.
+Time limit on quests
+If a quest is not competed by the due date it is no longer available
 
-Some kind of mini games to perform skills? Or just press buttons to make choices? Mini game during adventures could be very cool
-
+--Characters--
+Characters can die in combat and need to be replaced
+Different character classes
+Party of four
+More than four classes
+Each class had different skills to level up
+Player has to choose how to mix and match to make the best party
 Different races
-
 Characters age
-
-Characters in party of same class will level up other characters faster (teaching them tricks)
-
+Characters in party with more experienced members of the same class will level up faster (teaching them tricks)
 Characters will die of old age or be unable to continue
 
-Future version tells a story over hundreds of years with many Heros and the player can look at a book of history that writes about what the characters have accomplished (major story events)
+--Battles--
+Player has to interact with battles just by pressing buttons
+Some choices to make might be what formation to use, what skills to use for every character etc
 
-The future version game is about building the history of a nation through the actions of a few brave adventurers
+--Crafting--
+Crafting system will use items dropped by monsters to create weapons etc
+Stopping to camp allows you to craft but wastes time
+Should require a mini game
+When defeated, monsters drop items to use for crafting
 
-Future version maybe technology will advance or new techniques will be learned
+--Items--
+Items can have huge stats epic etc
 
-Mentalist type
+--Tech--
+Use different scenes as overlays for when tab changes
+Keep simulation items separate from display items
+Terrain can be made of small repeatable mixable patches of graphics
+Could have parallax or a background and foreground layer
 
+--To Do--
+Need better way to decide when monsters appear?
+How long does it take to travel from one area to another?
+How long do you have to travel within an area before you arrive at the quest?
+Do all quests come from the king or from other sources?
+Where to go to get rewards once quests have been completed?
+What about if people have been killed?
+How is the time limit on the quests calculated?
+How will player learn new crafting recipe?
+Need ideas for how player interacts with game especially in battles
+Some kind of mini games to perform skills? Or just press buttons to make choices? Mini game during adventures could be very cool
 Side effect of skills if not performed correctly
-
 Press buttons to perform skills in combat / actions
-
-Game world is broken up into rings of the eight directions with columns and rows of locations. The locations get much more difficult as you go to the outer rows. The difficulty of areas within a row will also vary.
-
 Quest difficulty will be represented by the % chance that you will get killed
-
-How long does it take to travel from one area to another
-
-Locations will have cartesian coordinates and we can come up with a system to calculate distances
-
 Travel time can be decreased if you get certain items (cars)
+
+--Future Version--
+The quests that are not completed might also affect story
+Tells a story over hundreds of years with many Heros and the player can look at a book of history that writes about what the characters have accomplished (major story events)
+Is about building the history of a nation through the actions of a few brave adventurers
+Maybe technology will advance or new techniques will be learned
+Could have dialogue interacting with different  choices
+Could have an overarching story sweep that develops through the random quests.
+Or multiple story sweeps that just keep going as long as the player keeps playing
+Could have alignment outcomes based on performing quests
+Can only have some quests available if your alignment is matching

@@ -2,8 +2,8 @@ local class = require 'libs/30log/30log'
 local GameTime = class('GameTime')
 
 function GameTime:init()	
-	self.speeds = { 0, 0.01, 0.1, 0.5, 1, 2, 5, 10, 1000, 10000 }
-	self.speedTexts = { 'paused', 'slowest', 'slower', 'slow', 'normal', 'fast', 'faster', 'fastest', 'ultra', 'redonkulous' }
+	self.speeds = { 0, 0.01, 0.1, 0.5, 1, 2, 5, 10, 100, 1000, 10000 }
+	self.speedTexts = { 'paused', 'slowest', 'slower', 'slow', 'normal', 'fast', 'faster', 'fastest', 'extreme', 'ultra', 'redonkulous' }
 	self.currentSpeed = 1
 end
 

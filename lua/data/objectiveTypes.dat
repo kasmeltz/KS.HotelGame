@@ -17,3 +17,23 @@ You must deliver %1% to %3%.
 Please deliver %1% to %2%, %3%.
 Please deliver %1% to %3%.
 ==
+Kill %1%
+**nm
+%1% has been conspiring to commit treason and he must be stopped!
+==
+Kill %1% in the %2%
+**m
+**l
+We have received word that %1% has been terrorizing citizens near the %2%. Please help me put an end to these attacks.
+==
+Retrieve %1% from %3%
+**i
+**rm
+**nm
+%2% %3% owes me %1%. Please bring it back for me.
+%3% owes me %1%. You will be rewarded for bringing it to me.
+==
+Investigate rumours in the %1%
+**l
+There have been rumours about something potentially dangerous happening at the %1%. I need you to investigate these rumours for me.
+==

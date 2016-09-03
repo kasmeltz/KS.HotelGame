@@ -7,6 +7,8 @@ local Scene = require 'classes/scene/Scene'
 local RPGSimulationScene = Scene:extend('RPGSimulationScene')
 
 RPGSimulationScene.BATTLE_TAB = 0
+RPGSimulationScene.MAP_TAB = 7
+
 
 local questObjectives = 
 {
@@ -118,6 +120,7 @@ local heroClasses =
 	'Thief',
 	'Necromancer',
 	'Ranger',
+	'Mentalist'
 }
 
 local heroRaces =
@@ -322,19 +325,20 @@ function RPGSimulationScene:drawMap()
 	local worldLocations = self.gameWorld.worldLocations
 
 	love.graphics.setColor(180, 180, 180)
-	love.graphics.rectangle('fill', 10, 10, sw - 20, sh - 20)
+	love.graphics.rectangle('fill', sw / 2 - 300, sh / 2 - 100 , 600, 450)
 	
 	love.graphics.setColor(0,0,0)
-	love.graphics.setLineWidth(400)
-	love.graphics.circle('line', sw / 2, sh / 2, 600)	
-	love.graphics.setLineWidth(1)
+	--love.graphics.setLineWidth(100)
+	--love.graphics.circle('line', sw / 2, sh / 2 + 100, 300)	
+	--love.graphics.circle('line', sw / 2, sh / 2 + 100, 300)	
+	--love.graphics.setLineWidth(1)
 
 	local font = FontManager:getFont('Courier12')	
 	love.graphics.setFont(font)
 		
 	for _, location in ipairs(worldLocations) do
-		local sx = sw / 2 + (location.cartesianX * 120)
-		local sy = sh / 2 + (location.cartesianY * 120)
+		local sx = sw / 2 + (location.cartesianX * 70)
+		local sy = sh / 2 + (location.cartesianY * 70) + 100
 		love.graphics.setColor(255,255,0)
 		love.graphics.circle('fill', sx, sy, 3)
 		
@@ -349,14 +353,12 @@ function RPGSimulationScene:draw()
 	local sw = self.screenWidth
 	local sh = self.screenHeight	
 	
-	self:drawMap()
-	local j = 1
-	if j == 1 then return end
-	
 	self:drawTopStrip()
 	
 	if self.activeTab ==  RPGSimulationScene.BATTLE_TAB then
 		self:drawBattleTab()
+	elseif self.activeTab == RPGSimulationScene.MAP_TAB then
+		self:drawMap()
 	end
 	
 	self:drawTab('B',  RPGSimulationScene.BATTLE_TAB, sh - 30)
@@ -366,6 +368,7 @@ function RPGSimulationScene:draw()
 	self:drawTab('G', 4, sh - 30)
 	self:drawTab('Q', 5, sh - 30)
 	self:drawTab('H', 6, sh - 30)
+	self:drawTab('M',  RPGSimulationScene.MAP_TAB, sh - 30)
 end
 
 function RPGSimulationScene:drawBar(sx, sy, width, max, current, fr, fg, fb, br, bg, bb, showText)
@@ -599,6 +602,13 @@ function RPGSimulationScene:update(dt)
 end
 
 function RPGSimulationScene:keyreleased(key, scancode)
+	if key == 'm' then
+		self.activeTab = RPGSimulationScene.MAP_TAB
+	end
+	if key == 'b'then
+		self.activeTab = RPGSimulationScene.BATTLE_TAB
+	end
+	
 end
 
 return RPGSimulationScene

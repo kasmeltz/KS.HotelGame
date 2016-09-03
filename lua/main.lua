@@ -113,9 +113,9 @@ function love.draw()
 		vScene:draw()
 	end		
 
-	--love.graphics.setFont(FontManager:getFont('Courier12'))	
-	--love.graphics.setColor(255,255,255)
-	--love.graphics.print('FPS: ' .. love.timer.getFPS(), 0, 0)
+	love.graphics.setFont(FontManager:getFont('Courier12'))	
+	love.graphics.setColor(255,255,255)
+	love.graphics.print('FPS: ' .. love.timer.getFPS(), 0, 700)
 
 --[[	
 	local gameTime = gameWorld.gameTime

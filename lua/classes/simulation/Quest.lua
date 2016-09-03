@@ -5,7 +5,7 @@ Quest.NOT_STARTED = 1
 
 -- locations
 -- objectives
--- due dates
+-- due date
 -- status
 
 function Quest:init(gameWorld)
