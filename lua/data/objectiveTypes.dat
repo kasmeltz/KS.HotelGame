@@ -1,10 +1,19 @@
 ==
-Deliver the %1% to %3%
+Deliver %1% to %3%
 **i
-**r
-**n
+**rm
+**nm
 You must deliver %1% to %2%, %3%.
 You must deliver %1% to %3%.
-Please deliver %1% to %3%, %3%.
+Please deliver %1% to %2%, %3%.
+Please deliver %1% to %3%.
+==
+Deliver %1% to %3%
+**i
+**rf
+**nf
+You must deliver %1% to %2%, %3%.
+You must deliver %1% to %3%.
+Please deliver %1% to %2%, %3%.
 Please deliver %1% to %3%.
 ==

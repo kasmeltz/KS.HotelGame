@@ -1,6 +1,12 @@
 local TerrainTypeManager = require 'classes/managers/TerrainTypeManager'
 TerrainTypeManager = TerrainTypeManager:getInstance()
+local ObjectiveTypeManager = require 'classes/managers/ObjectiveTypeManager'
+ObjectiveTypeManager = ObjectiveTypeManager:getInstance()
+local NameManager = require 'classes/managers/NameManager'
+NameManager = NameManager:getInstance()
+
 local Location = require 'classes/simulation/Location'
+local Objective = require 'classes/simulation/Objective'
 local Quest = require 'classes/simulation/Quest'
 local GameTime = require 'classes/simulation/GameTime'
 
@@ -119,10 +125,41 @@ function GameWorld:createWorldLocations()
 	end
 end
 
+function GameWorld:chooseObjectiveNoun(wordType)
+	local availableNouns = ObjectiveTypeManager.nouns[wordType]
+	local firstNamesM = NameManager.firstNamesM
+	local firstNamesF = NameManager.firstNamesF
+	local lastNames = NameManager.lastNames
+	
+	if wordType == 'nm' then
+		local fidx = math.random(1, #firstNamesM)
+		local lidx = math.random(1, #lastNames)
+		
+		return firstNamesM[fidx] .. ' ' .. lastNames[lidx]
+	elseif wordType == 'nf' then
+		local fidx = math.random(1, #firstNamesF)
+		local lidx = math.random(1, #lastNames)
+		
+		return firstNamesF[fidx] .. ' ' .. lastNames[lidx]
+	else
+		local idx = math.random(1, #availableNouns)
+		return availableNouns[idx]
+	end
+end
+
+function GameWorld:replaceNouns(text, chosenNouns)
+	for i = 1, 1000 do
+		if not chosenNouns[i] then break end
+		text = text:gsub('%%' .. i .. '%%', chosenNouns[i])
+	end
+	return text
+end
+
 function GameWorld:createQuest(minDifficulty, maxDifficulty, minLocations, maxLocations)
 	local locationCount = math.random(minLocations, maxLocations)	
 	local quest = Quest:new()
-
+	local objectiveTypes = ObjectiveTypeManager.objectiveTypes
+	
 	for i = 1, locationCount do
 		local difficulty = math.random(minDifficulty, maxDifficulty)
 
@@ -135,6 +172,29 @@ function GameWorld:createQuest(minDifficulty, maxDifficulty, minLocations, maxLo
 		end
 		
 		quest:addLocation(location)
+		
+		local objective = Objective:new()
+		
+		local oidx = math.random(1, #objectiveTypes)
+		local objectiveType = objectiveTypes[oidx]
+		local chosenNouns = {}
+		
+		for j = 1, #objectiveType.wordTypes do
+			local noun = self:chooseObjectiveNoun(objectiveType.wordTypes[j])
+			chosenNouns[#chosenNouns + 1] = noun
+		end
+
+		objective.title = self:replaceNouns(objectiveType.title, chosenNouns)
+		
+		local didx = math.random(1, #objectiveType.descriptions)
+		local description = objectiveType.descriptions[didx]
+		
+		objective.description = self:replaceNouns(description, chosenNouns)
+		
+		print(objective.title)
+		print(objective.description)
+		
+		quest:addObjective(objective)		
 	end	
 	
 	return quest

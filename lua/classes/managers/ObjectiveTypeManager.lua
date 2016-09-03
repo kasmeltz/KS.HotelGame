@@ -35,14 +35,6 @@ function ObjectiveTypeManager:loadObjectiveTypes()
 				objectiveType.descriptions = descriptions
 				objectiveType.wordTypes = wordTypes
 				table.insert(self.objectiveTypes, objectiveType) 
-				
-				print(objectiveType.title)
-				for i = 1, #wordTypes do
-					print(wordTypes[i])
-				end
-				for i = 1, #descriptions do
-					print(descriptions[i])
-				end
 			end
 			objectiveType = {}
 			descriptions = {}
@@ -63,20 +55,25 @@ function ObjectiveTypeManager:loadObjectiveTypes()
 end
 
 function ObjectiveTypeManager:loadObjectiveNouns()
-	self.nouns = {}	
+	self.nouns = {}		
+	
+	local nounType = nil
+	local text = nil
+	
 	for line in love.filesystem.lines('data/objectiveNouns.dat') do
 		if line:sub(1,2) == '==' then
-			if noun then
-				table.insert(self.nouns, noun)				
-							
-				print(noun.type)
-				print(noun.text)
-			end
-			
-			noun = {}
-			noun.type = line:sub(3,3)
+			if text then
+				if not self.nouns[nounType] then
+					self.nouns[nounType] = {}
+				end					
+				table.insert(self.nouns[nounType], text)
+				
+				nounType = nil
+				text = nil					
+			end			
+			nounType = line:sub(3)
 		else
-			noun.text = line
+			text = line
 		end		
 	end
 end

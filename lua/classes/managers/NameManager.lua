@@ -1,5 +1,5 @@
 local class = require 'libs/30log/30log'
-local NameManager = class('ObjectiveManager', { })
+local NameManager = class('NameManager', { })
 local instance = NameManager()
 
 function NameManager.new() 
