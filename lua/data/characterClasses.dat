@@ -1,0 +1,52 @@
+{
+	{
+		name = 'Knight',
+		stats = 
+		{
+			str = 20,
+			vit = 20,
+			mag = 0
+		},
+		skills = 
+		{
+			{
+				name = 'Protect'
+			},
+			{
+				name = 'Shield Bash'
+			}
+		}
+	},
+	{
+		name = 'Mage',
+		skills = {}
+	},
+	{
+		name = 'Barbarian',
+		skills = {}
+	},
+	{
+		name = 'Cleric',
+		skills = {}
+	},
+	{
+		name = 'Druid',
+		skills = {}
+	},
+	{
+		name = 'Thief',
+		skills = {}
+	},
+	{
+		name = 'Necromancer',
+		skills = {}
+	},
+	{
+		name = 'Ranger',
+		skills = {}
+	},
+	{
+		name = 'Mentalist',
+		skills = {}
+	}
+}

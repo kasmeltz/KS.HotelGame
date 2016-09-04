@@ -19,7 +19,17 @@ Please deliver %1% to %3%.
 ==
 Kill %1%
 **nm
-%1% has been conspiring to commit treason and he must be stopped!
+**l
+**rm
+It has come to my attention that %1% has been conspiring to commit treason. He must be stopped.
+I have learned that %1%, %3%, has been conspiring to commit treason. While this news is troubling to me, he must be stopped. You will be rewarded handsomely if you stop him for me.
+==
+Kill %1%
+**nf
+**l
+**rf
+%1% has been conspiring to commit treason and she must be stopped!
+I have learned that %1%, %3%, has been conspiring to commit treason. This news has been very hard for me to accept. Nevertheless she must be stopped. You will be rewarded handsomely if you stop her for me.
 ==
 Kill %1% in the %2%
 **m
@@ -30,7 +40,7 @@ Retrieve %1% from %3%
 **i
 **rm
 **nm
-%2% %3% owes me %1%. Please bring it back for me.
+Did you know that %2% %3% owes me %1%? Please get it from him and bring it back for me.
 %3% owes me %1%. You will be rewarded for bringing it to me.
 ==
 Investigate rumours in the %1%

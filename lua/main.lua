@@ -23,6 +23,11 @@ local ObjectiveTypeManager = require 'classes/managers/ObjectiveTypeManager'
 ObjectiveTypeManager = ObjectiveTypeManager:getInstance()
 local NameManager =  require 'classes/managers/NameManager'
 NameManager = NameManager:getInstance()
+local CharacterClassesManager = require 'classes/managers/CharacterClassesManager'
+CharacterClassesManager = CharacterClassesManager:getInstance()
+local RacesManager = require 'classes/managers/RacesManager'
+RacesManager = RacesManager:getInstance()
+
 
 local GameWorld = require 'classes/simulation/GameWorld'
 --local Dialogue = require 'classes/simulation/Dialogue'
@@ -46,6 +51,8 @@ function love.load()
 	TerrainTypeManager:initialize()
 	TerrainStripTypeManager:initialize()
 	ObjectiveTypeManager:initialize()
+	CharacterClassesManager:initialize()
+	RacesManager:initialize()
 
 	local font = love.graphics.newFont('data/fonts/courbd.ttf', 10)
 	FontManager:addFont(font, 'Courier8')	

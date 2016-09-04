@@ -1,0 +1,17 @@
+{
+	{
+		name = 'Human',
+	},
+	{
+		name = 'Dwarf',
+	},
+	{
+		name = 'Gnome',
+	},
+	{
+		name = 'Elf',
+	},
+	{
+		name = 'Orc',
+	}
+}

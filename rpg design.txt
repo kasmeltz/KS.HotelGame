@@ -52,6 +52,10 @@ Terrain can be made of small repeatable mixable patches of graphics
 Could have parallax or a background and foreground layer
 
 --To Do--
+Figure out character class stats
+Figure out character class skills
+Figure out skill upgrading
+Figure out experience / levelling system
 Need better way to decide when monsters appear?
 How long does it take to travel from one area to another?
 How long do you have to travel within an area before you arrive at the quest?

@@ -9,15 +9,17 @@ a sealed letter
 ==i
 a message
 ==rm
-my brother
+a friend of mine
 ==rm
-my father
+the duke of %l%
+==rm
+the governor of %l%
 ==rf 
-my mother
+the lady of %l%
 ==rf
-my sister
+the duchess of %l%
 ==rf
-my wife
+a lady friend of mine
 ==m
 a green dragon
 ==m

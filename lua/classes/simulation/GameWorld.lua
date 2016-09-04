@@ -8,6 +8,8 @@ NameManager = NameManager:getInstance()
 local Location = require 'classes/simulation/Location'
 local Objective = require 'classes/simulation/Objective'
 local Quest = require 'classes/simulation/Quest'
+local Party = require 'classes/simulation/Party'
+local Guild = require 'classes/simulation/Guild'
 local GameTime = require 'classes/simulation/GameTime'
 
 local class = require 'libs/30log/30log'
@@ -26,7 +28,11 @@ end
 function GameWorld:generateNewWorld()
 	self.generatedObjectives = {}
 	self:createWorldLocations()
-	self:createInitialQuests()
+	self:createInitialQuests()	
+	self.guild = Guild:new(self)
+	self.guild:createInitialHeroes()		
+	self.heroParty = Party:new(self)
+	self.heroParty.currentLocation = self.worldLocations[#self.worldLocations]
 end
 
 function GameWorld:createInitialQuests()
@@ -123,6 +129,16 @@ function GameWorld:createWorldLocations()
 			
 			difficulty = difficulty + 1
 		end		
+		
+		local worldLocation = Location:new(self)
+		worldLocation.terrainType = 'Castle'
+		local idx = math.random(1, #availableNouns)
+		local pidx = availableNouns[idx]
+		worldLocation.name = nouns[pidx]
+		worldLocation.nameType = 3
+		worldLocation.difficulty = 0			
+		worldLocation:setQuadrantRowColumn(0, 0, 0)					
+		table.insert(self.worldLocations, worldLocation)
 	end
 end
 
@@ -192,16 +208,18 @@ function GameWorld:createQuest(minDifficulty, maxDifficulty, minLocations, maxLo
 			
 			for j = 1, #objectiveType.wordTypes do
 				local noun = self:chooseObjectiveNoun(objectiveType.wordTypes[j], selectedLocation)
+				noun = noun:gsub('%%l%%', selectedLocation:fullName())
 				chosenNouns[#chosenNouns + 1] = noun
 			end
 
-			objective.title = self:replaceNouns(objectiveType.title, chosenNouns)
+			local title = objectiveType.title
+			objective.title = self:replaceNouns(title, chosenNouns)
 			
 			if not self:isObjectiveDuplicate(objective) then
 				self:rememberObjective(objective)
 				local didx = math.random(1, #objectiveType.descriptions)
-				local description = objectiveType.descriptions[didx]			
-				objective.description = self:replaceNouns(description, chosenNouns)			
+				local description = objectiveType.descriptions[didx]		
+				objective.description = self:replaceNouns(description, chosenNouns)	
 				objectiveChosen = objective
 								
 				print(objective.title)

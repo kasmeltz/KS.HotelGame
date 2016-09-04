@@ -7,6 +7,7 @@ local Scene = require 'classes/scene/Scene'
 local RPGSimulationScene = Scene:extend('RPGSimulationScene')
 
 RPGSimulationScene.BATTLE_TAB = 0
+RPGSimulationScene.QUEST_TAB = 5
 RPGSimulationScene.MAP_TAB = 7
 
 
@@ -349,6 +350,24 @@ function RPGSimulationScene:drawMap()
 	end
 end
 
+function RPGSimulationScene:drawQuestTab()
+	local sw = self.screenWidth
+	local sh = self.screenHeight	
+
+	local quests = self.gameWorld.activeQuests	
+	
+	local sy = 250
+	for _, quest in ipairs(quests) do
+		local questTitleText = ''
+		for _, objective in ipairs(quest.objectives) do
+			questTitleText = questTitleText .. objective.title .. ' '		
+		end
+		
+		love.graphics.print(questTitleText, 0, sy)
+		sy = sy + 60
+	end
+end
+
 function RPGSimulationScene:draw()
 	local sw = self.screenWidth
 	local sh = self.screenHeight	
@@ -357,6 +376,8 @@ function RPGSimulationScene:draw()
 	
 	if self.activeTab ==  RPGSimulationScene.BATTLE_TAB then
 		self:drawBattleTab()
+	elseif self.activeTab == RPGSimulationScene.QUEST_TAB then
+		self:drawQuestTab()
 	elseif self.activeTab == RPGSimulationScene.MAP_TAB then
 		self:drawMap()
 	end
@@ -366,7 +387,7 @@ function RPGSimulationScene:draw()
 	self:drawTab('I', 2, sh - 30)
 	self:drawTab('C', 3, sh - 30)
 	self:drawTab('G', 4, sh - 30)
-	self:drawTab('Q', 5, sh - 30)
+	self:drawTab('Q',  RPGSimulationScene.QUEST_TAB, sh - 30)
 	self:drawTab('H', 6, sh - 30)
 	self:drawTab('M',  RPGSimulationScene.MAP_TAB, sh - 30)
 end
@@ -607,6 +628,9 @@ function RPGSimulationScene:keyreleased(key, scancode)
 	end
 	if key == 'b'then
 		self.activeTab = RPGSimulationScene.BATTLE_TAB
+	end
+	if key == 'q' then
+		self.activeTab = RPGSimulationScene.QUEST_TAB
 	end
 	
 end
