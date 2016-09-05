@@ -17,4 +17,8 @@ function Hero:init(gameWorld)
 	Hero.super.init(self, gameWorld)
 end
 
+function Hero:fullName()
+	return self.firstName .. ' ' .. self.lastName
+end
+
 return Hero

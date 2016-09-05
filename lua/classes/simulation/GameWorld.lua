@@ -115,8 +115,7 @@ function GameWorld:createWorldLocations()
 			local pidx = availableTable[idx]
 			table.remove(availableTable, idx)				
 			worldLocation.name = nameTable[pidx]
-			worldLocation.difficulty = difficulty
-			
+			worldLocation.difficulty = difficulty			
 			worldLocation:setQuadrantRowColumn(quadrant, row, column)
 					
 			table.insert(self.worldLocations, worldLocation)
@@ -129,17 +128,18 @@ function GameWorld:createWorldLocations()
 			
 			difficulty = difficulty + 1
 		end		
-		
-		local worldLocation = Location:new(self)
-		worldLocation.terrainType = 'Castle'
-		local idx = math.random(1, #availableNouns)
-		local pidx = availableNouns[idx]
-		worldLocation.name = nouns[pidx]
-		worldLocation.nameType = 3
-		worldLocation.difficulty = 0			
-		worldLocation:setQuadrantRowColumn(0, 0, 0)					
-		table.insert(self.worldLocations, worldLocation)
 	end
+				
+	local worldLocation = Location:new(self)
+	worldLocation.terrainType = 'Castle'
+	local idx = math.random(1, #availableNouns)
+	local pidx = availableNouns[idx]
+	worldLocation.name = nouns[pidx]
+	worldLocation.nameType = 3
+	worldLocation.difficulty = 0			
+	worldLocation:setQuadrantRowColumn(0, 0, 0)
+	worldLocation.isDiscovered = true
+	table.insert(self.worldLocations, worldLocation)
 end
 
 function GameWorld:chooseObjectiveNoun(wordType, location)

@@ -7,6 +7,7 @@ local Scene = require 'classes/scene/Scene'
 local RPGSimulationScene = Scene:extend('RPGSimulationScene')
 
 RPGSimulationScene.BATTLE_TAB = 0
+RPGSimulationScene.GUILD_TAB = 4
 RPGSimulationScene.QUEST_TAB = 5
 RPGSimulationScene.MAP_TAB = 7
 
@@ -336,17 +337,19 @@ function RPGSimulationScene:drawMap()
 
 	local font = FontManager:getFont('Courier12')	
 	love.graphics.setFont(font)
-		
+	
 	for _, location in ipairs(worldLocations) do
-		local sx = sw / 2 + (location.cartesianX * 70)
-		local sy = sh / 2 + (location.cartesianY * 70) + 100
-		love.graphics.setColor(255,255,0)
-		love.graphics.circle('fill', sx, sy, 3)
-		
-		local locationText = location:fullName()
-		local tw = font:getWidth(locationText)
-		love.graphics.setColor(0, 10, 0)
-		love.graphics.print(locationText, sx - tw / 2, sy)
+		if location.isDiscovered then
+			local sx = sw / 2 + (location.cartesianX * 70)
+			local sy = sh / 2 + (location.cartesianY * 70) + 100
+			love.graphics.setColor(255,255,0)
+			love.graphics.circle('fill', sx, sy, 3)
+			
+			local locationText = location:fullName()
+			local tw = font:getWidth(locationText)
+			love.graphics.setColor(0, 10, 0)		
+			love.graphics.print(locationText, sx - tw / 2, sy)
+		end
 	end
 end
 
@@ -368,6 +371,22 @@ function RPGSimulationScene:drawQuestTab()
 	end
 end
 
+function RPGSimulationScene:drawGuild()
+	local sw = self.screenWidth
+	local sh = self.screenHeight	
+
+	local guild = self.gameWorld.guild
+	
+	local sy = 220
+	for _, hero in ipairs(guild.heroes) do
+		local text = hero:fullName()		
+		text = text .. ' L' .. hero.level .. ' ' .. hero.race.name .. ' ' .. hero.characterClass.name .. ' COST: $' .. hero.cost
+		love.graphics.print(text, 0, sy)
+		sy = sy + 25
+	end
+
+end
+
 function RPGSimulationScene:draw()
 	local sw = self.screenWidth
 	local sh = self.screenHeight	
@@ -380,16 +399,18 @@ function RPGSimulationScene:draw()
 		self:drawQuestTab()
 	elseif self.activeTab == RPGSimulationScene.MAP_TAB then
 		self:drawMap()
+	elseif self.activeTab == RPGSimulationScene.GUILD_TAB then
+		self:drawGuild()
 	end
 	
 	self:drawTab('B',  RPGSimulationScene.BATTLE_TAB, sh - 30)
 	self:drawTab('P', 1, sh - 30)
 	self:drawTab('I', 2, sh - 30)
 	self:drawTab('C', 3, sh - 30)
-	self:drawTab('G', 4, sh - 30)
-	self:drawTab('Q',  RPGSimulationScene.QUEST_TAB, sh - 30)
+	self:drawTab('G', RPGSimulationScene.GUILD_TAB, sh - 30)
+	self:drawTab('Q', RPGSimulationScene.QUEST_TAB, sh - 30)
 	self:drawTab('H', 6, sh - 30)
-	self:drawTab('M',  RPGSimulationScene.MAP_TAB, sh - 30)
+	self:drawTab('M', RPGSimulationScene.MAP_TAB, sh - 30)
 end
 
 function RPGSimulationScene:drawBar(sx, sy, width, max, current, fr, fg, fb, br, bg, bb, showText)
@@ -632,7 +653,9 @@ function RPGSimulationScene:keyreleased(key, scancode)
 	if key == 'q' then
 		self.activeTab = RPGSimulationScene.QUEST_TAB
 	end
-	
+	if key == 'g' then
+		self.activeTab = RPGSimulationScene.GUILD_TAB
+	end
 end
 
 return RPGSimulationScene

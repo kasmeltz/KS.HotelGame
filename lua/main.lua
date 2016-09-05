@@ -122,7 +122,7 @@ function love.draw()
 
 	love.graphics.setFont(FontManager:getFont('Courier12'))	
 	love.graphics.setColor(255,255,255)
-	love.graphics.print('FPS: ' .. love.timer.getFPS(), 0, 700)
+	love.graphics.print('FPS: ' .. love.timer.getFPS(), 0, 750)
 
 --[[	
 	local gameTime = gameWorld.gameTime

@@ -9,9 +9,11 @@ local Location = SimulationItem:extend('Location')
 -- column
 -- cartesian location
 -- monster difficulty
+-- is discovered (the player has visited it at least once or there is at least one quest for this location)
 
 function Location:init(gameWorld)
 	Location.super.init(self, gameWorld)
+	self.isDiscovered = false
 end
 
 function Location:fullName()
