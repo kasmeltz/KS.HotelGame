@@ -366,6 +366,7 @@ function RPGSimulationScene:drawQuestTab()
 			questTitleText = questTitleText .. objective.title .. ' '		
 		end
 		
+		questTitleText = questTitleText .. ' DUE DATE: ' .. quest.dueDate:getDateString('%d, %B, %Y %H:%M:%S')
 		love.graphics.print(questTitleText, 0, sy)
 		sy = sy + 60
 	end

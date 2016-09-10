@@ -34,6 +34,8 @@ local GameWorld = require 'classes/simulation/GameWorld'
 --local StoryScene = require 'classes/scene/StoryScene'
 --local DialogueScene = require 'classes/scene/DialogueScene'
 local RPGSimulationScene = require 'classes/scene/RPGSimulationScene'
+local BattleScene = require 'classes/scene/BattleScene'
+
 	
 local gameWorld
 function love.load()
@@ -74,9 +76,11 @@ function love.load()
 	gameWorld = GameWorld:new()
 	gameWorld:generateNewWorld()
 
+	SceneManager:addScene(BattleScene:new(gameWorld), 'battleScene')
+	SceneManager:show('battleScene')	
 
-	SceneManager:addScene(RPGSimulationScene:new(gameWorld), 'rpgsimulation')
-	SceneManager:show('rpgsimulation')	
+	--SceneManager:addScene(RPGSimulationScene:new(gameWorld), 'rpgsimulation')
+	--SceneManager:show('rpgsimulation')	
 	
 	--SceneManager:show('story', StoryFactory:createStory('begin', gameWorld))
 	

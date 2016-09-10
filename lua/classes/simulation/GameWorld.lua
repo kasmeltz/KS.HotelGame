@@ -33,6 +33,12 @@ function GameWorld:generateNewWorld()
 	self.guild:createInitialHeroes()		
 	self.heroParty = Party:new(self)
 	self.heroParty.currentLocation = self.worldLocations[#self.worldLocations]
+	self.heroParty.gold = 5000	
+	
+	table.insert(self.heroParty.heroes, self.guild.heroes[1])
+	table.insert(self.heroParty.heroes, self.guild.heroes[2])
+	table.insert(self.heroParty.heroes, self.guild.heroes[3])
+	table.insert(self.heroParty.heroes, self.guild.heroes[4])
 end
 
 function GameWorld:createInitialQuests()
@@ -246,6 +252,10 @@ end
 
 function GameWorld:update(dt)
 	self.gameTime:update(dt)
+	
+	if self.currentBattle then
+		self.currentBattle:update(dt)
+	end
 end
 
 return GameWorld

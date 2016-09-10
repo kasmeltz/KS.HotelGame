@@ -1,5 +1,7 @@
 --=Rpg Simulation=--
 
+--=Design=--
+
 --Overview--
 Side scrolling terrain with small 8 bit characters
 Game date will always advance in real time 
@@ -51,7 +53,13 @@ Keep simulation items separate from display items
 Terrain can be made of small repeatable mixable patches of graphics
 Could have parallax or a background and foreground layer
 
---To Do--
+--=To Do=--
+Quest objectives have to be matched to difficulty levels
+what is the formula for health	
+what is the formula for attack
+what is the formaul for defense	
+what is the formula for magic
+what is the formula for hero cost
 Figure out character class stats
 Figure out character class skills
 Figure out skill upgrading
@@ -70,6 +78,44 @@ Side effect of skills if not performed correctly
 Press buttons to perform skills in combat / actions
 Quest difficulty will be represented by the % chance that you will get killed
 Travel time can be decreased if you get certain items (cars)
+When are new quests generated?
+What do classes do?
+What do races do?
+Side scrolling terrain with small 8 bit characters
+Game date will always advance in real time 
+Time may move faster depending on the current game state
+The difficulty of the game should build as long as possible with procedurally generated crafting recipes, monsters, bosses etc
+Outdoor and indoor environments
+World is generated randomly at the start of the game. 
+Game world is broken up into rings of the eight directions with columns and rows of locations. The locations get much more difficult as you go to the outer rows. The difficulty of areas within a row will also vary.
+Locations will have cartesian coordinates and we can come up with a system to calculate distances
+Graphical view of map players can see the world, zoom in and out, and see their parties current location
+Quests are randomly generated and given to you by the king / whoever you are working for
+Quests will pass through different areas of the world and have different objectives with different monsters encountered and different rewards
+There will be multiple quests to choose from.
+Time limit on quests
+If a quest is not competed by the due date it is no longer available
+Characters can die in combat and need to be replaced
+Different character classes
+Party of four
+More than four classes
+Each class had different skills to level up
+Player has to choose how to mix and match to make the best party
+Different races
+Characters age
+Characters in party with more experienced members of the same class will level up faster (teaching them tricks)
+Characters will die of old age or be unable to continue
+Player has to interact with battles just by pressing buttons
+Some choices to make might be what formation to use, what skills to use for every character etc
+Crafting system will use items dropped by monsters to create weapons etc
+Stopping to camp allows you to craft but wastes time
+Should require a mini game
+When defeated, monsters drop items to use for crafting
+Items can have huge stats epic etc
+Use different scenes as overlays for when tab changes
+Keep simulation items separate from display items
+Terrain can be made of small repeatable mixable patches of graphics
+Could have parallax or a background and foreground layer
 
 --Future Version--
 The quests that are not completed might also affect story
