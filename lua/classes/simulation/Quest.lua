@@ -13,6 +13,8 @@ function Quest:init(gameWorld)
 	self.locations = {}
 	self.objectives = {}
 	self.status = Quest.NOT_STARTED
+	
+	self.currentObjective = 1
 end
 
 function Quest:addLocation(location)

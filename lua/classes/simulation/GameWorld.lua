@@ -50,18 +50,18 @@ function GameWorld:generateNewWorld()
 end
 
 function GameWorld:createInitialQuests()
-	self.activeQuests = {}
+	self.availableQuests = {}
 	
 	local q = self:createQuest(1, 1, 1, 1)
-	table.insert(self.activeQuests, q)
+	table.insert(self.availableQuests, q)
 	local q = self:createQuest(1, 1, 1, 1)
-	table.insert(self.activeQuests, q)
+	table.insert(self.availableQuests, q)
 	local q = self:createQuest(1, 1, 1, 1)
-	table.insert(self.activeQuests, q)
+	table.insert(self.availableQuests, q)
 	local q = self:createQuest(1, 3, 1, 1)	
-	table.insert(self.activeQuests, q)
+	table.insert(self.availableQuests, q)
 	local q = self:createQuest(2, 3, 1, 2)	
-	table.insert(self.activeQuests, q)
+	table.insert(self.availableQuests, q)
 end
 
 function GameWorld:createWorldLocations()

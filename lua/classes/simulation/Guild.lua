@@ -100,4 +100,8 @@ function Guild:createHero(minLevel, maxLevel, minAge, maxAge)
 	return hero
 end
 
+function Guild:removeHero(idx)
+	table.remove(self.heroes, idx)
+end
+
 return Guild

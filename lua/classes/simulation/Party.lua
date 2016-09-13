@@ -12,13 +12,17 @@ function Party:init(gameWorld)
 	
 	self.heroes = {}
 	self.destination = nil
-	self.walkingSpeed = 0.000004
+	self.walkingSpeed = 0.000002
 	--self.walkingSpeed = 0.0002
 	self.visited = {}	
 end
 
 function Party:addHero(hero)
 	table.insert(self.heroes, hero)
+end
+
+function Party:removeHero(idx)
+	table.remove(self.heroes, idx)
 end
 
 function Party:walking(w)
@@ -98,7 +102,7 @@ function Party:update(dt, gwdt)
 		local dx = self.cartesianX - destination.cartesianX
 		local dy = self.cartesianY - destination.cartesianY
 		local d2 = math.sqrt(dx * dx + dy * dy)
-		if d2 >= d1 then
+		if d2 > d1 then
 			self.cartesianX = destination.cartesianX
 			self.cartesianY = destination.cartesianY
 			self.destination = nil

@@ -28,7 +28,7 @@ function RPGSimulationScene:init(gameWorld)
 		love.graphics.newImage('data/images/skeleton.png')
 	}
 	
-	self.scrollingSpeed = 200
+	self.scrollingSpeed = 10
 	self.monsterFightX = 400
 	self.monsterMinDistance = 300
 	self.activeTab = RPGSimulationScene.GUILD_TAB
@@ -61,7 +61,7 @@ function RPGSimulationScene:show()
 	self.monsters = {}
 	
 	local gameTime = self.gameWorld.gameTime
-	gameTime:setSpeed(11)
+	gameTime:setSpeed(4)
 end
 
 local tabWidth = 50
@@ -125,21 +125,30 @@ function RPGSimulationScene:drawTopStrip()
 	love.graphics.setFont(font)		
 	local tw = font:getWidth(timeText)	
 	love.graphics.print(timeText, sw - tw - 10, 0)
+	
+	local speedText = gameTime.speedTexts[gameTime.currentSpeed]
+	local tw = font:getWidth(speedText)	
+	love.graphics.print(speedText, sw - tw - 10, 15)
 				
 	local party = self.gameWorld.heroParty
 	local locationText = party.currentLocation:fullName()
 	local tw = font:getWidth(locationText)
-	love.graphics.print(locationText, sw - tw - 10, 20)
+	love.graphics.print(locationText, sw - tw - 10, 30)
 	
 	if party.destination then
 		local destinationText = party.destination:fullName()
 		local tw = font:getWidth(destinationText)
-		love.graphics.print(destinationText, sw - tw - 10, 40)
+		love.graphics.print(destinationText, sw - tw - 10, 45)
 	end		
 		
 	if quest then
-		love.graphics.print(quest.objective .. ' in the ' .. quest.name .. ' ' .. quest.terrain, 10, 0)	
+	
+		--love.graphics.print(quest.objective .. ' in the ' .. quest.name .. ' ' .. quest.terrain, 10, 0)
 	end
+
+	local goldText = 'Gold: $' .. party.gold
+	local tw = font:getWidth(goldText)
+	love.graphics.print(goldText, sw - tw - 10, 180)
 end
 
 function RPGSimulationScene:drawBattleTab()
@@ -191,7 +200,7 @@ function RPGSimulationScene:drawBattleTab()
 	end]]
 end
 
-function RPGSimulationScene:drawMap()
+function RPGSimulationScene:drawMapTab()
 	local sw = self.screenWidth
 	local sh = self.screenHeight	
 	
@@ -237,7 +246,7 @@ function RPGSimulationScene:drawQuestTab()
 	local sw = self.screenWidth
 	local sh = self.screenHeight	
 
-	local quests = self.gameWorld.activeQuests	
+	local quests = self.gameWorld.availableQuests	
 	
 	local sy = 250
 	for _, quest in ipairs(quests) do
@@ -252,7 +261,7 @@ function RPGSimulationScene:drawQuestTab()
 	end
 end
 
-function RPGSimulationScene:drawGuild()
+function RPGSimulationScene:drawGuildTab()
 	local sw = self.screenWidth
 	local sh = self.screenHeight	
 
@@ -283,9 +292,9 @@ function RPGSimulationScene:draw()
 	elseif self.activeTab == RPGSimulationScene.QUEST_TAB then
 		self:drawQuestTab()
 	elseif self.activeTab == RPGSimulationScene.MAP_TAB then
-		self:drawMap()
+		self:drawMapTab()
 	elseif self.activeTab == RPGSimulationScene.GUILD_TAB then
-		self:drawGuild()
+		self:drawGuildTab()
 	end
 	
 	self:drawTab('B', RPGSimulationScene.BATTLE_TAB, sh - 30)
@@ -400,13 +409,13 @@ function RPGSimulationScene:updateWalking(dt, gwdt)
 
 	for _, terrainStrip in ipairs(terrainStrips) do		
 		local sx = terrainStrip[1]
-		terrainStrip[1] = sx - (self.scrollingSpeed * dt)
+		terrainStrip[1] = sx - (self.scrollingSpeed * gwdt)
 	end	
 	
 	for _, monsterGroup in ipairs(monsters) do
 		for _, monster in ipairs(monsterGroup) do
 			local sx = monster[1]
-			monster[1] = sx - (self.scrollingSpeed * dt)
+			monster[1] = sx - (self.scrollingSpeed * gwdt)
 			
 			if monster[1] < monsterFightX then
 				self:startBattle()
@@ -497,6 +506,21 @@ function RPGSimulationScene:keyreleased(key, scancode)
 		self.gameWorld.heroParty:walking(false)
 	end
 	
+	if key == '3' then
+		local speed = self.gameWorld.gameTime.currentSpeed
+		speed = speed - 1
+		if speed > 0 then		
+			self.gameWorld.gameTime:setSpeed(speed)
+		end
+	end
+	
+	if key == '4' then
+		local speed = self.gameWorld.gameTime.currentSpeed
+		speed = speed + 1
+		if speed <= #self.gameWorld.gameTime.speeds then		
+			self.gameWorld.gameTime:setSpeed(speed)
+		end
+	end
 end
 
 return RPGSimulationScene
