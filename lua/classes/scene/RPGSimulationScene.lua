@@ -10,6 +10,7 @@ local Scene = require 'classes/scene/Scene'
 local RPGSimulationScene = Scene:extend('RPGSimulationScene')
 
 RPGSimulationScene.BATTLE_TAB = 0
+RPGSimulationScene.PARTY_TAB = 1
 RPGSimulationScene.GUILD_TAB = 4
 RPGSimulationScene.QUEST_TAB = 5
 RPGSimulationScene.MAP_TAB = 7
@@ -28,22 +29,25 @@ function RPGSimulationScene:init(gameWorld)
 	}
 	
 	self.scrollingSpeed = 200
-	self.isInCombat = false
 	self.monsterFightX = 400
 	self.monsterMinDistance = 300
-	self.activeTab = RPGSimulationScene.BATTLE_TAB
+	self.activeTab = RPGSimulationScene.GUILD_TAB
 	self.battleActionPoints = 100
 end
 
+function RPGSimulationScene:createTerrainStrip(terrainType, sx, idx)
+	local terrainStripTypes = TerrainStripTypeManager:getTerrainStripTypes(terrainType)
+	local idx = idx or math.random(1, #terrainStripTypes)
+	local strip = { sx, 0, terrainStripTypes[idx] }	
+	return strip	
+end
+
 function RPGSimulationScene:createTerrain()
-	local terrainStripTypes = TerrainStripTypeManager:getTerrainStripTypes('forest')
-	
 	local terrainStrips = {}
 	
 	local sx = 0
 	for i = 1, 5 do
-		local idx = math.random(1, #terrainStripTypes)
-		local strip = { sx, 0, terrainStripTypes[idx] }
+		local strip = self:createTerrainStrip('forest', sx)
 		sx = sx + 300		
 		terrainStrips[#terrainStrips + 1] = strip
 	end
@@ -139,6 +143,7 @@ function RPGSimulationScene:drawTopStrip()
 end
 
 function RPGSimulationScene:drawBattleTab()
+--[[
 	local sw = self.screenWidth
 	local sh = self.screenHeight	
 	
@@ -183,12 +188,7 @@ function RPGSimulationScene:drawBattleTab()
 	
 	if battle.currentActor then	
 		self:drawBattleInput()
-	end
-end
-
-function RPGSimulationScene:drawBattleInput()
-	love.graphics.setColor(200,200,200)
-	love.graphics.rectangle('line', 10, 380, 500, 330)		
+	end]]
 end
 
 function RPGSimulationScene:drawMap()
@@ -265,7 +265,9 @@ function RPGSimulationScene:drawGuild()
 		love.graphics.print(text, 0, sy)
 		sy = sy + 25
 	end
+end
 
+function RPGSimulationScene:drawPartyTab()
 end
 
 function RPGSimulationScene:draw()
@@ -276,6 +278,8 @@ function RPGSimulationScene:draw()
 	
 	if self.activeTab ==  RPGSimulationScene.BATTLE_TAB then
 		self:drawBattleTab()
+	elseif self.activeTab == RPGSimulationScene.PARTY_TAB then
+		self:drawPartyTab()
 	elseif self.activeTab == RPGSimulationScene.QUEST_TAB then
 		self:drawQuestTab()
 	elseif self.activeTab == RPGSimulationScene.MAP_TAB then
@@ -284,8 +288,8 @@ function RPGSimulationScene:draw()
 		self:drawGuild()
 	end
 	
-	self:drawTab('B',  RPGSimulationScene.BATTLE_TAB, sh - 30)
-	self:drawTab('P', 1, sh - 30)
+	self:drawTab('B', RPGSimulationScene.BATTLE_TAB, sh - 30)
+	self:drawTab('P', RPGSimulationScene.PARTY_TAB, sh - 30)
 	self:drawTab('I', 2, sh - 30)
 	self:drawTab('C', 3, sh - 30)
 	self:drawTab('G', RPGSimulationScene.GUILD_TAB, sh - 30)
@@ -344,27 +348,10 @@ end
 
 function RPGSimulationScene:startBattle()
 	local gameTime = self.gameWorld.gameTime
-	local heroes = self.heroes
-	local monsters = self.monsters	
-	local monsterFightX = self.monsterFightX
-	local battleActionPoints = self.battleActionPoints
 	local party = self.gameWorld.heroParty
 	
-	self.isInCombat = true
 	party:walking(false)
 	gameTime:setSpeed(5)
-
-	for _, hero in ipairs(heroes) do
-		hero.actionPoints = math.random(0, battleActionPoints / 2)
-	end	
-	
-	-- position monsters properly
-	local firstGroup = monsters[1]
-	for _, monster in ipairs(firstGroup) do
-		monster.actionPoints = math.random(0, battleActionPoints / 2)
-	end
-	
-	self.battle = self:createBattle()
 end
 
 function RPGSimulationScene:createMonsterGroup()
@@ -407,7 +394,6 @@ function RPGSimulationScene:updateWalking(dt, gwdt)
 	local sw = self.screenWidth
 	
 	local terrainStrips = self.terrainStrips
-	local terrainStripTypes = TerrainStripTypeManager:getTerrainStripTypes('forest')
 	local monsterTypes = self.monsterTypes
 	local monsters = self.monsters	
 	local monsterFightX = self.monsterFightX
@@ -433,8 +419,7 @@ function RPGSimulationScene:updateWalking(dt, gwdt)
 	local img = lastStrip[3]
 	local stripWidth = img:getWidth()
 	if sx <= sw - stripWidth then
-		local newIdx = math.random(1, #terrainStripTypes)
-		local newStrip = { sx + stripWidth, 0, terrainStripTypes[newIdx] }
+		local newStrip = self:createTerrainStrip('forest', sx + stripWidth)
 		terrainStrips[#terrainStrips + 1] = newStrip
 	end
 	
@@ -470,71 +455,25 @@ function RPGSimulationScene:updateWalking(dt, gwdt)
 	end	
 end
 
-function RPGSimulationScene:createBattle()
-	local battle = {}
-	
-	local monsterGroup = self.monsters[1]
-	battle.monsters = monsterGroup	
-	
-	return battle	
-end
-
-function RPGSimulationScene:setBattleActor(actor)
-	local battle = self.battle
-	battle.currentActor = actor
-end
-
-function RPGSimulationScene:updateCombat(dt)
-	local battle = self.battle
-	local heroes = self.heroes
-	local monsters = battle.monsters
-	local battleActionPoints = self.battleActionPoints
-	
-	-- someone is taking a turn
-	if battle.currentActor then
-	
-	else	
-		for _, hero in ipairs(heroes) do
-			hero.actionPoints = hero.actionPoints + (dt * 100)
-			if (hero.actionPoints > battleActionPoints) then
-				self:setBattleActor(hero)
-				hero.actionPoints = battleActionPoints
-				return
-			end
-		end
-
-		for _, monster in ipairs(monsters) do
-			monster.actionPoints = monster.actionPoints + (dt * 100)
-			if (monster.actionPoints > battleActionPoints) then
-				self:setBattleActor(monster)
-				monster.actionPoints = battleActionPoints
-				return
-			end
-		end
-	end	
-end
-
 function RPGSimulationScene:update(dt)
 	local party = self.gameWorld.heroParty
 	local gameTime = self.gameWorld.gameTime
 	local gwdt = gameTime:updateSpeed(dt)
 	
-	if self.isInCombat then
-		self:updateCombat(dt, gwdt)
-	end
-	
 	if party:walking() then
 		self:updateWalking(dt, gwdt)
-	end
-	
+	end	
 end
 
 function RPGSimulationScene:keyreleased(key, scancode)
 	if key == 'm' then
 		self.activeTab = RPGSimulationScene.MAP_TAB
 	end
-	if key == 'b'then
-		self.activeTab = RPGSimulationScene.BATTLE_TAB
+	--if key == 'b'then
+		--self.activeTab = RPGSimulationScene.BATTLE_TAB
+	--end
+	if key == 'p' then
+		self.activeTab = RPGSimulationScene.PARTY_TAB
 	end
 	if key == 'q' then
 		self.activeTab = RPGSimulationScene.QUEST_TAB
