@@ -23,6 +23,7 @@ end
 
 function TerrainStripTypeManager:loadTerrainStripTypes()
 	self.terrainStrips = {}
+	
 	local files = love.filesystem.getDirectoryItems('data/images/terrainstrips')
 	for k, file in pairs(files) do
 		local a, b, c, d = string.find(file, '(.+)_(%d+)')
@@ -32,16 +33,16 @@ function TerrainStripTypeManager:loadTerrainStripTypes()
 end
 
 function TerrainStripTypeManager:addTerrainStripType(strip, terrainName)
-	if not self.strips[terrainName] then 
-		self.strips[terrainName] = {}
+	if not self.terrainStrips[terrainName] then 
+		self.terrainStrips[terrainName] = {}
 	end
 	
-	local strips = self.strips[terrainName]
-	strips[#strips + 1] = terrainName
+	local strips = self.terrainStrips[terrainName]
+	strips[#strips + 1] = strip
 end
 
 function TerrainStripTypeManager:getTerrainStripTypes(terrainName)
-	return strips[terrainName]
+	return self.terrainStrips[terrainName]
 end
 
 return TerrainStripTypeManager

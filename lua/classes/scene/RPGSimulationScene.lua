@@ -3,6 +3,9 @@ FontManager = FontManager:getInstance()
 local SceneManager = require 'classes/scene/SceneManager'
 SceneManager = SceneManager:getInstance()
 
+local TerrainStripTypeManager = require 'classes/managers/TerrainStripTypeManager'
+TerrainStripTypeManager = TerrainStripTypeManager:getInstance()
+
 local Scene = require 'classes/scene/Scene'
 local RPGSimulationScene = Scene:extend('RPGSimulationScene')
 
@@ -11,50 +14,8 @@ RPGSimulationScene.GUILD_TAB = 4
 RPGSimulationScene.QUEST_TAB = 5
 RPGSimulationScene.MAP_TAB = 7
 
-local questObjectives = 
-{
-	'Defeat the dragon',
-	'Rescue the princess',
-	'Recover the stolen orb',
-	'Deliver a package',
-	'Investigate rumours',
-	'Kill the evil wizard'
-}
-
-local difficultyTypes =
-{
-	'Easy',
-	'Medium',
-	'Hard',
-	'Challenging',
-	'Insane'
-}
-
-local terrainTypes = 
-{
-	'Forest', 'Swamp', 'Mountains', 'Hills', 'Plains', 'Sea', 'Desert', 'Tundra', 'Rainforest', 'Dungeon', 'Castle', 'Church'
-}
-
-local areaTypes = 
-{
-	'North', 'North East', 'East', 'South East', 'South', 'South West', 'West', 'North West'
-}
-
-local nameTypes = 
-{
-	'Dark', 'Light', 'Frozen', 'Greylock', 'Agwando', 'Infinite', 'Kilrog', 'Hidden', 'Mystic', 'Ancient', 'Forbidden'
-}
-
 function RPGSimulationScene:init(gameWorld)
 	RPGSimulationScene.super.init(self, gameWorld)
-	
-	self.terrainStripTypes = 
-	{
-		love.graphics.newImage('data/images/terrainstrips/forest_1.png'),
-		love.graphics.newImage('data/images/terrainstrips/forest_2.png'),
-		love.graphics.newImage('data/images/terrainstrips/forest_3.png'),
-		love.graphics.newImage('data/images/terrainstrips/forest_4.png'),		
-	}
 	
 	self.heroTypes =
 	{
@@ -66,7 +27,7 @@ function RPGSimulationScene:init(gameWorld)
 		love.graphics.newImage('data/images/skeleton.png')
 	}
 	
-	self.scrollingSpeed = 0.1
+	self.scrollingSpeed = 200
 	self.isInCombat = false
 	self.monsterFightX = 400
 	self.monsterMinDistance = 300
@@ -74,129 +35,29 @@ function RPGSimulationScene:init(gameWorld)
 	self.battleActionPoints = 100
 end
 
-function RPGSimulationScene:generateQuest()
-	local quest = {}
-	
-	local idx = math.random(1, #questObjectives)
-	
-	quest.objective = questObjectives[idx]
-	
-	idx = math.random(1, #difficultyTypes)
-	
-	quest.difficulty = difficultyTypes[idx]
-	
-	idx = math.random(1, #terrainTypes)
-	
-	quest.terrain = terrainTypes[idx]
-	
-	idx = math.random(1, #nameTypes)
-	
-	quest.name = nameTypes[idx]
-		
-	return quest
-end
-
 function RPGSimulationScene:createTerrain()
+	local terrainStripTypes = TerrainStripTypeManager:getTerrainStripTypes('forest')
+	
 	local terrainStrips = {}
 	
 	local sx = 0
 	for i = 1, 5 do
-		local idx = math.random(1, #self.terrainStripTypes)
-		local strip = { sx, 0, 1 }
-		sx = sx + 300
-		
+		local idx = math.random(1, #terrainStripTypes)
+		local strip = { sx, 0, terrainStripTypes[idx] }
+		sx = sx + 300		
 		terrainStrips[#terrainStrips + 1] = strip
 	end
 	
 	return terrainStrips	
 end
 
-local heroClasses = 
-{
-	'Knight',
-	'Mage',
-	'Barbarian',
-	'Cleric',
-	'Druid',
-	'Thief',
-	'Necromancer',
-	'Ranger',
-	'Mentalist'
-}
-
-local heroRaces =
-{
-	'Human',
-	'Dwarf', 
-	'Elf', 
-	'Gnome',
-	'Orc',
-}
-
-local heroFirstNames =  
-{
-	'Paul', 
-	'George',
-	'John',
-	'Ringo'
-}
-
-local heroLastNames =
-{
-	'McCartney',
-	'Lennon',
-	'Harrison',
-	'Starr'
-}
-
-function RPGSimulationScene:createHero() 
-	local hero = {}
-	local idx
-	
-	idx = math.random(1, #heroFirstNames)
-	hero.fname = heroFirstNames[idx]
-
-	idx = math.random(1, #heroLastNames)
-	hero.lname = heroLastNames[idx]
-	
-	idx = math.random(1, #heroClasses)
-	hero.class = heroClasses[idx]
-	
-	idx = math.random(1, #heroRaces)
-	hero.race = heroRaces[idx]
-	
-	hero.level = math.random(1, 3)
-	
-	hero.physicalDamage = hero.level * math.random(2, 5)
-	hero.physicalDefense = hero.level * math.random(2, 5)
-	hero.magicSkill = hero.level * math.random(2, 5)
-	
-	hero.hitPoints = hero.level * math.random(10, 40)
-	hero.maxHitPoints = hero.hitPoints	
-	
-	hero.actionPoints = 0
-	
-	return hero
-end
-
-function RPGSimulationScene:show(heroes)
-	if not heroes then
-		heroes = {}
-		for i = 1, 4 do
-			heroes[#heroes + 1] = self:createHero()	
-		end
-	end
-	
-	self.heroes = heroes
-	
-	self.quest = self:generateQuest()
-	
+function RPGSimulationScene:show()
 	self.terrainStrips = self:createTerrain()
 	
 	self.monsters = {}
 	
 	local gameTime = self.gameWorld.gameTime
-	gameTime:setSpeed(10)
+	gameTime:setSpeed(11)
 end
 
 local tabWidth = 50
@@ -224,22 +85,24 @@ function RPGSimulationScene:drawTopStrip()
 	
 	local heroes = self.heroes
 	local monsters = self.monsters
-	local quest = self.quest
+	local quest = self.gameWorld.currentQuest
 	
 	love.graphics.setColor(255,255,255)
 	
 	for _, terrainStrip in ipairs(self.terrainStrips) do		
 		local sx = terrainStrip[1]
 		local sy = terrainStrip[2]
-		local idx = terrainStrip[3]
+		local tt = terrainStrip[3]
 		
-		love.graphics.draw(self.terrainStripTypes[idx], sx, sy)
+		love.graphics.draw(tt, sx, sy)
 	end	
 	
+	--[[
 	self:drawHero(heroes[1], 150, 100)	
 	self:drawHero(heroes[2], 200, 130)
 	self:drawHero(heroes[3], 250, 100)
 	self:drawHero(heroes[4], 300, 130)
+	]]
 	
 	love.graphics.setColor(255,255,255)
 	
@@ -270,7 +133,9 @@ function RPGSimulationScene:drawTopStrip()
 		love.graphics.print(destinationText, sw - tw - 10, 40)
 	end		
 		
-	love.graphics.print(quest.objective .. ' in the ' .. quest.name .. ' ' .. quest.terrain, 10, 0)	
+	if quest then
+		love.graphics.print(quest.objective .. ' in the ' .. quest.name .. ' ' .. quest.terrain, 10, 0)	
+	end
 end
 
 function RPGSimulationScene:drawBattleTab()
@@ -336,10 +201,6 @@ function RPGSimulationScene:drawMap()
 	love.graphics.rectangle('fill', sw / 2 - 300, sh / 2 - 100 , 600, 450)
 	
 	love.graphics.setColor(0,0,0)
-	--love.graphics.setLineWidth(100)
-	--love.graphics.circle('line', sw / 2, sh / 2 + 100, 300)	
-	--love.graphics.circle('line', sw / 2, sh / 2 + 100, 300)	
-	--love.graphics.setLineWidth(1)
 
 	local font = FontManager:getFont('Courier12')	
 	love.graphics.setFont(font)
@@ -362,6 +223,14 @@ function RPGSimulationScene:drawMap()
 	local sy = sh / 2 + (party.cartesianY * 70) + 100
 	love.graphics.setColor(255,0,0)
 	love.graphics.circle('fill', sx, sy, 3)
+	
+	local destination = party.destination
+	if destination then
+		local sx = sw / 2 + (destination.cartesianX * 70)
+		local sy = sh / 2 + (destination.cartesianY * 70) + 100
+		love.graphics.setColor(0,0,255)
+		love.graphics.circle('fill', sx, sy, 3)
+	end
 end
 
 function RPGSimulationScene:drawQuestTab()
@@ -538,20 +407,20 @@ function RPGSimulationScene:updateWalking(dt, gwdt)
 	local sw = self.screenWidth
 	
 	local terrainStrips = self.terrainStrips
-	local terrainStripTypes = self.terrainStripTypes
+	local terrainStripTypes = TerrainStripTypeManager:getTerrainStripTypes('forest')
 	local monsterTypes = self.monsterTypes
 	local monsters = self.monsters	
 	local monsterFightX = self.monsterFightX
 
 	for _, terrainStrip in ipairs(terrainStrips) do		
 		local sx = terrainStrip[1]
-		terrainStrip[1] = sx - (self.scrollingSpeed * gwdt)
+		terrainStrip[1] = sx - (self.scrollingSpeed * dt)
 	end	
 	
 	for _, monsterGroup in ipairs(monsters) do
 		for _, monster in ipairs(monsterGroup) do
 			local sx = monster[1]
-			monster[1] = sx - (self.scrollingSpeed * gwdt)
+			monster[1] = sx - (self.scrollingSpeed * dt)
 			
 			if monster[1] < monsterFightX then
 				self:startBattle()
@@ -561,19 +430,17 @@ function RPGSimulationScene:updateWalking(dt, gwdt)
 	
 	local lastStrip = terrainStrips[#terrainStrips]
 	local sx = lastStrip[1]
-	local idx = lastStrip[3]
-	local img = terrainStripTypes[idx]
+	local img = lastStrip[3]
 	local stripWidth = img:getWidth()
 	if sx <= sw - stripWidth then
 		local newIdx = math.random(1, #terrainStripTypes)
-		local newStrip = { sx + stripWidth, 0, newIdx }
+		local newStrip = { sx + stripWidth, 0, terrainStripTypes[newIdx] }
 		terrainStrips[#terrainStrips + 1] = newStrip
 	end
 	
 	local firstStrip = terrainStrips[1]
 	local sx = firstStrip[1]
-	local idx = firstStrip[3]
-	local img = terrainStripTypes[idx]
+	local img = firstStrip[3]
 	local stripWidth = img:getWidth()
 	if sx + stripWidth < 0 then
 		table.remove(terrainStrips, 1)
