@@ -27,10 +27,10 @@ function Location:fullName()
 end
 
 function Location:discovered(d)
-	if d then
-		self.isDiscovered = d		
-	else
+	if d == nil then	
 		return self.isDiscovered
+	else
+		self.isDiscovered = d		
 	end
 end
 

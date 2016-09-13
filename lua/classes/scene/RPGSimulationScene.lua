@@ -11,7 +11,6 @@ RPGSimulationScene.GUILD_TAB = 4
 RPGSimulationScene.QUEST_TAB = 5
 RPGSimulationScene.MAP_TAB = 7
 
-
 local questObjectives = 
 {
 	'Defeat the dragon',
@@ -67,7 +66,7 @@ function RPGSimulationScene:init(gameWorld)
 		love.graphics.newImage('data/images/skeleton.png')
 	}
 	
-	self.walkingSpeed = 200
+	self.scrollingSpeed = 0.1
 	self.isInCombat = false
 	self.monsterFightX = 400
 	self.monsterMinDistance = 300
@@ -101,7 +100,7 @@ function RPGSimulationScene:createTerrain()
 	local terrainStrips = {}
 	
 	local sx = 0
-	for i = 1, 4 do
+	for i = 1, 5 do
 		local idx = math.random(1, #self.terrainStripTypes)
 		local strip = { sx, 0, 1 }
 		sx = sx + 300
@@ -197,7 +196,7 @@ function RPGSimulationScene:show(heroes)
 	self.monsters = {}
 	
 	local gameTime = self.gameWorld.gameTime
-	gameTime:setSpeed(11)
+	gameTime:setSpeed(10)
 end
 
 local tabWidth = 50
@@ -480,9 +479,10 @@ function RPGSimulationScene:startBattle()
 	local monsters = self.monsters	
 	local monsterFightX = self.monsterFightX
 	local battleActionPoints = self.battleActionPoints
+	local party = self.gameWorld.heroParty
 	
-	self.walkingSpeed = 0
 	self.isInCombat = true
+	party:walking(false)
 	gameTime:setSpeed(5)
 
 	for _, hero in ipairs(heroes) do
@@ -534,7 +534,7 @@ function RPGSimulationScene:createMonsterGroup()
 	monsters[#monsters +1] = monsterGroup
 end
 
-function RPGSimulationScene:updateWalking(dt)
+function RPGSimulationScene:updateWalking(dt, gwdt)
 	local sw = self.screenWidth
 	
 	local terrainStrips = self.terrainStrips
@@ -545,13 +545,13 @@ function RPGSimulationScene:updateWalking(dt)
 
 	for _, terrainStrip in ipairs(terrainStrips) do		
 		local sx = terrainStrip[1]
-		terrainStrip[1] = sx - (self.walkingSpeed * dt)
+		terrainStrip[1] = sx - (self.scrollingSpeed * gwdt)
 	end	
 	
 	for _, monsterGroup in ipairs(monsters) do
 		for _, monster in ipairs(monsterGroup) do
 			local sx = monster[1]
-			monster[1] = sx - (self.walkingSpeed * dt)
+			monster[1] = sx - (self.scrollingSpeed * gwdt)
 			
 			if monster[1] < monsterFightX then
 				self:startBattle()
@@ -648,10 +648,16 @@ function RPGSimulationScene:updateCombat(dt)
 end
 
 function RPGSimulationScene:update(dt)
+	local party = self.gameWorld.heroParty
+	local gameTime = self.gameWorld.gameTime
+	local gwdt = gameTime:updateSpeed(dt)
+	
 	if self.isInCombat then
-		self:updateCombat(dt)
-	else
-		self:updateWalking(dt)
+		self:updateCombat(dt, gwdt)
+	end
+	
+	if party:walking() then
+		self:updateWalking(dt, gwdt)
 	end
 	
 end
@@ -676,6 +682,15 @@ function RPGSimulationScene:keyreleased(key, scancode)
 		local location = locations[idx]
 		self.gameWorld.heroParty:setDestination(location)
 	end
+	
+	if key == '1' then
+		self.gameWorld.heroParty:walking(true)
+	end
+	
+	if key == '2' then
+		self.gameWorld.heroParty:walking(false)
+	end
+	
 end
 
 return RPGSimulationScene

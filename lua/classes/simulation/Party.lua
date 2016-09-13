@@ -12,21 +12,29 @@ function Party:init(gameWorld)
 	
 	self.heroes = {}
 	self.destination = nil
-	self.walkingSpeed = 0.000002
-	self.visited = {}
-	--self.walkingSpeed = 0.001
+	self.walkingSpeed = 0.000004
+	--self.walkingSpeed = 0.0002
+	self.visited = {}	
 end
 
 function Party:addHero(hero)
 	table.insert(self.heroes, hero)
 end
 
+function Party:walking(w)
+	if w == nil
+		then return self.isWalking
+	else
+		self.isWalking = w 
+	end
+end
+
 function Party:setLocation(location)
 	self.currentLocation = location	
-	location:discovered(true)
-	
-	if not self.visited[location] then
-		self.visited[location] = true
+	location:discovered(true)	
+	local fn = location:fullName()
+	if not self.visited[fn] then
+		self.visited[fn] = true
 		
 		if self.onVisitedNewLocation then		
 			self.onVisitedNewLocation(location)

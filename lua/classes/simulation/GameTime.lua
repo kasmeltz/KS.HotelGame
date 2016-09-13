@@ -26,6 +26,11 @@ function GameTime:setSpeed(speed)
 	self.currentSpeed = speed
 end
 
+function GameTime:updateSpeed(dt)
+	local speed = self.speeds[self.currentSpeed]
+	return dt * speed
+end
+
 function GameTime:update(dt)
 	local speed = self.speeds[self.currentSpeed]
 	self.timeSeconds = self.timeSeconds + (dt * speed)

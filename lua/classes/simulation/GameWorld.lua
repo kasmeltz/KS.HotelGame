@@ -39,7 +39,7 @@ function GameWorld:generateNewWorld()
 	self.heroParty.cartesianY = castle.cartesianY
 	
 	self.heroParty.gold = 5000	
-	self.heroParty.isWalking = true
+	self.heroParty:walking(false)
 	
 	self.heroParty:setDestination(self.worldLocations[1])
 	
