@@ -32,13 +32,21 @@ function GameWorld:generateNewWorld()
 	self.guild = Guild:new(self)
 	self.guild:createInitialHeroes()		
 	self.heroParty = Party:new(self)
-	self.heroParty.currentLocation = self.worldLocations[#self.worldLocations]
-	self.heroParty.gold = 5000	
 	
-	table.insert(self.heroParty.heroes, self.guild.heroes[1])
-	table.insert(self.heroParty.heroes, self.guild.heroes[2])
-	table.insert(self.heroParty.heroes, self.guild.heroes[3])
-	table.insert(self.heroParty.heroes, self.guild.heroes[4])
+	local castle = self.worldLocations[#self.worldLocations]
+	self.heroParty:setLocation(castle)
+	self.heroParty.cartesianX = castle.cartesianX
+	self.heroParty.cartesianY = castle.cartesianY
+	
+	self.heroParty.gold = 5000	
+	self.heroParty.isWalking = true
+	
+	self.heroParty:setDestination(self.worldLocations[1])
+	
+	self.heroParty:addHero(self.guild.heroes[1])
+	self.heroParty:addHero(self.guild.heroes[2])
+	self.heroParty:addHero(self.guild.heroes[3])
+	self.heroParty:addHero(self.guild.heroes[4])
 end
 
 function GameWorld:createInitialQuests()
@@ -144,7 +152,7 @@ function GameWorld:createWorldLocations()
 	worldLocation.nameType = 3
 	worldLocation.difficulty = 0			
 	worldLocation:setQuadrantRowColumn(0, 0, 0)
-	worldLocation.isDiscovered = true
+	worldLocation:discovered(true)
 	table.insert(self.worldLocations, worldLocation)
 end
 
@@ -251,11 +259,13 @@ function GameWorld:isObjectiveDuplicate(objective)
 end
 
 function GameWorld:update(dt)
-	self.gameTime:update(dt)
+	local gwdt = self.gameTime:update(dt)
 	
 	if self.currentBattle then
-		self.currentBattle:update(dt)
+		self.currentBattle:update(dt, gwdt)
 	end
+	
+	self.heroParty:update(dt, gwdt)
 end
 
 return GameWorld

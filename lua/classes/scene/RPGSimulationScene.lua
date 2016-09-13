@@ -197,7 +197,7 @@ function RPGSimulationScene:show(heroes)
 	self.monsters = {}
 	
 	local gameTime = self.gameWorld.gameTime
-	gameTime:setSpeed(9)
+	gameTime:setSpeed(11)
 end
 
 local tabWidth = 50
@@ -259,11 +259,18 @@ function RPGSimulationScene:drawTopStrip()
 	love.graphics.setFont(font)		
 	local tw = font:getWidth(timeText)	
 	love.graphics.print(timeText, sw - tw - 10, 0)
-	
-	local locationText = quest.name .. ' ' .. quest.terrain
+				
+	local party = self.gameWorld.heroParty
+	local locationText = party.currentLocation:fullName()
 	local tw = font:getWidth(locationText)
-	love.graphics.print(locationText, sw - tw - 10, 20)	
+	love.graphics.print(locationText, sw - tw - 10, 20)
 	
+	if party.destination then
+		local destinationText = party.destination:fullName()
+		local tw = font:getWidth(destinationText)
+		love.graphics.print(destinationText, sw - tw - 10, 40)
+	end		
+		
 	love.graphics.print(quest.objective .. ' in the ' .. quest.name .. ' ' .. quest.terrain, 10, 0)	
 end
 
@@ -343,14 +350,19 @@ function RPGSimulationScene:drawMap()
 			local sx = sw / 2 + (location.cartesianX * 70)
 			local sy = sh / 2 + (location.cartesianY * 70) + 100
 			love.graphics.setColor(255,255,0)
-			love.graphics.circle('fill', sx, sy, 3)
-			
-			local locationText = location:fullName()
-			local tw = font:getWidth(locationText)
-			love.graphics.setColor(0, 10, 0)		
-			love.graphics.print(locationText, sx - tw / 2, sy)
+			love.graphics.circle('fill', sx, sy, 3)			
+			--local locationText = location:fullName()
+			--local tw = font:getWidth(locationText)
+			--love.graphics.setColor(0, 10, 0)		
+			--love.graphics.print(locationText, sx - tw / 2, sy)
 		end
 	end
+	
+	local party = self.gameWorld.heroParty
+	local sx = sw / 2 + (party.cartesianX * 70)
+	local sy = sh / 2 + (party.cartesianY * 70) + 100
+	love.graphics.setColor(255,0,0)
+	love.graphics.circle('fill', sx, sy, 3)
 end
 
 function RPGSimulationScene:drawQuestTab()
@@ -585,7 +597,7 @@ function RPGSimulationScene:updateWalking(dt)
 	
 	if canAddMonster then
 		local shouldAdd = math.random(1, 1000)
-		if shouldAdd < 5 then
+		if shouldAdd < 1 then
 			self:createMonsterGroup()
 		end
 	end	
@@ -656,6 +668,13 @@ function RPGSimulationScene:keyreleased(key, scancode)
 	end
 	if key == 'g' then
 		self.activeTab = RPGSimulationScene.GUILD_TAB
+	end
+	
+	if key == 'a' then
+		local locations = self.gameWorld.worldLocations
+		local idx = math.random(1, #locations)
+		local location = locations[idx]
+		self.gameWorld.heroParty:setDestination(location)
 	end
 end
 

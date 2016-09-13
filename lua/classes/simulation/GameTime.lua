@@ -29,6 +29,7 @@ end
 function GameTime:update(dt)
 	local speed = self.speeds[self.currentSpeed]
 	self.timeSeconds = self.timeSeconds + (dt * speed)
+	return dt * speed
 end
 
 return GameTime

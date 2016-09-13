@@ -38,6 +38,14 @@ function Battle:start()
 
 end
 
+function Battle:performSkill()
+	local actor = self.currentActor
+	
+	if self.IS_HERO then
+	elseif self.IS_MONSTER then
+	end
+end
+
 function Battle:setCurrentActor(actor)
 	local actionLevelRequiredToAct = self.actionLevelRequiredToAct
 
@@ -46,8 +54,10 @@ function Battle:setCurrentActor(actor)
 	
 	self.currentMiniGame = BattleMiniGame:new(self.gameWorld, self.currentActor)
 	
-	self.currentMiniGame.onFinish = function(miniGame)
-		self.currentActor.battleTimer = 0
+	self.currentMiniGame.onFinish = function(miniGame)		
+		-- to do what happens when you finish the mini game?
+		self:performSkill()
+		self.currentActor.battleTimer = 0		
 		self.currentActor = nil
 		self.state = Battle.NO_ACTIONS
 	end
@@ -77,7 +87,7 @@ function Battle:updateBattleTimers(dt)
 	end
 end
 
-function Battle:update(dt)
+function Battle:update(dt, gwdt)
 	if self.state == Battle.NO_ACTIONS then
 		self:updateBattleTimers(dt)
 	elseif self.state == Battle.SOMEONE_ACTING then	

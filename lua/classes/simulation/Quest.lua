@@ -16,7 +16,7 @@ function Quest:init(gameWorld)
 end
 
 function Quest:addLocation(location)
-	location.isDiscovered = true
+	location:discovered(true)
 	table.insert(self.locations, location)
 end
 

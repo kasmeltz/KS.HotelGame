@@ -76,11 +76,11 @@ function love.load()
 	gameWorld = GameWorld:new()
 	gameWorld:generateNewWorld()
 
-	SceneManager:addScene(BattleScene:new(gameWorld), 'battleScene')
-	SceneManager:show('battleScene')	
+	--SceneManager:addScene(BattleScene:new(gameWorld), 'battleScene')
+	--SceneManager:show('battleScene')	
 
-	--SceneManager:addScene(RPGSimulationScene:new(gameWorld), 'rpgsimulation')
-	--SceneManager:show('rpgsimulation')	
+	SceneManager:addScene(RPGSimulationScene:new(gameWorld), 'rpgsimulation')
+	SceneManager:show('rpgsimulation')	
 	
 	--SceneManager:show('story', StoryFactory:createStory('begin', gameWorld))
 	

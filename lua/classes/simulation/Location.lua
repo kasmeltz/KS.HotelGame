@@ -26,6 +26,14 @@ function Location:fullName()
 	end		
 end
 
+function Location:discovered(d)
+	if d then
+		self.isDiscovered = d		
+	else
+		return self.isDiscovered
+	end
+end
+
 function Location:setQuadrantRowColumn(quadrant, row, column)
 	self.quadrant = quadrant
 	self.row = row	

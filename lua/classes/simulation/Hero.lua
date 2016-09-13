@@ -15,6 +15,7 @@ local Hero = SimulationItem:extend('Hero')
 
 function Hero:init(gameWorld)
 	Hero.super.init(self, gameWorld)
+	self.IS_HERO = 1
 end
 
 function Hero:fullName()

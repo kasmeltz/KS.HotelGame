@@ -12,6 +12,7 @@ local Monster = SimulationItem:extend('Monster')
 
 function Monster:init(gameWorld)
 	Monster.super.init(self, gameWorld)
+	self.IS_MONSTER = 1
 end
 
 return Monster
